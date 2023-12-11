@@ -1,4 +1,7 @@
-﻿using System;
+﻿using DataAccess.Concrete.Contexts;
+using Entities.Concrete;
+using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace ConsoleUI
 {
@@ -6,7 +9,18 @@ namespace ConsoleUI
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+            void Add(Language language)
+            {
+                using (LibraryAPIDbContext context = new LibraryAPIDbContext())
+                {
+                    var addedEntity = context.Entry(language);
+                    addedEntity.State = EntityState.Added;
+                    context.SaveChanges();
+                }
+            }
+
+            Language lang1 = new Language() { LanguageName = "Urduca" };
+            Add(lang1);
         }
     }
 }
