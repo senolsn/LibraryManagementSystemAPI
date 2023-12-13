@@ -11,6 +11,7 @@ namespace Entities.Concrete
     public class Book:BaseEntity
     {
         public Guid BookId { get; set; }
+        public List<Guid> AuthorIds { get; set; }
         public string LanguageId { get; set; }
         public string CategoryId { get; set; }
         public string PublisherId { get; set; }
