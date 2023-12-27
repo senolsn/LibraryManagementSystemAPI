@@ -1,17 +1,15 @@
-﻿using Core.Entities.Abstract;
-using Core.Entities.Concrete;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities.Concrete
+namespace Business.Dtos.Response
 {
-    public class Language:BaseEntity
+    public class CreatedLanguageResponse
     {
         public Guid LanguageId { get; set; }
         public string? LanguageName { get; set; }
-
+        public bool IsAdded { get; set; }
     }
 }

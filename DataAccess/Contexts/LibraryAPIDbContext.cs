@@ -2,7 +2,7 @@
 using Entities.Concrete;
 using Microsoft.EntityFrameworkCore;
 
-namespace DataAccess.Concrete.Contexts
+namespace DataAccess.Contexts
 {
     public class LibraryAPIDbContext : DbContext
     {

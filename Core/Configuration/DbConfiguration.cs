@@ -1,5 +1,4 @@
-﻿using Business.Constants;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,8 +18,8 @@ namespace Core.Configuration
                 configurationManager.SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "../../../../WebAPI"));
                 configurationManager.AddJsonFile("appsettings.json");
 
-                string connectionString = configurationManager.GetConnectionString(DbConfigurationMessages.MySQLConnectionString);
-                return connectionString == null ? throw new Exception(DbConfigurationMessages.ConnectionStringNotFound) : connectionString;
+                string connectionString = configurationManager.GetConnectionString("MySQLConnectionString");
+                return connectionString == null ? throw new Exception("Not Found") : connectionString;
             }
         }
     }

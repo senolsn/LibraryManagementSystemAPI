@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 
 namespace Core.Entities.Concrete
 {
-    public class BaseEntity : IEntity
+    public class BaseEntity : IEntity,IEntityTimestamps
     {
-        public DateTime CreatedAt { get; set; }
-        public bool IsDeleted { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public DateTime? UpdatedDate { get; set; }
+        public DateTime? DeletedDate { get; set; }
     }
 }
