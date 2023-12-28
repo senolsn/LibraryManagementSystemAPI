@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 
 namespace WebAPI
 {
@@ -22,7 +23,12 @@ namespace WebAPI
             // Add services to the container.
             builder.Services.AddScoped<ILanguageDal, EfLanguageDal>();
             builder.Services.AddScoped<ILanguageService, LanguageManager>();
-           
+            builder.Services.AddDbContext<LibraryAPIDbContext>(
+            options => options.UseMySql(
+         configuration.GetConnectionString("MySQLConnectionString"),
+         new MySqlServerVersion(new Version(10, 3, 39)) 
+     )
+ );
 
 
             builder.Services.AddControllers();

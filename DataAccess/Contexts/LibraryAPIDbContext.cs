@@ -6,7 +6,11 @@ namespace DataAccess.Contexts
 {
     public class LibraryAPIDbContext : DbContext
     {
-        string connectionString = DbConfiguration.ConnectionString;
+        public LibraryAPIDbContext(DbContextOptions<LibraryAPIDbContext> options) : base(options)
+        {
+        }
+
+        string connectionString = "Server=94.73.147.32;User=u0756268_user16;Password=ASD123_Asd123_asd123;database=u0756268_dblms";    //DbConfiguration.ConnectionString;
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));

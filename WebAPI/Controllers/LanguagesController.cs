@@ -24,6 +24,21 @@ namespace WebAPI.Controllers
             return Ok(result);
         }
 
-        
+        [HttpGet("GetPagedListAsync")]
+        public async Task<IActionResult> GetPagedListAsync(
+            [FromQuery] int index = 0,
+            [FromQuery] int size = 10
+        )
+        {
+            var result = await _languageService.GetListAsync(
+                index: index,
+                size: size
+            );
+
+            return Ok(result);
+        }
+
+
+
     }
 }

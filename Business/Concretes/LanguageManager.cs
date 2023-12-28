@@ -1,6 +1,7 @@
 ﻿using Business.Abstracts;
 using Business.Dtos.Request;
 using Business.Dtos.Response;
+using Core.DataAccess.Paging;
 using DataAccess.Abstracts;
 using Entities.Concrete;
 using System;
@@ -30,6 +31,11 @@ namespace Business.Concretes
             CreatedLanguageResponse createdLanguageResponse = new CreatedLanguageResponse() {IsAdded = true,LanguageId = createdLanguage.LanguageId, LanguageName= createdLanguage.LanguageName };
 
             return createdLanguageResponse;
+        }
+
+        public async Task<IPaginate<Language>> GetListAsync(int index, int size)
+        {
+            return await _languageDal.GetListAsync(null, index, size);
         }
     }
 }
