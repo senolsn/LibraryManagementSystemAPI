@@ -14,6 +14,12 @@ namespace Business.Abstracts
     {
         Task<CreatedLanguageResponse> Add(CreateLanguageRequest request);
 
+        Task<UpdatedLanguageResponse> Update(UpdateLanguageRequest request);
+
+        Task<DeletedLanguageResponse> Delete (DeleteLanguageRequest request);
+
         Task<IPaginate<Language>> GetListAsync(int index,int size);
+
+        Task<Language> GetAsync(Guid id);
     }
 }

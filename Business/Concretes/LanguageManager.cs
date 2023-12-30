@@ -24,18 +24,70 @@ namespace Business.Concretes
 
         public async Task<CreatedLanguageResponse> Add(CreateLanguageRequest createLanguageRequest)
         {
-            Language language = new Language() { LanguageId = Guid.NewGuid(), LanguageName= createLanguageRequest.LanguageName};
+            Language language = new Language() { LanguageId = Guid.NewGuid(), LanguageName = createLanguageRequest.LanguageName };
 
-           Language createdLanguage = await _languageDal.AddAsync(language);
+            var createdLanguage = await _languageDal.AddAsync(language);
 
-            CreatedLanguageResponse createdLanguageResponse = new CreatedLanguageResponse() {IsAdded = true,LanguageId = createdLanguage.LanguageId, LanguageName= createdLanguage.LanguageName };
+            var createdLanguageResponse = new CreatedLanguageResponse() { IsAdded = true, LanguageId = createdLanguage.LanguageId, LanguageName = createdLanguage.LanguageName };
 
             return createdLanguageResponse;
         }
 
+        public async Task<DeletedLanguageResponse> Delete(DeleteLanguageRequest request)
+        {
+            var languageToDelete = await _languageDal.GetAsync(l => l.LanguageId == request.LanguageId);
+
+            if (languageToDelete == null)
+            {
+                return new DeletedLanguageResponse() { IsDeleted = false };
+            }
+
+            await _languageDal.DeleteAsync(languageToDelete);
+
+            return new DeletedLanguageResponse() { IsDeleted = true };
+        }
+
+        public async Task<Language> GetAsync(Guid id)
+        {
+            return await _languageDal.GetAsync(l => l.LanguageId == id);
+        }
+
         public async Task<IPaginate<Language>> GetListAsync(int index, int size)
         {
+
             return await _languageDal.GetListAsync(null, index, size);
+        }
+
+        public async Task<UpdatedLanguageResponse> Update(UpdateLanguageRequest request)
+        {
+            var languageToUpdate = await _languageDal.GetAsync(l => l.LanguageId == request.LanguageId);
+
+            if (languageToUpdate == null)
+            {
+                return new UpdatedLanguageResponse() { IsUpdated = false };
+            }
+
+            UpdateLanguageFields(request, languageToUpdate);
+
+            await _languageDal.UpdateAsync(languageToUpdate);
+            return new UpdatedLanguageResponse() { IsUpdated = true };
+        }
+
+
+        protected void UpdateLanguageFields(UpdateLanguageRequest request, Language language)
+        {
+            var properties = typeof(UpdateLanguageRequest).GetProperties();
+
+            foreach (var property in properties)
+            {
+                var requestValue = property.GetValue(request);
+                if (requestValue != null && !string.IsNullOrEmpty(requestValue.ToString()))
+                {
+                    var productProperty = language.GetType().GetProperty(property.Name);
+                    productProperty?.SetValue(language, requestValue);
+                }
+
+            }
         }
     }
 }

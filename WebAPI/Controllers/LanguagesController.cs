@@ -1,6 +1,7 @@
 ﻿using Business.Abstracts;
 using Business.Dtos.Request;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace WebAPI.Controllers
@@ -36,6 +37,56 @@ namespace WebAPI.Controllers
             );
 
             return Ok(result);
+        }
+
+        [HttpGet("GetById")]
+        public async Task<IActionResult> GetById(Guid id)
+        {
+            var result = await _languageService.GetAsync(id);
+
+            return Ok(result);
+        }
+
+        [HttpPut("Update")]
+        public async Task<IActionResult> Update(UpdateLanguageRequest request)
+        {
+            try
+            {
+                var updatedLanguageResponse = await _languageService.Update(request);
+
+                if(!updatedLanguageResponse.IsUpdated)
+                {
+                    return NotFound($"Product with Id {request.LanguageId} not found.");
+                }
+
+                return Ok(updatedLanguageResponse);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500,$"Error : {ex.Message }");
+            }
+        }
+
+        [HttpDelete()]
+        public async Task<IActionResult> Delete(DeleteLanguageRequest request)
+        {
+            try
+            {
+                var deletedLanguageResponse = await _languageService.Delete(request);
+
+                if (!deletedLanguageResponse.IsDeleted)
+                {
+                    return NotFound($"Not found.");
+                }
+
+                return Ok(deletedLanguageResponse);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
         }
 
 
