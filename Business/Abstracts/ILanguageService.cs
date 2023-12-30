@@ -1,5 +1,9 @@
-﻿using Business.Dtos.Request;
-using Business.Dtos.Response;
+﻿using Business.Dtos.Request.Create;
+using Business.Dtos.Request.Delete;
+using Business.Dtos.Request.Update;
+using Business.Dtos.Response.Create;
+using Business.Dtos.Response.Delete;
+using Business.Dtos.Response.Update;
 using Core.DataAccess.Paging;
 using Entities.Concrete;
 using System;

@@ -1,5 +1,7 @@
 ﻿using Business.Abstracts;
-using Business.Dtos.Request;
+using Business.Dtos.Request.Create;
+using Business.Dtos.Request.Delete;
+using Business.Dtos.Request.Update;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -88,8 +90,6 @@ namespace WebAPI.Controllers
                 return StatusCode(500, $"An error occurred: {ex.Message}");
             }
         }
-
-
 
     }
 }

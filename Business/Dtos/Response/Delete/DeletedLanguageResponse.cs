@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Business.Dtos.Response
+namespace Business.Dtos.Response.Delete
 {
     public class DeletedLanguageResponse
     {

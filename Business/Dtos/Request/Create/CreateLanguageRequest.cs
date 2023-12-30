@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Business.Dtos.Response
+namespace Business.Dtos.Request.Create
 {
-    public class UpdatedLanguageResponse
+    public class CreateLanguageRequest
     {
-        public bool IsUpdated { get; set; }
+        public string? LanguageName { get; set; }
     }
 }

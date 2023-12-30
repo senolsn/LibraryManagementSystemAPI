@@ -1,6 +1,11 @@
-﻿using Business.Abstracts;
-using Business.Dtos.Request;
-using Business.Dtos.Response;
+﻿using AutoMapper;
+using Business.Abstracts;
+using Business.Dtos.Request.Create;
+using Business.Dtos.Request.Delete;
+using Business.Dtos.Request.Update;
+using Business.Dtos.Response.Create;
+using Business.Dtos.Response.Delete;
+using Business.Dtos.Response.Update;
 using Core.DataAccess.Paging;
 using DataAccess.Abstracts;
 using Entities.Concrete;
@@ -16,10 +21,13 @@ namespace Business.Concretes
     {
 
         protected readonly ILanguageDal _languageDal;
+        protected readonly IMapper _mapper;
 
-        public LanguageManager(ILanguageDal languageDal)
+        public LanguageManager(ILanguageDal languageDal,IMapper mapper)
         {
             _languageDal = languageDal;
+            _mapper = mapper;
+
         }
 
         public async Task<CreatedLanguageResponse> Add(CreateLanguageRequest createLanguageRequest)
