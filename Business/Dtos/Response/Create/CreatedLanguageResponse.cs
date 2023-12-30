@@ -10,6 +10,5 @@ namespace Business.Dtos.Response.Create
     {
         public Guid LanguageId { get; set; }
         public string? LanguageName { get; set; }
-        public bool IsAdded { get; set; }
     }
 }

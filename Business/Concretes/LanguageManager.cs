@@ -32,11 +32,11 @@ namespace Business.Concretes
 
         public async Task<CreatedLanguageResponse> Add(CreateLanguageRequest createLanguageRequest)
         {
-            Language language = new Language() { LanguageId = Guid.NewGuid(), LanguageName = createLanguageRequest.LanguageName };
+            Language language = _mapper.Map<Language>(createLanguageRequest);
 
             var createdLanguage = await _languageDal.AddAsync(language);
 
-            var createdLanguageResponse = new CreatedLanguageResponse() { IsAdded = true, LanguageId = createdLanguage.LanguageId, LanguageName = createdLanguage.LanguageName };
+            var createdLanguageResponse = _mapper.Map<CreatedLanguageResponse>(createdLanguage);
 
             return createdLanguageResponse;
         }
