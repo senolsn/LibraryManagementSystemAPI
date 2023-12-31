@@ -4,7 +4,6 @@ using Business.Dtos.Request.Create;
 using Business.Dtos.Request.Delete;
 using Business.Dtos.Request.Update;
 using Business.Dtos.Response.Create;
-using Business.Dtos.Response.Delete;
 using Business.Dtos.Response.Read;
 using Business.Dtos.Response.Update;
 using Core.DataAccess.Paging;
@@ -57,18 +56,16 @@ namespace Business.Concretes
             return new UpdatedLanguageResponse();
         }
 
-        public async Task<DeletedLanguageResponse> Delete(DeleteLanguageRequest request)
+        public async Task Delete(DeleteLanguageRequest request)
         {
             var languageToDelete = await _languageDal.GetAsync(l => l.LanguageId == request.LanguageId);
 
-            if (languageToDelete is null)
+            if(languageToDelete is not null)
             {
-                return new DeletedLanguageResponse() { IsDeleted = false };
+               await _languageDal.DeleteAsync(languageToDelete);
             }
 
-            await _languageDal.DeleteAsync(languageToDelete);
-
-            return new DeletedLanguageResponse();
+            throw new Exception("Something went wrong!");
         }
 
         public async Task<Language> GetAsync(Guid languageId)

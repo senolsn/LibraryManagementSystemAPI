@@ -14,17 +14,16 @@ using System.Threading.Tasks;
 
 namespace Business.Abstracts
 {
-    public interface IAuthorService
+    public interface IDepartmentService
     {
-        Task<CreatedAuthorResponse> Add(CreateAuthorRequest request);
+        Task<CreatedLanguageResponse> Add(CreateLanguageRequest request);
 
-        Task<UpdatedAuthorResponse> Update(UpdateAuthorRequest request);
+        //Task<UpdatedLanguageResponse> Update(UpdateLanguageRequest request);
 
-        Task Delete(DeleteAuthorRequest request);
+        //Task<DeletedLanguageResponse> Delete(DeleteLanguageRequest request);
 
-        Task<Author> GetAsync(Guid authorId);
+        //Task<IPaginate<GetListLanguageResponse>> GetListAsync(PageRequest pageRequest);
 
-        Task<IPaginate<GetListAuthorResponse>> GetListAsync(PageRequest pageRequest);
-
+        //Task<Language> GetAsync(Guid languageId);
     }
 }

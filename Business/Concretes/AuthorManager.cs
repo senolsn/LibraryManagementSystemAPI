@@ -4,7 +4,6 @@ using Business.Dtos.Request.Create;
 using Business.Dtos.Request.Delete;
 using Business.Dtos.Request.Update;
 using Business.Dtos.Response.Create;
-using Business.Dtos.Response.Delete;
 using Business.Dtos.Response.Read;
 using Business.Dtos.Response.Update;
 using Core.DataAccess.Paging;
@@ -57,20 +56,16 @@ namespace Business.Concretes
             return new UpdatedAuthorResponse();
         }
 
-        public async Task<DeletedAuthorResponse> Delete(DeleteAuthorRequest request)
+        public async Task Delete(DeleteAuthorRequest request)
         {
             var authorToDelete = await _authorDal.GetAsync(a => a.AuthorId == request.AuthorId);
 
-            if(authorToDelete is null)
+           if( authorToDelete is not null)
             {
-                return new DeletedAuthorResponse() { IsDeleted = false };
+                await _authorDal.DeleteAsync(authorToDelete);
             }
 
-            await _authorDal.DeleteAsync(authorToDelete);
-
-            return new DeletedAuthorResponse();
-
-
+            throw new Exception("Something went wrong!");
         }
 
         public async Task<Author> GetAsync(Guid authorId)

@@ -70,14 +70,8 @@ namespace WebAPI.Controllers
         {
             try
             {
-                var deletedLanguageResponse = await _languageService.Delete(request);
-
-                if (!deletedLanguageResponse.IsDeleted)
-                {
-                    return NotFound($"Not found.");
-                }
-
-                return Ok(deletedLanguageResponse);
+                await _languageService.Delete(request);
+                return Ok();
             }
             catch (Exception ex)
             {

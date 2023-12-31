@@ -2,7 +2,6 @@
 using Business.Dtos.Request.Delete;
 using Business.Dtos.Request.Update;
 using Business.Dtos.Response.Create;
-using Business.Dtos.Response.Delete;
 using Business.Dtos.Response.Read;
 using Business.Dtos.Response.Update;
 using Core.DataAccess.Paging;
@@ -21,7 +20,7 @@ namespace Business.Abstracts
 
         Task<UpdatedLanguageResponse> Update(UpdateLanguageRequest request);
 
-        Task<DeletedLanguageResponse> Delete (DeleteLanguageRequest request);
+        Task Delete (DeleteLanguageRequest request);
 
         Task<IPaginate<GetListLanguageResponse>> GetListAsync(PageRequest pageRequest);
 

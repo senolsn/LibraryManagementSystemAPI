@@ -54,19 +54,13 @@ namespace WebAPI.Controllers
         {
             try
             {
-                var deletedAuthorResponse = await _authorService.Delete(request);
-
-                if (!deletedAuthorResponse.IsDeleted)
-                {
-                    NotFound();
-                }
-
-                return Ok(deletedAuthorResponse);
+                await _authorService.Delete(request);
+                return Ok();
             }
             catch (Exception ex)
             {
 
-                throw new Exception(ex.Message);
+                return StatusCode(500, $"An error occurred: {ex.Message}");
             }
         }
 
