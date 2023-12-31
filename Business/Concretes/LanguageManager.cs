@@ -5,6 +5,7 @@ using Business.Dtos.Request.Delete;
 using Business.Dtos.Request.Update;
 using Business.Dtos.Response.Create;
 using Business.Dtos.Response.Delete;
+using Business.Dtos.Response.Read;
 using Business.Dtos.Response.Update;
 using Core.DataAccess.Paging;
 using DataAccess.Abstracts;
@@ -60,13 +61,16 @@ namespace Business.Concretes
             return await _languageDal.GetAsync(l => l.LanguageId == id);
         }
 
-        public async Task<IPaginate<Language>> GetListAsync(PageRequest pageRequest)
+        public async Task<IPaginate<GetListLanguageResponse>> GetListAsync(PageRequest pageRequest)
         {
 
-            return await _languageDal.GetListAsync(
-                null, //Include eklemesine bakalım
+            var data = await _languageDal.GetListAsync(
+                null, 
                 index : pageRequest.PageIndex,
                 size : pageRequest.PageSize);
+
+            var result = _mapper.Map<Paginate<GetListLanguageResponse>>(data);
+            return result;
         }
 
         public async Task<UpdatedLanguageResponse> Update(UpdateLanguageRequest request)

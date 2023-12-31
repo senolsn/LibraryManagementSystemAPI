@@ -3,6 +3,7 @@ using Business.Dtos.Request.Delete;
 using Business.Dtos.Request.Update;
 using Business.Dtos.Response.Create;
 using Business.Dtos.Response.Delete;
+using Business.Dtos.Response.Read;
 using Business.Dtos.Response.Update;
 using Core.DataAccess.Paging;
 using Entities.Concrete;
@@ -22,7 +23,7 @@ namespace Business.Abstracts
 
         Task<DeletedLanguageResponse> Delete (DeleteLanguageRequest request);
 
-        Task<IPaginate<Language>> GetListAsync(PageRequest pageRequest);
+        Task<IPaginate<GetListLanguageResponse>> GetListAsync(PageRequest pageRequest);
 
         Task<Language> GetAsync(Guid id);
     }
