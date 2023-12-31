@@ -53,7 +53,7 @@ namespace WebAPI.Controllers
 
                 if(!updatedLanguageResponse.IsUpdated)
                 {
-                    return NotFound($"Product with Id {request.LanguageId} not found.");
+                    return NotFound( "Not found.");
                 }
 
                 return Ok(updatedLanguageResponse);

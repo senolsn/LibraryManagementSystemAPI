@@ -25,6 +25,6 @@ namespace Business.Abstracts
 
         Task<IPaginate<GetListLanguageResponse>> GetListAsync(PageRequest pageRequest);
 
-        Task<Language> GetAsync(Guid id);
+        Task<Language> GetAsync(Guid languageId);
     }
 }
