@@ -9,5 +9,11 @@ namespace Business.Dtos.Response.Delete
     public class DeletedLanguageResponse
     {
         public bool IsDeleted { get; set; }
+
+
+        public DeletedLanguageResponse()
+        {
+            IsDeleted = true;
+        }
     }
 }

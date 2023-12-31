@@ -2,6 +2,7 @@
 using Business.Dtos.Request.Create;
 using Business.Dtos.Request.Delete;
 using Business.Dtos.Request.Update;
+using Core.DataAccess.Paging;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -28,15 +29,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("GetPagedListAsync")]
-        public async Task<IActionResult> GetPagedListAsync(
-            [FromQuery] int index = 0,
-            [FromQuery] int size = 10
-        )
+        public async Task<IActionResult> GetPagedListAsync([FromQuery] PageRequest pageRequest)
         {
-            var result = await _languageService.GetListAsync(
-                index: index,
-                size: size
-            );
+            var result = await _languageService.GetListAsync(pageRequest);
 
             return Ok(result);
         }
@@ -70,7 +65,7 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpDelete()]
+        [HttpDelete("Delete")]
         public async Task<IActionResult> Delete(DeleteLanguageRequest request)
         {
             try

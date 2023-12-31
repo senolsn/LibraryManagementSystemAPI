@@ -22,7 +22,7 @@ namespace Business.Abstracts
 
         Task<DeletedLanguageResponse> Delete (DeleteLanguageRequest request);
 
-        Task<IPaginate<Language>> GetListAsync(int index,int size);
+        Task<IPaginate<Language>> GetListAsync(PageRequest pageRequest);
 
         Task<Language> GetAsync(Guid id);
     }

@@ -45,14 +45,14 @@ namespace Business.Concretes
         {
             var languageToDelete = await _languageDal.GetAsync(l => l.LanguageId == request.LanguageId);
 
-            if (languageToDelete == null)
+            if (languageToDelete is null)
             {
                 return new DeletedLanguageResponse() { IsDeleted = false };
             }
 
             await _languageDal.DeleteAsync(languageToDelete);
 
-            return new DeletedLanguageResponse() { IsDeleted = true };
+            return new DeletedLanguageResponse();
         }
 
         public async Task<Language> GetAsync(Guid id)
@@ -60,10 +60,13 @@ namespace Business.Concretes
             return await _languageDal.GetAsync(l => l.LanguageId == id);
         }
 
-        public async Task<IPaginate<Language>> GetListAsync(int index, int size)
+        public async Task<IPaginate<Language>> GetListAsync(PageRequest pageRequest)
         {
 
-            return await _languageDal.GetListAsync(null, index, size);
+            return await _languageDal.GetListAsync(
+                null, //Include eklemesine bakalım
+                index : pageRequest.PageIndex,
+                size : pageRequest.PageSize);
         }
 
         public async Task<UpdatedLanguageResponse> Update(UpdateLanguageRequest request)
@@ -75,27 +78,11 @@ namespace Business.Concretes
                 return new UpdatedLanguageResponse() { IsUpdated = false };
             }
 
-            UpdateLanguageFields(request, languageToUpdate);
+            _mapper.Map(request, languageToUpdate);
 
             await _languageDal.UpdateAsync(languageToUpdate);
-            return new UpdatedLanguageResponse() { IsUpdated = true };
-        }
 
-
-        protected void UpdateLanguageFields(UpdateLanguageRequest request, Language language)
-        {
-            var properties = typeof(UpdateLanguageRequest).GetProperties();
-
-            foreach (var property in properties)
-            {
-                var requestValue = property.GetValue(request);
-                if (requestValue != null && !string.IsNullOrEmpty(requestValue.ToString()))
-                {
-                    var productProperty = language.GetType().GetProperty(property.Name);
-                    productProperty?.SetValue(language, requestValue);
-                }
-
-            }
+            return new UpdatedLanguageResponse();
         }
     }
 }
