@@ -1,10 +1,7 @@
-﻿using Business.Dtos.Request.Create;
-using Business.Dtos.Request.Delete;
-using Business.Dtos.Request.Update;
-using Business.Dtos.Response.Create;
-using Business.Dtos.Response.Read;
-using Business.Dtos.Response.Update;
+﻿using Business.Dtos.Request.Author;
+using Business.Dtos.Response.Author;
 using Core.DataAccess.Paging;
+using Core.Utilities.Results;
 using Entities.Concrete;
 using System;
 using System.Collections.Generic;
@@ -16,15 +13,15 @@ namespace Business.Abstracts
 {
     public interface IAuthorService
     {
-        Task<CreatedAuthorResponse> Add(CreateAuthorRequest request);
+        Task<IResult> Add(CreateAuthorRequest request);
 
-        Task<UpdatedAuthorResponse> Update(UpdateAuthorRequest request);
+        Task<IResult> Update(UpdateAuthorRequest request);
 
-        Task Delete(DeleteAuthorRequest request);
+        Task<IResult> Delete(DeleteAuthorRequest request);
 
-        Task<Author> GetAsync(Guid authorId);
+        Task<IDataResult<Author>> GetAsync(Guid authorId);
 
-        Task<IPaginate<GetListAuthorResponse>> GetListAsync(PageRequest pageRequest);
+        Task<IDataResult<IPaginate<GetListAuthorResponse>>> GetListAsync(PageRequest pageRequest);
 
     }
 }

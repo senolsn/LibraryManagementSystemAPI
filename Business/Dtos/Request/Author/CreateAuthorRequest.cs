@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Business.Dtos.Request.Create
+namespace Business.Dtos.Request.Author
 {
     public class CreateAuthorRequest
     {

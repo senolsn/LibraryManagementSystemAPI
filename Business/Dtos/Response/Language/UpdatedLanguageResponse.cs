@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Business.Dtos.Response.Update
+namespace Business.Dtos.Response.Language
 {
-    public class UpdatedAuthorResponse
+    public class UpdatedLanguageResponse
     {
         public bool IsUpdated { get; set; }
 
-        public UpdatedAuthorResponse()
+        public UpdatedLanguageResponse()
         {
             IsUpdated = true;
         }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Business.Dtos.Response.Read
+namespace Business.Dtos.Response.Language
 {
     public class GetListLanguageResponse
     {

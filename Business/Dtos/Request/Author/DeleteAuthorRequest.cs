@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Business.Dtos.Request.Delete
+namespace Business.Dtos.Request.Author
 {
-    public class DeleteLanguageRequest
+    public class DeleteAuthorRequest
     {
-        public Guid LanguageId { get; set; }
+        public Guid AuthorId { get; set; }
     }
 }

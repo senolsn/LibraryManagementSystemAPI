@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Business.Dtos.Request.Update
+namespace Business.Dtos.Response.Author
 {
-    public class UpdateAuthorRequest
+    public class GetListAuthorResponse
     {
         public Guid AuthorId { get; set; }
         public string AuthorFirstName { get; set; }

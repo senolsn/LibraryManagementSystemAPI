@@ -1,7 +1,5 @@
 ﻿using Business.Abstracts;
-using Business.Dtos.Request.Create;
-using Business.Dtos.Request.Delete;
-using Business.Dtos.Request.Update;
+using Business.Dtos.Request.Author;
 using Core.DataAccess.Paging;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -23,9 +21,23 @@ namespace WebAPI.Controllers
         [HttpPost("Add")]
         public async Task<IActionResult> Add(CreateAuthorRequest request)
         {
-            var result = await _authorService.Add(request);
+            try
+            {
+                var result = await _authorService.Add(request);
 
-            return Ok(result);
+                if (!result.IsSuccess)
+                {
+                    return BadRequest(result);
+                }
+
+                return Ok(result);
+
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message);
+            }
         }
 
         [HttpPut("Update")]
@@ -33,14 +45,14 @@ namespace WebAPI.Controllers
         {
             try
             {
-                var updatedAuthorResponse = await _authorService.Update(request);
+                var result = await _authorService.Update(request);
 
-                if (updatedAuthorResponse is null)
+                if (!result.IsSuccess)
                 {
-                    NotFound();
+                    NotFound(result);
                 }
 
-                return Ok(updatedAuthorResponse);
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -54,8 +66,15 @@ namespace WebAPI.Controllers
         {
             try
             {
-                await _authorService.Delete(request);
-                return Ok();
+                var result = await _authorService.Delete(request);
+
+                if (!result.IsSuccess)
+                {
+                    return NotFound(result);
+                }
+                return Ok(result);
+                
+
             }
             catch (Exception ex)
             {
@@ -71,12 +90,12 @@ namespace WebAPI.Controllers
             {
                 var result = await _authorService.GetAsync(authorId);
 
-                if (result is null)
+                if (!result.IsSuccess)
                 {
                     return BadRequest();
                 }
 
-                    return Ok(result);
+                return Ok(result);
 
             }
             catch (Exception ex)
@@ -89,9 +108,22 @@ namespace WebAPI.Controllers
         [HttpGet("GetPagedListAsync")]
         public async Task<IActionResult> GetPagedListAsync([FromQuery] PageRequest pageRequest)
         {
-            var result = await _authorService.GetListAsync(pageRequest);
+            try
+            {
+                var result = await _authorService.GetListAsync(pageRequest);
 
-            return Ok(result);
+                if (!result.IsSuccess)
+                {
+                    return BadRequest(result);
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message);
+            }
         }
     }
 }

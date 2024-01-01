@@ -1,12 +1,10 @@
 ﻿using AutoMapper;
 using Business.Abstracts;
-using Business.Dtos.Request.Create;
-using Business.Dtos.Request.Delete;
-using Business.Dtos.Request.Update;
-using Business.Dtos.Response.Create;
-using Business.Dtos.Response.Read;
-using Business.Dtos.Response.Update;
+using Business.Constants;
+using Business.Dtos.Request.Author;
+using Business.Dtos.Response.Author;
 using Core.DataAccess.Paging;
+using Core.Utilities.Results;
 using DataAccess.Abstracts;
 using DataAccess.Concretes;
 using Entities.Concrete;
@@ -29,51 +27,55 @@ namespace Business.Concretes
             _mapper = mapper;
         }
 
-        public async Task<CreatedAuthorResponse> Add(CreateAuthorRequest request)
+        public async Task<IResult> Add(CreateAuthorRequest request)
         {
             Author author = _mapper.Map<Author>(request);
 
             var createdAuthor = await _authorDal.AddAsync(author);
+            
+            if(createdAuthor is null)
+            {
+                return new ErrorResult(Messages.Error);
+            }
 
-            var createdAuthorResponse = _mapper.Map<CreatedAuthorResponse>(createdAuthor);
-
-            return createdAuthorResponse;
+            return new SuccessResult(Messages.AuthorAdded);
         }
 
-        public async Task<UpdatedAuthorResponse> Update(UpdateAuthorRequest request)
+        public async Task<IResult> Update(UpdateAuthorRequest request)
         {
             var authorToUpdate = await _authorDal.GetAsync(a => a.AuthorId == request.AuthorId);
 
             if(authorToUpdate is null) 
             {
-                return new UpdatedAuthorResponse() { IsUpdated = false };
+                return new ErrorResult(Messages.Error);
             }
 
             _mapper.Map(request,authorToUpdate);
 
             await _authorDal.UpdateAsync(authorToUpdate);
 
-            return new UpdatedAuthorResponse();
+            return new SuccessResult(Messages.AuthorUpdated);
         }
 
-        public async Task Delete(DeleteAuthorRequest request)
+        public async Task<IResult> Delete(DeleteAuthorRequest request)
         {
             var authorToDelete = await _authorDal.GetAsync(a => a.AuthorId == request.AuthorId);
 
            if( authorToDelete is not null)
             {
                 await _authorDal.DeleteAsync(authorToDelete);
+                return new SuccessResult(Messages.AuthorDeleted);
             }
 
-            throw new Exception("Something went wrong!");
+            return new ErrorResult(Messages.Error);
         }
 
-        public async Task<Author> GetAsync(Guid authorId)
+        public async Task<IDataResult<Author>> GetAsync(Guid authorId)
         {
-            return await _authorDal.GetAsync(a => a.AuthorId == authorId);
+            return new SuccessDataResult<Author>(await _authorDal.GetAsync(a => a.AuthorId == authorId),Messages.AuthorListed); 
         }
 
-        public async Task<IPaginate<GetListAuthorResponse>> GetListAsync(PageRequest pageRequest)
+        public async Task<IDataResult<IPaginate<GetListAuthorResponse>>> GetListAsync(PageRequest pageRequest)
         {
             var data = await _authorDal.GetListAsync(
                 null,
@@ -81,7 +83,7 @@ namespace Business.Concretes
                 size: pageRequest.PageSize);
 
             var result = _mapper.Map<Paginate<GetListAuthorResponse>>(data);
-            return result;
+            return new SuccessDataResult<IPaginate<GetListAuthorResponse>>(result,Messages.AuthorsListed);
         }
     }
 }

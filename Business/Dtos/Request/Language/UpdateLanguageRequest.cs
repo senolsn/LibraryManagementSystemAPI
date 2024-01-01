@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Business.Dtos.Response.Create
+namespace Business.Dtos.Request.Language
 {
-    public class CreatedLanguageResponse
+    public class UpdateLanguageRequest
     {
         public Guid LanguageId { get; set; }
-        public string? LanguageName { get; set; }
+        public string LanguageName { get; set; }
+
     }
 }
