@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Business.Abstracts;
+using Business.Constants;
 using Business.Dtos.Request.Language;
 using Business.Dtos.Response.Language;
 using Core.DataAccess.Paging;
+using Core.Utilities.Results;
 using DataAccess.Abstracts;
 using Entities.Concrete;
 using System;
@@ -25,51 +27,62 @@ namespace Business.Concretes
             _mapper = mapper;
         }
 
-        public async Task<CreatedLanguageResponse> Add(CreateLanguageRequest request)
+        public async Task<IResult> Add(CreateLanguageRequest request)
         {
             Language language = _mapper.Map<Language>(request);
 
             var createdLanguage = await _languageDal.AddAsync(language);
 
-            var createdLanguageResponse = _mapper.Map<CreatedLanguageResponse>(createdLanguage);
+            if (createdLanguage is null) 
+            {
+                return new ErrorResult(Messages.Error);
+            }
 
-            return createdLanguageResponse;
+            return new SuccessResult(Messages.LanguageAdded);
         }
 
-        public async Task<UpdatedLanguageResponse> Update(UpdateLanguageRequest request)
+        public async Task<IResult> Update(UpdateLanguageRequest request)
         {
             var languageToUpdate = await _languageDal.GetAsync(l => l.LanguageId == request.LanguageId);
 
-            if (languageToUpdate == null)
+            if (languageToUpdate is null)
             {
-                return new UpdatedLanguageResponse() { IsUpdated = false };
+                return new ErrorResult(Messages.Error);
             }
 
             _mapper.Map(request, languageToUpdate);
 
             await _languageDal.UpdateAsync(languageToUpdate);
 
-            return new UpdatedLanguageResponse();
+            return new SuccessResult(Messages.LanguageUpdated);
         }
 
-        public async Task Delete(DeleteLanguageRequest request)
+        public async Task<IResult> Delete(DeleteLanguageRequest request)
         {
             var languageToDelete = await _languageDal.GetAsync(l => l.LanguageId == request.LanguageId);
 
             if(languageToDelete is not null)
             {
                await _languageDal.DeleteAsync(languageToDelete);
+                return new SuccessResult(Messages.LanguageDeleted);
             }
 
-            throw new Exception("Something went wrong!");
+            return new ErrorResult(Messages.Error);
         }
 
-        public async Task<Language> GetAsync(Guid languageId)
+        public async Task<IDataResult<Language>> GetAsync(Guid languageId)
         {
-            return await _languageDal.GetAsync(l => l.LanguageId == languageId);
+            var result = await _languageDal.GetAsync(l => l.LanguageId == languageId);
+
+            if(result is not null)
+            {
+                return new SuccessDataResult<Language>(result,Messages.LanguageListed);
+            }
+            
+            return new ErrorDataResult<Language>(Messages.Error);
         }
 
-        public async Task<IPaginate<GetListLanguageResponse>> GetListAsync(PageRequest pageRequest)
+        public async Task<IDataResult<IPaginate<GetListLanguageResponse>>> GetListAsync(PageRequest pageRequest)
         {
 
             var data = await _languageDal.GetListAsync(
@@ -77,8 +90,14 @@ namespace Business.Concretes
                 index : pageRequest.PageIndex,
                 size : pageRequest.PageSize);
 
-            var result = _mapper.Map<Paginate<GetListLanguageResponse>>(data);
-            return result;
+           if(data is not null)
+            {
+                var result = _mapper.Map<Paginate<GetListLanguageResponse>>(data);
+
+                return new SuccessDataResult<IPaginate<GetListLanguageResponse>>(result,Messages.LanguagesListed);
+            }
+
+           return new ErrorDataResult<IPaginate<GetListLanguageResponse>>(Messages.Error);
         }
     }
 }

@@ -36,7 +36,7 @@ namespace WebAPI.Controllers
             catch (Exception ex)
             {
 
-                throw new Exception(ex.Message);
+                return StatusCode(500, $"Error : {ex.Message}");
             }
         }
 
@@ -57,7 +57,7 @@ namespace WebAPI.Controllers
             catch (Exception ex)
             {
 
-                throw new Exception(ex.Message);
+                return StatusCode(500, $"Error : {ex.Message}");
             }
         }
 
@@ -92,7 +92,7 @@ namespace WebAPI.Controllers
 
                 if (!result.IsSuccess)
                 {
-                    return BadRequest();
+                    return NotFound(result);
                 }
 
                 return Ok(result);
@@ -101,7 +101,7 @@ namespace WebAPI.Controllers
             catch (Exception ex)
             {
 
-                throw new Exception(ex.Message);
+                return StatusCode(500, $"Error : {ex.Message}");
             }
         }
 
@@ -122,7 +122,7 @@ namespace WebAPI.Controllers
             catch (Exception ex)
             {
 
-                throw new Exception(ex.Message);
+                return StatusCode(500, $"Error : {ex.Message}");
             }
         }
     }

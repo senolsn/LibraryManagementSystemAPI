@@ -21,25 +21,22 @@ namespace WebAPI.Controllers
         [HttpPost("Add")]
         public async Task<IActionResult> Add([FromBody] CreateLanguageRequest request)
         {
-            var result = await _languageService.Add(request);
+            try
+            {
+                var result = await _languageService.Add(request);
 
-            return Ok(result);
-        }
+                if (!result.IsSuccess)
+                {
+                    return BadRequest(result);
+                }
 
-        [HttpGet("GetPagedListAsync")]
-        public async Task<IActionResult> GetPagedListAsync([FromQuery] PageRequest pageRequest)
-        {
-            var result = await _languageService.GetListAsync(pageRequest);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
 
-            return Ok(result);
-        }
-
-        [HttpGet("GetById")]
-        public async Task<IActionResult> GetById(Guid id)
-        {
-            var result = await _languageService.GetAsync(id);
-
-            return Ok(result);
+                return StatusCode(500, $"Error : {ex.Message}");
+            }
         }
 
         [HttpPut("Update")]
@@ -47,19 +44,19 @@ namespace WebAPI.Controllers
         {
             try
             {
-                var updatedLanguageResponse = await _languageService.Update(request);
+                var result = await _languageService.Update(request);
 
-                if(!updatedLanguageResponse.IsUpdated)
+                if (!result.IsSuccess)
                 {
-                    return NotFound( "Not found.");
+                    return NotFound(result);
                 }
 
-                return Ok(updatedLanguageResponse);
+                return Ok(result);
             }
             catch (Exception ex)
             {
 
-                return StatusCode(500,$"Error : {ex.Message }");
+                return StatusCode(500, $"Error : {ex.Message}");
             }
         }
 
@@ -68,8 +65,12 @@ namespace WebAPI.Controllers
         {
             try
             {
-                await _languageService.Delete(request);
-                return Ok();
+                var result = await _languageService.Delete(request);
+                if (!result.IsSuccess)
+                {
+                    return NotFound(result);
+                }
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -78,5 +79,44 @@ namespace WebAPI.Controllers
             }
         }
 
+        [HttpGet("GetById")]
+        public async Task<IActionResult> GetAsync(Guid id)
+        {
+            try
+            {
+                var result = await _languageService.GetAsync(id);
+
+                if (!result.IsSuccess)
+                {
+                    return NotFound(result);
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, $"Error : {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetPagedListAsync")]
+        public async Task<IActionResult> GetPagedListAsync([FromQuery] PageRequest pageRequest)
+        {
+            try
+            {
+                var result = await _languageService.GetListAsync(pageRequest);
+
+                if (!result.IsSuccess)
+                {
+                    return NotFound(result);
+                }
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error : {ex.Message}");
+            }
+        }
     }
 }

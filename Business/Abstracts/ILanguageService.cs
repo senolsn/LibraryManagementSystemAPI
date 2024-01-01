@@ -1,6 +1,7 @@
 ﻿using Business.Dtos.Request.Language;
 using Business.Dtos.Response.Language;
 using Core.DataAccess.Paging;
+using Core.Utilities.Results;
 using Entities.Concrete;
 using System;
 using System.Collections.Generic;
@@ -12,14 +13,14 @@ namespace Business.Abstracts
 {
     public interface ILanguageService
     {
-        Task<CreatedLanguageResponse> Add(CreateLanguageRequest request);
+        Task<IResult> Add(CreateLanguageRequest request);
 
-        Task<UpdatedLanguageResponse> Update(UpdateLanguageRequest request);
+        Task<IResult> Update(UpdateLanguageRequest request);
 
-        Task Delete (DeleteLanguageRequest request);
+        Task<IResult> Delete (DeleteLanguageRequest request);
 
-        Task<IPaginate<GetListLanguageResponse>> GetListAsync(PageRequest pageRequest);
+        Task<IDataResult<IPaginate<GetListLanguageResponse>>> GetListAsync(PageRequest pageRequest);
 
-        Task<Language> GetAsync(Guid languageId);
+        Task<IDataResult<Language>> GetAsync(Guid languageId);
     }
 }

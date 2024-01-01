@@ -72,7 +72,15 @@ namespace Business.Concretes
 
         public async Task<IDataResult<Author>> GetAsync(Guid authorId)
         {
-            return new SuccessDataResult<Author>(await _authorDal.GetAsync(a => a.AuthorId == authorId),Messages.AuthorListed); 
+            var result = await _authorDal.GetAsync(a => a.AuthorId == authorId);
+
+            if (result is not null)
+            {
+                return new SuccessDataResult<Author>(result,Messages.AuthorListed); 
+            }
+
+            return new ErrorDataResult<Author>(Messages.Error);
+            
         }
 
         public async Task<IDataResult<IPaginate<GetListAuthorResponse>>> GetListAsync(PageRequest pageRequest)
@@ -82,8 +90,14 @@ namespace Business.Concretes
                 index: pageRequest.PageIndex,
                 size: pageRequest.PageSize);
 
-            var result = _mapper.Map<Paginate<GetListAuthorResponse>>(data);
-            return new SuccessDataResult<IPaginate<GetListAuthorResponse>>(result,Messages.AuthorsListed);
+            if (data is not null)
+            {
+                var result = _mapper.Map<Paginate<GetListAuthorResponse>>(data);
+
+                return new SuccessDataResult<IPaginate<GetListAuthorResponse>>(result, Messages.AuthorsListed);
+            }
+
+            return new ErrorDataResult<IPaginate<GetListAuthorResponse>>(Messages.Error);
         }
     }
 }

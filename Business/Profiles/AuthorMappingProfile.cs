@@ -16,10 +16,8 @@ namespace Business.Profiles
       public AuthorMappingProfile()
         {
             CreateMap<Author,CreateAuthorRequest>().ReverseMap();
-            CreateMap<Author,CreatedAuthorResponse>().ReverseMap();
 
             CreateMap<Author,UpdateAuthorRequest>().ReverseMap();
-            CreateMap<Author,UpdatedAuthorResponse>().ReverseMap();
 
             CreateMap<IPaginate<Author>, Paginate<GetListAuthorResponse>>().ReverseMap();
             CreateMap<Author,GetListAuthorResponse>().ReverseMap();
