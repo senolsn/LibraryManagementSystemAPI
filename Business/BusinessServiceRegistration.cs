@@ -18,6 +18,7 @@ namespace Business
             services.AddScoped<ILanguageService, LanguageManager>();
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddScoped<IAuthorService, AuthorManager>();
+            services.AddScoped<IDepartmentService, DepartmentManager>();
 
             return services;
         }

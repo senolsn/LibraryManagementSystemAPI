@@ -1,6 +1,9 @@
-﻿using Business.Dtos.Request.Language;
+﻿using Business.Dtos.Request.Department;
+using Business.Dtos.Request.Language;
+using Business.Dtos.Response.Department;
 using Business.Dtos.Response.Language;
 using Core.DataAccess.Paging;
+using Core.Utilities.Results;
 using Entities.Concrete;
 using System;
 using System.Collections.Generic;
@@ -12,14 +15,14 @@ namespace Business.Abstracts
 {
     public interface IDepartmentService
     {
-        Task<CreatedLanguageResponse> Add(CreateLanguageRequest request);
+        Task<IResult> Add(CreateDepartmentRequest request);
 
-        //Task<UpdatedLanguageResponse> Update(UpdateLanguageRequest request);
+        Task<IResult> Update(UpdateDepartmentRequest request);
 
-        //Task<DeletedLanguageResponse> Delete(DeleteLanguageRequest request);
+        Task<IResult> Delete(DeleteDepartmentRequest request);
 
-        //Task<IPaginate<GetListLanguageResponse>> GetListAsync(PageRequest pageRequest);
+        Task<IDataResult<IPaginate<GetListDepartmentResponse>>> GetListAsync(PageRequest pageRequest);
 
-        //Task<Language> GetAsync(Guid languageId);
+        Task<IDataResult<Department>> GetAsync(Guid departmentId);
     }
 }

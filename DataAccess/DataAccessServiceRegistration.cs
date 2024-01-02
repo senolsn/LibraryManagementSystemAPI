@@ -27,6 +27,7 @@ namespace DataAccess
 
             services.AddScoped<ILanguageDal, EfLanguageDal>();
             services.AddScoped<IAuthorDal, EfAuthorDal>();
+
             services.AddScoped<IDepartmentDal, EfDepartmentDal>();
             
 
