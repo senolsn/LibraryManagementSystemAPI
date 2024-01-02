@@ -17,5 +17,10 @@ namespace DataAccess.Contexts
 
         public DbSet<Language> Languages { get; set; }
         public DbSet<Author> Authors { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Department> Departments { get; set; }
+        public DbSet<Faculty> Faculties { get; set; }
+        public DbSet<Location> Locations { get; set; }
+        public DbSet<Publisher> Publishers { get; set; }
     }
 }
