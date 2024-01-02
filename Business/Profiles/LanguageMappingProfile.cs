@@ -16,10 +16,8 @@ namespace Business.Profiles
         public LanguageMappingProfile() 
         {
             CreateMap<Language,CreateLanguageRequest>().ReverseMap();
-            CreateMap<Language,CreatedLanguageResponse>().ReverseMap();
 
             CreateMap<Language, UpdateLanguageRequest>().ReverseMap();
-            CreateMap<Language,UpdatedLanguageResponse>().ReverseMap();
 
             CreateMap<IPaginate<Language>, Paginate<GetListLanguageResponse>>().ReverseMap();
             CreateMap<Language,GetListLanguageResponse>().ReverseMap();
