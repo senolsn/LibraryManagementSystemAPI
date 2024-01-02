@@ -21,13 +21,5 @@ namespace Business.Constants
         public static string LanguageDeleted = "The language was successfully deleted.";
         public static string LanguageListed = "The language has successfully listed.";
         public static string LanguagesListed = "The authors were successfully listed.";
-        internal static string DepartmentAdded;
-        internal static string DepartmentUpdated;
-        internal static string DepartmentDeleted;
-        internal static string DepartmentListed;
-        internal static string LocationAdded;
-        internal static string LocationUpdated;
-        internal static string LocationDeleted;
-        internal static string LocationListed;
     }
 }

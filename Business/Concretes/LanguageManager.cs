@@ -8,9 +8,6 @@ using Core.Utilities.Results;
 using DataAccess.Abstracts;
 using Entities.Concrete;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Business.Concretes
@@ -88,7 +85,8 @@ namespace Business.Concretes
             var data = await _languageDal.GetListAsync(
                 null, 
                 index : pageRequest.PageIndex,
-                size : pageRequest.PageSize);
+                size : pageRequest.PageSize,
+                true);
 
            if(data is not null)
             {

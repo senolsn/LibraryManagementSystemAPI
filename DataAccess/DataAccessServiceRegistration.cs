@@ -5,10 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataAccess
 {
@@ -29,8 +25,11 @@ namespace DataAccess
             services.AddScoped<IAuthorDal, EfAuthorDal>();
 
             services.AddScoped<IDepartmentDal, EfDepartmentDal>();
-            services.AddScoped<ILocationDal,EfLocationDal>();
-            
+            services.AddScoped<IFacultyDal, EfFacultyDal>();
+            services.AddScoped<ICategoryDal, EfCategoryDal>();
+            services.AddScoped<IPublisherDal, EfPublisherDal>();
+
+
 
             return services;
 

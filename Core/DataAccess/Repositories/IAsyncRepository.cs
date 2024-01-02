@@ -36,9 +36,6 @@ namespace Core.DataAccess.Repositories
 
         Task<TEntity> DeleteAsync(TEntity entity, bool permanent = false);
 
-
-
-
             
     }
 }
