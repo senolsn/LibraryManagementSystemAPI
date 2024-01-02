@@ -25,5 +25,9 @@ namespace Business.Constants
         internal static string DepartmentUpdated;
         internal static string DepartmentDeleted;
         internal static string DepartmentListed;
+        internal static string LocationAdded;
+        internal static string LocationUpdated;
+        internal static string LocationDeleted;
+        internal static string LocationListed;
     }
 }

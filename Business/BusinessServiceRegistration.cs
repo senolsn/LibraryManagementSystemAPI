@@ -19,6 +19,7 @@ namespace Business
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddScoped<IAuthorService, AuthorManager>();
             services.AddScoped<IDepartmentService, DepartmentManager>();
+            services.AddScoped<ILocationService, LocationManager>();
 
             return services;
         }

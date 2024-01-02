@@ -1,14 +1,12 @@
-﻿using Core.Entities.Abstract;
-using Core.Entities.Concrete;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities.Concrete
+namespace Business.Dtos.Request.Location
 {
-    public class Location:BaseEntity
+    public class UpdateLocationRequest
     {
         public Guid LocationId { get; set; }
         public string? Shelf { get; set; }

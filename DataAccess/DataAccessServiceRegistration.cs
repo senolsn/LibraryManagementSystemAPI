@@ -29,6 +29,7 @@ namespace DataAccess
             services.AddScoped<IAuthorDal, EfAuthorDal>();
 
             services.AddScoped<IDepartmentDal, EfDepartmentDal>();
+            services.AddScoped<ILocationDal,EfLocationDal>();
             
 
             return services;
