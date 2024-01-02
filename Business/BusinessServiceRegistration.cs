@@ -15,11 +15,14 @@ namespace Business
     {
         public static IServiceCollection AddBusinessServiceRegistration(this IServiceCollection services)
         {
-            services.AddScoped<ILanguageService, LanguageManager>();
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddScoped<IAuthorService, AuthorManager>();
             services.AddScoped<IDepartmentService, DepartmentManager>();
             services.AddScoped<ILocationService, LocationManager>();
+            services.AddScoped<ICategoryService, CategoryManager>();
+            services.AddScoped<IFacultyService, FacultyManager>();
+            services.AddScoped<IPublisherService, PublisherManager>();
+            services.AddScoped<ILanguageService, LanguageManager>();
 
             return services;
         }
