@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Abstracts
 {
-    public interface ILanguageDal : IAsyncRepository<Language>
+    public interface ICategoryDal : IAsyncRepository<Category>
     {
     }
 }

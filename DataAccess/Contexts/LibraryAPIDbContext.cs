@@ -1,5 +1,4 @@
-﻿using Core.Configuration;
-using Entities.Concrete;
+﻿using Entities.Concrete;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Contexts
@@ -18,5 +17,8 @@ namespace DataAccess.Contexts
 
         public DbSet<Language> Languages { get; set; }
         public DbSet<Author> Authors { get; set; }
+        public DbSet<Faculty> Faculties { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Publisher> Publishers { get; set; }
     }
 }

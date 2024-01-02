@@ -34,7 +34,7 @@ namespace Core.DataAccess.Repositories
             return entity;
         }
 
-        public async Task<TEntity> DeleteAsync(TEntity entity,bool permanent)
+        public async Task<TEntity> DeleteAsync(TEntity entity, bool permanent)
         {
             await SetEntityAsDeletedAsync(entity, permanent);
             await Context.SaveChangesAsync();
