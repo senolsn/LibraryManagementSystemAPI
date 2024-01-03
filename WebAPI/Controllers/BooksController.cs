@@ -22,6 +22,8 @@ namespace WebAPI.Controllers
         [HttpPost("Add")]
         public async Task<IActionResult> Add(CreateBookRequest request)
         {
+            try
+            {
                 var result = await _bookService.Add(request);
 
                 if (!result.IsSuccess)
@@ -30,9 +32,11 @@ namespace WebAPI.Controllers
                 }
 
                 return Ok(result);
-
-            
-            
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error : {ex.Message}");
+            }
         }
 
         [HttpPut("Update")]
@@ -51,7 +55,6 @@ namespace WebAPI.Controllers
             }
             catch (Exception ex)
             {
-
                 return StatusCode(500, $"Error : {ex.Message}");
             }
         }
@@ -148,6 +151,27 @@ namespace WebAPI.Controllers
             try
             {
                 var result = await _bookService.GetListAsyncSortedByName(pageRequest);
+
+                if (!result.IsSuccess)
+                {
+                    return BadRequest(result);
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, $"Error : {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetListAsyncSortedByCreatedDate")]
+        public async Task<IActionResult> GetListAsyncSortedByCreatedDate([FromQuery] PageRequest pageRequest)
+        {
+            try
+            {
+                var result = await _bookService.GetListAsyncSortedByCreatedDate(pageRequest);
 
                 if (!result.IsSuccess)
                 {
