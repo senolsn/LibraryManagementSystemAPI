@@ -22,5 +22,6 @@ namespace DataAccess.Contexts
         public DbSet<Faculty> Faculties { get; set; }
         public DbSet<Location> Locations { get; set; }
         public DbSet<Publisher> Publishers { get; set; }
+        public DbSet<Book> Books { get; set; }
     }
 }
