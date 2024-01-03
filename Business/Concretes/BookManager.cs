@@ -98,6 +98,43 @@ namespace Business.Concretes
             }
 
             return new ErrorDataResult<IPaginate<GetListBookResponse>>(Messages.Error);
-        } 
+        }
+
+        public async Task<IDataResult<IPaginate<GetListBookResponse>>> GetListAsyncByCategory(PageRequest pageRequest, Guid categoryId)
+        {
+            var data = await _bookDal.GetListAsync(
+                predicate: b => b.CategoryId == categoryId,
+                index: pageRequest.PageIndex,
+                size: pageRequest.PageSize
+                );
+
+            if(data is not null)
+            {
+                var result = _mapper.Map<Paginate<GetListBookResponse>>(data);
+
+                return new SuccessDataResult<IPaginate<GetListBookResponse>>(result, Messages.AuthorsListed); 
+            }
+
+            return new ErrorDataResult<IPaginate<GetListBookResponse>>(Messages.Error);
+        }
+
+        public async Task<IDataResult<IPaginate<GetListBookResponse>>> GetListAsyncSortedByName(PageRequest pageRequest)
+        {
+            var data = await _bookDal.GetListAsyncSortedByName(
+                predicate: null,
+                orderBy : q => q.OrderBy(b => b.BookName),
+                index: pageRequest.PageIndex,
+                size: pageRequest.PageSize
+                );
+
+            if (data is not null)
+            {
+                var result = _mapper.Map<Paginate<GetListBookResponse>>(data);
+
+                return new SuccessDataResult<IPaginate<GetListBookResponse>>(result, Messages.AuthorsListed);
+            }
+
+            return new ErrorDataResult<IPaginate<GetListBookResponse>>(Messages.Error);
+        }
     }
 }

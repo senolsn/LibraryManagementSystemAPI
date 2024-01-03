@@ -24,5 +24,8 @@ namespace Business.Abstracts
         Task<IDataResult<Book>> GetAsync(Guid bookId);
 
         Task<IDataResult<IPaginate<GetListBookResponse>>> GetListAsync(PageRequest pageRequest);
+        Task<IDataResult<IPaginate<GetListBookResponse>>> GetListAsyncByCategory(PageRequest pageRequest,Guid categoryId);
+
+        Task<IDataResult<IPaginate<GetListBookResponse>>> GetListAsyncSortedByName(PageRequest pageRequest);
     }
 }

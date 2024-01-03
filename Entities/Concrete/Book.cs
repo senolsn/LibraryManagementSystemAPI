@@ -10,11 +10,12 @@ namespace Entities.Concrete
 {
     public class Book:BaseEntity
     {
-        public Guid BookId { get; set; } 
+        public Guid BookId { get; set; }
         public Guid LanguageId { get; set; }
         public Guid CategoryId { get; set; }
         public Guid PublisherId { get; set; }
         public Guid LocationId { get; set; }
+        public string BookName { get; set; }
         public int PageCount { get; set; }
         public string ISBNNumber { get; set; }
         public DateTime PublishedDate { get; set; }

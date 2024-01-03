@@ -120,5 +120,47 @@ namespace WebAPI.Controllers
                 return StatusCode(500, $"Error : {ex.Message}");
             }
         }
+
+        [HttpGet("GetPagedListAsyncByCategory")]
+        public async Task<IActionResult> GetPagedListAsyncByCategory([FromQuery] PageRequest pageRequest,Guid categoryId)
+        {
+            try
+            {
+                var result = await _bookService.GetListAsyncByCategory(pageRequest,categoryId);
+
+                if (!result.IsSuccess)
+                {
+                    return BadRequest(result);
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, $"Error : {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetListAsyncSortedByName")]
+        public async Task<IActionResult> GetListAsyncSortedByName([FromQuery] PageRequest pageRequest)
+        {
+            try
+            {
+                var result = await _bookService.GetListAsyncSortedByName(pageRequest);
+
+                if (!result.IsSuccess)
+                {
+                    return BadRequest(result);
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, $"Error : {ex.Message}");
+            }
+        }
     }
 }

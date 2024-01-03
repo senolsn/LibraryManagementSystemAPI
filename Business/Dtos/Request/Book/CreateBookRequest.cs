@@ -12,6 +12,7 @@ namespace Business.Dtos.Request.Book
         public Guid CategoryId { get; set; }
         public Guid PublisherId { get; set; }
         public Guid LocationId { get; set; }
+        public string BookName { get; set; }
         public int PageCount { get; set; }
         public string ISBNNumber { get; set; }
         public DateTime PublishedDate { get; set; }
