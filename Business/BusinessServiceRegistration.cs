@@ -23,6 +23,7 @@ namespace Business
             services.AddScoped<IFacultyService, FacultyManager>();
             services.AddScoped<IPublisherService, PublisherManager>();
             services.AddScoped<ILanguageService, LanguageManager>();
+            services.AddScoped<IBookService, BookManager>();
 
             return services;
         }

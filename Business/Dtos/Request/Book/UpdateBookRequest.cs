@@ -1,16 +1,14 @@
-﻿using Core.Entities.Abstract;
-using Core.Entities.Concrete;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities.Concrete
+namespace Business.Dtos.Request.Book
 {
-    public class Book:BaseEntity
+    public class UpdateBookRequest
     {
-        public Guid BookId { get; set; } 
+        public Guid BookId { get; set; }
         public Guid LanguageId { get; set; }
         public Guid CategoryId { get; set; }
         public Guid PublisherId { get; set; }

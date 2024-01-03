@@ -29,6 +29,7 @@ namespace DataAccess
             services.AddScoped<ICategoryDal, EfCategoryDal>();
             services.AddScoped<IPublisherDal, EfPublisherDal>();
             services.AddScoped<ILocationDal, EfLocationDal>();
+            services.AddScoped<IBookDal, EfBookDal>();
 
 
 
