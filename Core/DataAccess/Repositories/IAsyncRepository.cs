@@ -30,7 +30,7 @@ namespace Core.DataAccess.Repositories
            CancellationToken cancellationToken = default
         );
 
-       Task<IPaginate<TEntity>> GetListAsyncSortedByName(
+       Task<IPaginate<TEntity>> GetListAsyncOrderBy(
        Expression<Func<TEntity, bool>>? predicate = null,
        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
        int index = 0,

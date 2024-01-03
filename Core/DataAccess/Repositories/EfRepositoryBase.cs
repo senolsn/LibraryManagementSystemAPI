@@ -73,7 +73,7 @@ namespace Core.DataAccess.Repositories
             return await queryable.ToPaginateAsync(index, size, from: 0, cancellationToken);
         }
 
-        public async Task<IPaginate<TEntity>> GetListAsyncSortedByName(
+        public async Task<IPaginate<TEntity>> GetListAsyncOrderBy(
         Expression<Func<TEntity, bool>>? predicate = null, 
         Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
         int index = 0,
