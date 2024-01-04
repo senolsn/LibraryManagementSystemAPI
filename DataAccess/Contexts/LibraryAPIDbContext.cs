@@ -9,6 +9,10 @@ namespace DataAccess.Contexts
         {
         }
 
+        public LibraryAPIDbContext()
+        {
+        }
+
         string connectionString = "Server=94.73.147.32;User=u0756268_user16;Password=ASD123_Asd123_asd123;database=u0756268_dblms";    //DbConfiguration.ConnectionString;
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -25,5 +29,25 @@ namespace DataAccess.Contexts
         public DbSet<Book> Books { get; set; }
         public DbSet<DepositBook> DepositBooks { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<BookCategory> BookCategories { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<BookCategory>()
+            .HasKey(bc => new { bc.BookId, bc.CategoryId });
+
+            modelBuilder.Entity<BookCategory>()
+                .HasOne(bc => bc.Book)
+                .WithMany(b => b.BookCategories)
+                .HasForeignKey(bc => bc.BookId);
+
+            modelBuilder.Entity<BookCategory>()
+                .HasOne(bc => bc.Category)
+                .WithMany(c => c.BookCategories)
+                .HasForeignKey(bc => bc.CategoryId);
+
+        }
     }
-}
+
+
+    }

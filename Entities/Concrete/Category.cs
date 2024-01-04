@@ -1,5 +1,6 @@
 ﻿using Core.Entities.Concrete;
 using System;
+using System.Collections.Generic;
 
 namespace Entities.Concrete
 {
@@ -7,5 +8,6 @@ namespace Entities.Concrete
     {
         public Guid CategoryId { get; set; }
         public string CategoryName { get; set; }
+        public List<BookCategory> BookCategories { get; set; }
     }
 }

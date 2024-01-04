@@ -26,6 +26,8 @@ namespace Business.Concretes
             _bookDal = bookDal;
         }
 
+
+        //[DecreaseBookStock]
         public async Task<IResult> Add(CreateDepositBookRequest request)
         {
             DepositBook depositBook = _mapper.Map<DepositBook>(request);
@@ -63,6 +65,7 @@ namespace Business.Concretes
             return new ErrorResult(Messages.Error);
         }
 
+        //[IncreaseBookStock]
         public async Task<IResult> GetBookBack(Guid depositBookId)
         {
             var depositBookToUpdate = await _depositBookDal.GetAsync(d => d.DepositBookId == depositBookId);

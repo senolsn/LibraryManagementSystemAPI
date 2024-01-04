@@ -1,5 +1,6 @@
 ﻿using Core.Entities.Concrete;
 using System;
+using System.Collections.Generic;
 
 namespace Entities.Concrete
 {
@@ -19,5 +20,6 @@ namespace Entities.Concrete
         public bool Status { get; set; }
         public string Interpreter { get; set; }
         public string FixtureNumber { get; set; }
+        public List<BookCategory> BookCategories { get; set; }
     }
 }
