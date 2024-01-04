@@ -31,6 +31,8 @@ namespace DataAccess
             services.AddScoped<IBookDal, EfBookDal>();
             services.AddScoped<IDepositBookDal, EfDepositBookDal>();
             services.AddScoped<IUserDal, EfUserDal>();
+            services.AddScoped<IBookAuthorDal, EfBookAuthorDal>();
+            services.AddScoped<IBookCategoryDal, EfBookCategoryDal>();
 
 
 

@@ -30,9 +30,11 @@ namespace DataAccess.Contexts
         public DbSet<DepositBook> DepositBooks { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<BookCategory> BookCategories { get; set; }
+        public DbSet<BookAuthor> BookAuthors { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // BookCategory
             modelBuilder.Entity<BookCategory>()
             .HasKey(bc => new { bc.BookId, bc.CategoryId });
 
@@ -45,6 +47,22 @@ namespace DataAccess.Contexts
                 .HasOne(bc => bc.Category)
                 .WithMany(c => c.BookCategories)
                 .HasForeignKey(bc => bc.CategoryId);
+
+            // BookAuthor
+            modelBuilder.Entity<BookAuthor>()
+            .HasKey(bc => new { bc.BookId, bc.AuthorId });
+
+            modelBuilder.Entity<BookAuthor>()
+                .HasOne(bc => bc.Book)
+                .WithMany(b => b.BookAuthors)
+                .HasForeignKey(bc => bc.BookId);
+
+            modelBuilder.Entity<BookAuthor>()
+                .HasOne(bc => bc.Author)
+                .WithMany(c => c.BookAuthors)
+                .HasForeignKey(bc => bc.AuthorId);
+
+
 
         }
     }
