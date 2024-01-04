@@ -23,13 +23,13 @@ namespace DataAccess
 
             services.AddScoped<ILanguageDal, EfLanguageDal>();
             services.AddScoped<IAuthorDal, EfAuthorDal>();
-
             services.AddScoped<IDepartmentDal, EfDepartmentDal>();
             services.AddScoped<IFacultyDal, EfFacultyDal>();
             services.AddScoped<ICategoryDal, EfCategoryDal>();
             services.AddScoped<IPublisherDal, EfPublisherDal>();
             services.AddScoped<ILocationDal, EfLocationDal>();
             services.AddScoped<IBookDal, EfBookDal>();
+            services.AddScoped<IDepositBookDal, EfDepositBookDal>();
 
 
 
