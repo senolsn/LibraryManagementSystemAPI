@@ -4,6 +4,7 @@ namespace Business.Dtos.Request.Book
 {
     public class CreateBookRequest
     {
+        public Guid AuthorId { get; set; }
         public Guid LanguageId { get; set; }
         public Guid CategoryId { get; set; }
         public Guid PublisherId { get; set; }

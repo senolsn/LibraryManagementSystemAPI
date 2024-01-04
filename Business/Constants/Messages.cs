@@ -51,5 +51,7 @@
         public static string PublisherDeleted = "The publisher was successfully deleted.";
         public static string PublisherListed = "The publisher has successfully listed.";
         public static string PublishersListed = "The publishers were successfully listed.";
+
+        public static string BookOutOfStock = "The book you've wanted out of stock.";
     }
 }

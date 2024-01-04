@@ -8,8 +8,8 @@ namespace Business.Dtos.Request.DepositBook
 {
     public class CreateDepositBookRequest
     {
-        public string StudentId { get; set; }
-        public string BookId { get; set; }
+        public Guid StudentId { get; set; }
+        public Guid BookId { get; set; }
         public DateTime DepositDate { get; set; }
         public bool Status { get; set; }
         public DateTime EscrowDate { get; set; }

@@ -16,24 +16,37 @@ namespace Business.Concretes
     public class DepositBookManager : IDepositBookService
     {
         protected readonly IDepositBookDal _depositBookDal;
+        protected readonly IBookDal _bookDal;
         protected readonly IMapper _mapper;
 
-        public object request { get; private set; }
-
-        public DepositBookManager(IDepositBookDal depositBookDal, IMapper mapper)
+        public DepositBookManager(IDepositBookDal depositBookDal, IMapper mapper, IBookDal bookDal)
         {
             _depositBookDal = depositBookDal;
             _mapper = mapper;
+            _bookDal = bookDal;
         }
 
         public async Task<IResult> Add(CreateDepositBookRequest request)
         {
             DepositBook depositBook = _mapper.Map<DepositBook>(request);
+
+            var book = await _bookDal.GetAsync(b => b.BookId == request.BookId);
+
+            if (!checkIfBookInStock(book))
+            {
+                return new ErrorResult(Messages.BookOutOfStock);
+            }
+
             var createdDepositBook = await _depositBookDal.AddAsync(depositBook);
             if (createdDepositBook is null)
             {
                 return new ErrorResult(Messages.Error);
             }
+
+            //Stock azaltma --- Bu ve bu tarz işlemleri aspect'lerle yaparız. Şimdilik dursun. Oraya taşıyacağız.
+            book.Stock = book.Stock - 1;
+            await _bookDal.UpdateAsync(book);
+
             return new SuccessResult(Messages.DepositBookAdded);
         }
 
@@ -62,6 +75,11 @@ namespace Business.Concretes
             depositBookToUpdate.Status = DepositBookStatus.RECEIVED;
 
             await _depositBookDal.UpdateAsync(depositBookToUpdate);
+
+            //Stock artırma --- Bu ve bu tarz işlemleri aspect'lerle yaparız. Şimdilik dursun. Oraya taşıyacağız.
+            var book = await _bookDal.GetAsync(b => b.BookId == depositBookToUpdate.BookId);
+            book.Stock = book.Stock + 1;
+            await _bookDal.UpdateAsync(book);
 
             return new SuccessResult(Messages.DepositBookUpdated);
         }
@@ -111,6 +129,18 @@ namespace Business.Concretes
             await _depositBookDal.UpdateAsync(depositBookToUpdate);
 
             return new SuccessResult(Messages.DepositBookUpdated);
+        }
+
+        private bool checkIfBookInStock(Book book)
+        {
+            if(book is null)
+            {
+                throw new Exception(Messages.Error);
+            }
+            else
+            {
+               return book.Stock < 1 ? false : true;
+            }
         }
     }
 }
