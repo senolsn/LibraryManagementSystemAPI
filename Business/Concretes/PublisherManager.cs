@@ -15,11 +15,13 @@ namespace Business.Concretes
     public class PublisherManager : IPublisherService
     {
         protected readonly IPublisherDal _publisherDal;
+        protected readonly IBookDal _bookDal;
         protected readonly IMapper _mapper;
 
-        public PublisherManager(IPublisherDal publisherDal, IMapper mapper)
+        public PublisherManager(IPublisherDal publisherDal, IBookDal bookDal, IMapper mapper)
         {
             _publisherDal = publisherDal;
+            _bookDal = bookDal;
             _mapper = mapper;
         }
 
@@ -43,6 +45,10 @@ namespace Business.Concretes
 
             if (publisherToDelete is not null)
             {
+                if (CheckIfExistInBooks(request.PublisherId))
+                {
+                    return new ErrorResult(Messages.PublisherExistInBooks);
+                }
                 await _publisherDal.DeleteAsync(publisherToDelete);
                 return new SuccessResult(Messages.PublisherDeleted);
             }
@@ -94,6 +100,15 @@ namespace Business.Concretes
             await _publisherDal.UpdateAsync(publisherToUpdate);
 
             return new SuccessResult(Messages.PublisherUpdated);
+        }
+
+        private bool CheckIfExistInBooks(Guid publisherId)
+        {
+            if(_bookDal.GetAsync(b => b.PublisherId == publisherId) is null)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

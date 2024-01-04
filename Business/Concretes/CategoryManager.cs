@@ -6,6 +6,7 @@ using Business.Dtos.Response.Category;
 using Core.DataAccess.Paging;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
+using DataAccess.Concretes;
 using Entities.Concrete;
 using System;
 using System.Threading.Tasks;
@@ -15,11 +16,13 @@ namespace Business.Concretes
     public class CategoryManager : ICategoryService
     {
         protected readonly ICategoryDal _categoryDal;
+        protected readonly IBookDal _bookDal;
         protected readonly IMapper _mapper;
-        public CategoryManager(ICategoryDal categoryDal, IMapper mapper)
+        public CategoryManager(ICategoryDal categoryDal, IBookDal bookDal, IMapper mapper)
         {
             _categoryDal = categoryDal;
             _mapper = mapper;
+            _bookDal = bookDal;
         }
 
         public async Task<IResult> Add(CreateCategoryRequest request)
@@ -42,6 +45,11 @@ namespace Business.Concretes
 
             if (categoryToDelete is not null)
             {
+                if (checkIfExistInBooks(request.CategoryId))
+                {
+                    return new ErrorResult(Messages.CategoryExistInBooks);
+                }
+
                 await _categoryDal.DeleteAsync(categoryToDelete);
                 return new SuccessResult(Messages.CategoryDeleted);
             }
@@ -93,6 +101,16 @@ namespace Business.Concretes
             await _categoryDal.UpdateAsync(categoryToUpdate);
 
             return new SuccessResult(Messages.CategoryUpdated);
+        }
+
+
+        public bool checkIfExistInBooks(Guid categoryId)
+        {
+            if (_bookDal.GetAsync(u => u.CategoryId == categoryId) is null)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

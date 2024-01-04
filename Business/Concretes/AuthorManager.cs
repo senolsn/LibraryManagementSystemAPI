@@ -15,11 +15,13 @@ namespace Business.Concretes
     public class AuthorManager : IAuthorService
     {
         protected readonly IAuthorDal _authorDal;
+        protected readonly IBookAuthorDal _bookAuthorDal;
         protected readonly IMapper _mapper;
 
-        public AuthorManager(IAuthorDal authorDal, IMapper mapper)
+        public AuthorManager(IAuthorDal authorDal, IBookAuthorDal bookAuthorDal, IMapper mapper)
         {
             _authorDal = authorDal;
+            _bookAuthorDal = bookAuthorDal;
             _mapper = mapper;
         }
 
@@ -59,6 +61,10 @@ namespace Business.Concretes
 
            if( authorToDelete is not null)
             {
+                if (CheckIfExistInBookAuthors(request.AuthorId))
+                {
+                    return new ErrorResult(Messages.AuthorExistInBookAuthors);
+                }
                 await _authorDal.DeleteAsync(authorToDelete);
                 return new SuccessResult(Messages.AuthorDeleted);
             }
@@ -94,6 +100,15 @@ namespace Business.Concretes
             }
 
             return new ErrorDataResult<IPaginate<GetListAuthorResponse>>(Messages.Error);
+        }
+
+        private bool CheckIfExistInBookAuthors(Guid authorId)
+        {
+            if(_bookAuthorDal.GetAsync(ba => ba.AuthorId == authorId) is null)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

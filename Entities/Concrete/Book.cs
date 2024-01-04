@@ -21,5 +21,6 @@ namespace Entities.Concrete
         public string Interpreter { get; set; }
         public string FixtureNumber { get; set; }
         public List<BookCategory> BookCategories { get; set; }
+        public List<BookAuthor> BookAuthors { get; set; }
     }
 }

@@ -15,10 +15,12 @@ namespace Business.Concretes
     public class FacultyManager : IFacultyService
     {
         protected readonly IFacultyDal _facultyDal;
+        protected readonly IUserDal _userDal;
         protected readonly IMapper _mapper;
-        public FacultyManager(IFacultyDal facultyDal, IMapper mapper)
+        public FacultyManager(IFacultyDal facultyDal, IUserDal userDal, IMapper mapper)
         {
             _facultyDal = facultyDal;
+            _userDal = userDal;
             _mapper = mapper;    
         }
         public async Task<IResult> Add(CreateFacultyRequest request)
@@ -39,6 +41,10 @@ namespace Business.Concretes
 
             if (facultyToDelete is not null)
             {
+                if (CheckIfExistInUsers(request.FacultyId))
+                {
+                    return new ErrorResult(Messages.FacultyExistInUsers);
+                }
                 await _facultyDal.DeleteAsync(facultyToDelete);
                 return new SuccessResult(Messages.FacultyDeleted);
             }
@@ -91,6 +97,15 @@ namespace Business.Concretes
             await _facultyDal.UpdateAsync(facultyToUpdate);
 
             return new SuccessResult(Messages.FacultyUpdated);
+        }
+
+        private bool CheckIfExistInUsers(Guid facultyId)
+        {
+            if(_userDal.GetAsync(u => u.FacultyId == facultyId) is null)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

@@ -2,17 +2,12 @@
 using Business.Abstracts;
 using Business.Constants;
 using Business.Dtos.Request.User;
-using Business.Dtos.Response.Language;
 using Business.Dtos.Response.User;
 using Core.DataAccess.Paging;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
-using DataAccess.Concretes;
 using Entities.Concrete;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Business.Concretes
@@ -20,12 +15,14 @@ namespace Business.Concretes
     public class UserManager : IUserService
     {
         protected readonly IUserDal _userDal;
+        protected readonly IDepositBookDal _depositBookDal;
         protected readonly IMapper _mapper;
 
-        public UserManager(IUserDal userDal, IMapper mapper)
+        public UserManager(IUserDal userDal, IDepositBookDal depositBookDal, IMapper mapper)
         {
             _userDal = userDal;
             _mapper = mapper;
+            _depositBookDal = depositBookDal;
         }
 
         public async Task<IResult> Add(CreateUserRequest request)
@@ -48,6 +45,10 @@ namespace Business.Concretes
 
             if (userToDelete is not null)
             {
+                if (checkIfExistInDepositBook(request.UserId))
+                {
+                    return new ErrorResult(Messages.UserExistInDepositBooks);
+                }
                 await _userDal.DeleteAsync(userToDelete);
                 return new SuccessResult(Messages.UserDeleted);
             }
@@ -100,5 +101,16 @@ namespace Business.Concretes
 
             return new SuccessResult(Messages.UserUpdated);
         }
+
+        public bool checkIfExistInDepositBook(Guid userId)
+        {
+            if (_depositBookDal.GetAsync(d => d.UserId == userId) is null)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        
     }
 }

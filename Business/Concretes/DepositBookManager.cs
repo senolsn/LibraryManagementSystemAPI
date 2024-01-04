@@ -9,6 +9,7 @@ using DataAccess.Abstracts;
 using Entities.Concrete;
 using Entities.Concrete.enums;
 using System;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace Business.Concretes
@@ -34,7 +35,7 @@ namespace Business.Concretes
 
             var book = await _bookDal.GetAsync(b => b.BookId == request.BookId);
 
-            if (!checkIfBookInStock(book))
+            if (!CheckIfBookInStock(book))
             {
                 return new ErrorResult(Messages.BookOutOfStock);
             }
@@ -134,16 +135,137 @@ namespace Business.Concretes
             return new SuccessResult(Messages.DepositBookUpdated);
         }
 
-        private bool checkIfBookInStock(Book book)
+        public async Task<IDataResult<DepositBook>> GetAsyncByBookAndUserId(Guid bookId, Guid userId)
         {
-            if(book is null)
+            var result = await _depositBookDal.GetAsync(d => d.BookId == bookId && d.UserId == userId);
+
+            if (result is not null)
+            {
+                return new SuccessDataResult<DepositBook>(result, Messages.DepositBookListed);
+            }
+
+            return new ErrorDataResult<DepositBook>(Messages.Error);
+        }
+
+        public async Task<IDataResult<IPaginate<GetListDepositBookResponse>>> GetListAsyncUndeposited(PageRequest pageRequest)
+        {
+            var data = await _depositBookDal.GetListAsync(
+               predicate: d => d.Status == DepositBookStatus.NOT_RECEIVED,
+               index: pageRequest.PageIndex,
+               size: pageRequest.PageSize,
+               true
+               );
+
+            if (data is not null)
+            {
+                var result = _mapper.Map<Paginate<GetListDepositBookResponse>>(data);
+
+                return new SuccessDataResult<IPaginate<GetListDepositBookResponse>>(result, Messages.DepositBooksListed);
+            }
+
+            return new ErrorDataResult<IPaginate<GetListDepositBookResponse>>(Messages.Error);
+        }
+
+        public async Task<IDataResult<IPaginate<GetListDepositBookResponse>>> GetListAsyncDeposited(PageRequest pageRequest)
+        {
+            var data = await _depositBookDal.GetListAsync(
+               predicate: d => d.Status == DepositBookStatus.RECEIVED,
+               index: pageRequest.PageIndex,
+               size: pageRequest.PageSize,
+               true
+               );
+
+            if (data is not null)
+            {
+                var result = _mapper.Map<Paginate<GetListDepositBookResponse>>(data);
+
+                return new SuccessDataResult<IPaginate<GetListDepositBookResponse>>(result, Messages.DepositBooksListed);
+            }
+
+            return new ErrorDataResult<IPaginate<GetListDepositBookResponse>>(Messages.Error);
+        }
+
+        public async Task<IDataResult<IPaginate<GetListDepositBookResponse>>> GetListAsyncByUserId(PageRequest pageRequest, Guid userId)
+        {
+            var data = await _depositBookDal.GetListAsync(
+               predicate: d => d.UserId == userId,
+               index: pageRequest.PageIndex,
+               size: pageRequest.PageSize,
+               true
+               );
+
+            if (data is not null)
+            {
+                var result = _mapper.Map<Paginate<GetListDepositBookResponse>>(data);
+
+                return new SuccessDataResult<IPaginate<GetListDepositBookResponse>>(result, Messages.DepositBooksListed);
+            }
+
+            return new ErrorDataResult<IPaginate<GetListDepositBookResponse>>(Messages.Error);
+        }
+
+        public async Task<IDataResult<IPaginate<GetListDepositBookResponse>>> GetListAsyncUndepositedByUserId(PageRequest pageRequest, Guid userId)
+        {
+            var data = await _depositBookDal.GetListAsync(
+               predicate: d => d.UserId == userId && d.Status == DepositBookStatus.NOT_RECEIVED,
+               index: pageRequest.PageIndex,
+               size: pageRequest.PageSize,
+               true
+               );
+
+            if (data is not null)
+            {
+                var result = _mapper.Map<Paginate<GetListDepositBookResponse>>(data);
+
+                return new SuccessDataResult<IPaginate<GetListDepositBookResponse>>(result, Messages.DepositBooksListed);
+            }
+
+            return new ErrorDataResult<IPaginate<GetListDepositBookResponse>>(Messages.Error);
+        }
+
+        public async Task<IDataResult<IPaginate<GetListDepositBookResponse>>> GetListAsyncByBookId(PageRequest pageRequest, Guid bookId)
+        {
+            var data = await _depositBookDal.GetListAsync(
+               predicate: d => d.BookId == bookId,
+               index: pageRequest.PageIndex,
+               size: pageRequest.PageSize,
+               true
+               );
+
+            if (data is not null)
+            {
+                var result = _mapper.Map<Paginate<GetListDepositBookResponse>>(data);
+
+                return new SuccessDataResult<IPaginate<GetListDepositBookResponse>>(result, Messages.DepositBooksListed);
+            }
+
+            return new ErrorDataResult<IPaginate<GetListDepositBookResponse>>(Messages.Error);
+        }
+
+        public async Task<IDataResult<DepositBook>> GetAsyncByUserId(Guid userId)
+        {
+            var result = await _depositBookDal.GetAsync(d => d.UserId == userId);
+
+            if (result is not null)
+            {
+                return new SuccessDataResult<DepositBook>(result, Messages.DepositBookListed);
+            }
+
+            return new ErrorDataResult<DepositBook>(Messages.Error);
+        }
+
+        private bool CheckIfBookInStock(Book book)
+        {
+            if (book is null)
             {
                 throw new Exception(Messages.Error);
             }
             else
             {
-               return book.Stock < 1 ? false : true;
+                return book.Stock < 1 ? false : true;
             }
         }
+
+      
     }
 }

@@ -15,11 +15,13 @@ namespace Business.Concretes
     public class LocationManager : ILocationService
     {
         protected readonly ILocationDal _locationDal;
+        protected readonly IBookDal _bookDal;
         protected readonly IMapper _mapper;
 
-        public LocationManager(ILocationDal locationDal, IMapper mapper)
+        public LocationManager(ILocationDal locationDal, IBookDal bookDal, IMapper mapper)
         {
             _locationDal = locationDal;
+            _bookDal = bookDal;
             _mapper = mapper;
         }
 
@@ -58,6 +60,10 @@ namespace Business.Concretes
 
             if(locationToDelete is not null)
             {
+                if (CheckIfExistInBooks(request.LocationId))
+                {
+                    return new ErrorResult(Messages.LocationExistInBooks);
+                }
                 await _locationDal.DeleteAsync(locationToDelete);
                 return new SuccessResult(Messages.LocationDeleted);
             }
@@ -90,6 +96,15 @@ namespace Business.Concretes
             }
 
             return new ErrorDataResult<IPaginate<GetListLocationResponse>>(Messages.Error);
+        }
+        
+        private bool CheckIfExistInBooks(Guid locationId)
+        {
+            if(_bookDal.GetAsync(b => b.LocationId == locationId) is null)
+            {
+                return false;
+            }
+            return true;
         }
 
        

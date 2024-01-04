@@ -16,11 +16,13 @@ namespace Business.Concretes
     {
 
         protected readonly ILanguageDal _languageDal;
+        protected readonly IBookDal _bookDal;
         protected readonly IMapper _mapper;
 
-        public LanguageManager(ILanguageDal languageDal,IMapper mapper)
+        public LanguageManager(ILanguageDal languageDal, IBookDal bookDal, IMapper mapper)
         {
             _languageDal = languageDal;
+            _bookDal = bookDal;
             _mapper = mapper;
         }
 
@@ -60,8 +62,12 @@ namespace Business.Concretes
 
             if(languageToDelete is not null)
             {
+               if (CheckIfExistInBooks(request.LanguageId))
+               {
+                    return new ErrorResult(Messages.LanguageExistInBooks);
+               }
                await _languageDal.DeleteAsync(languageToDelete);
-                return new SuccessResult(Messages.LanguageDeleted);
+               return new SuccessResult(Messages.LanguageDeleted);
             }
 
             return new ErrorResult(Messages.Error);
@@ -81,7 +87,6 @@ namespace Business.Concretes
 
         public async Task<IDataResult<IPaginate<GetListLanguageResponse>>> GetListAsync(PageRequest pageRequest)
         {
-
             var data = await _languageDal.GetListAsync(
                 null, 
                 index : pageRequest.PageIndex,
@@ -96,6 +101,15 @@ namespace Business.Concretes
             }
 
            return new ErrorDataResult<IPaginate<GetListLanguageResponse>>(Messages.Error);
+        }
+
+        private bool CheckIfExistInBooks(Guid languageId)
+        {
+            if(_bookDal.GetAsync(b => b.LanguageId == languageId) is null)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

@@ -15,11 +15,13 @@ namespace Business.Concretes
     public class DepartmentManager : IDepartmentService
     {
         protected readonly IDepartmentDal _departmentDal;
+        protected readonly IUserDal _userDal;
         protected readonly IMapper _mapper;
 
-        public DepartmentManager(IDepartmentDal departmentDal, IMapper mapper)
+        public DepartmentManager(IDepartmentDal departmentDal, IUserDal userDal, IMapper mapper)
         {
             _departmentDal = departmentDal;
+            _userDal = userDal;
             _mapper = mapper;
         }
 
@@ -59,6 +61,10 @@ namespace Business.Concretes
 
             if(departmentToDelete is not null)
             {
+                if (CheckIfExistInUsers(request.DepartmentId))
+                {
+                    return new ErrorResult(Messages.DepartmentExistInUsers);
+                }
                 await _departmentDal.DeleteAsync(departmentToDelete);
                 return new SuccessResult(Messages.DepartmentDeleted);
             }
@@ -92,6 +98,15 @@ namespace Business.Concretes
             }
 
             return new ErrorDataResult<IPaginate<GetListDepartmentResponse>>(Messages.Error);
+        }
+
+        private bool CheckIfExistInUsers(Guid departmentId)
+        {
+            if(_userDal.GetAsync(u => u.DepartmentId == departmentId) is null)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

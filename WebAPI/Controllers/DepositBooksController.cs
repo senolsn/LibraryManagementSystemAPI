@@ -123,12 +123,128 @@ namespace WebAPI.Controllers
             }
         }
 
+        [HttpGet("GetByBookAndUserId")]
+        public async Task<IActionResult> GetAsyncByBookAndUserId(Guid bookId, Guid userId)
+        {
+            try
+            {
+                var result = await _depositBookService.GetAsyncByBookAndUserId(bookId, userId);
+
+                if (!result.IsSuccess)
+                {
+                    return NotFound(result);
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, $"Error : {ex.Message}");
+            }
+        }
+
         [HttpGet("GetPagedListAsync")]
         public async Task<IActionResult> GetPagedListAsync([FromQuery] PageRequest pageRequest)
         {
             try
             {
                 var result = await _depositBookService.GetListAsync(pageRequest);
+
+                if (!result.IsSuccess)
+                {
+                    return NotFound(result);
+                }
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error : {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetPagedListAsyncUndeposited")]
+        public async Task<IActionResult> GetPagedListAsyncUndeposited([FromQuery] PageRequest pageRequest)
+        {
+            try
+            {
+                var result = await _depositBookService.GetListAsyncUndeposited(pageRequest);
+
+                if (!result.IsSuccess)
+                {
+                    return NotFound(result);
+                }
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error : {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetPagedListAsyncDeposited")]
+        public async Task<IActionResult> GetPagedListAsyncDeposited([FromQuery] PageRequest pageRequest)
+        {
+            try
+            {
+                var result = await _depositBookService.GetListAsyncDeposited(pageRequest);
+
+                if (!result.IsSuccess)
+                {
+                    return NotFound(result);
+                }
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error : {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetPagedListAsyncByUser")]
+        public async Task<IActionResult> GetPagedListAsyncByUser([FromQuery] PageRequest pageRequest, Guid userId)
+        {
+            try
+            {
+                var result = await _depositBookService.GetListAsyncByUserId(pageRequest, userId);
+
+                if (!result.IsSuccess)
+                {
+                    return NotFound(result);
+                }
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error : {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetPagedListAsyncByBook")]
+        public async Task<IActionResult> GetPagedListAsyncByBook([FromQuery] PageRequest pageRequest, Guid bookId)
+        {
+            try
+            {
+                var result = await _depositBookService.GetListAsyncByBookId(pageRequest, bookId);
+
+                if (!result.IsSuccess)
+                {
+                    return NotFound(result);
+                }
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error : {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetPagedListAsyncUndepositedByUser")]
+        public async Task<IActionResult> GetPagedListAsyncUndepositedByUser([FromQuery] PageRequest pageRequest, Guid userId)
+        {
+            try
+            {
+                var result = await _depositBookService.GetListAsyncUndepositedByUserId(pageRequest, userId);
 
                 if (!result.IsSuccess)
                 {
