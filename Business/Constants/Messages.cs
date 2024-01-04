@@ -52,6 +52,12 @@
         public static string PublisherListed = "The publisher has successfully listed.";
         public static string PublishersListed = "The publishers were successfully listed.";
 
+        public static string UserAdded = "The user has been successfully added.";
+        public static string UserUpdated = "The user has been successfully updated.";
+        public static string UserDeleted = "The user was successfully deleted.";
+        public static string UserListed = "The user has been successfully listed.";
+        public static string UsersListed = "The users were successfully listed.";
+
         public static string BookOutOfStock = "The book you've wanted out of stock.";
     }
 }

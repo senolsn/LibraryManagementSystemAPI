@@ -19,6 +19,7 @@ namespace Business
             services.AddScoped<ILanguageService, LanguageManager>();
             services.AddScoped<IBookService, BookManager>();
             services.AddScoped<IDepositBookService, DepositBookManager>();
+            services.AddScoped<IUserService, UserManager>();
 
             return services;
         }
