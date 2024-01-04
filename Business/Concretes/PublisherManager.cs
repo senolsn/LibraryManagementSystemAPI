@@ -2,17 +2,12 @@
 using Business.Abstracts;
 using Business.Constants;
 using Business.Dtos.Request.Publisher;
-using Business.Dtos.Response.Category;
 using Business.Dtos.Response.Publisher;
 using Core.DataAccess.Paging;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
-using DataAccess.Concretes;
 using Entities.Concrete;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Business.Concretes

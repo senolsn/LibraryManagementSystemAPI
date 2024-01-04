@@ -1,7 +1,5 @@
 ﻿using Business.Dtos.Request.Category;
-using Business.Dtos.Request.Faculty;
 using Business.Dtos.Response.Category;
-using Business.Dtos.Response.Faculty;
 using Core.DataAccess.Paging;
 using Core.Utilities.Results;
 using Entities.Concrete;

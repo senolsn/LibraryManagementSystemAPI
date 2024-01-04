@@ -1,12 +1,8 @@
 ﻿using Core.DataAccess.Paging;
 using Core.Entities.Abstract;
-using Core.Entities.Concrete;
-using Microsoft.EntityFrameworkCore.Query;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 

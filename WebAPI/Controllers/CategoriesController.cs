@@ -1,6 +1,4 @@
 ﻿using Business.Abstracts;
-using Business.Dtos.Request.Faculty;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using System;

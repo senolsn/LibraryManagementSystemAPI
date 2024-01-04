@@ -1,15 +1,8 @@
 ﻿using AutoMapper;
 using Business.Dtos.Request.Category;
-using Business.Dtos.Request.Faculty;
 using Business.Dtos.Response.Category;
-using Business.Dtos.Response.Faculty;
 using Core.DataAccess.Paging;
 using Entities.Concrete;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Business.Profiles
 {

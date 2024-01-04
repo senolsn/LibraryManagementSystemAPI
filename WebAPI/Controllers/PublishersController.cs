@@ -1,7 +1,5 @@
 ﻿using Business.Abstracts;
-using Business.Dtos.Request.Category;
 using Core.DataAccess.Paging;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using System;

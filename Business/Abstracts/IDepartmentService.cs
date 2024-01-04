@@ -1,14 +1,9 @@
 ﻿using Business.Dtos.Request.Department;
-using Business.Dtos.Request.Language;
 using Business.Dtos.Response.Department;
-using Business.Dtos.Response.Language;
 using Core.DataAccess.Paging;
 using Core.Utilities.Results;
 using Entities.Concrete;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Business.Abstracts
