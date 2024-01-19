@@ -1,4 +1,5 @@
-﻿using Entities.Concrete;
+﻿using Core.Entities.Concrete;
+using Entities.Concrete;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Contexts
@@ -28,7 +29,9 @@ namespace DataAccess.Contexts
         public DbSet<Publisher> Publishers { get; set; }
         public DbSet<Book> Books { get; set; }
         public DbSet<DepositBook> DepositBooks { get; set; }
+        public DbSet<OperationClaim> OperationClaims { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<UserOperationClaim> UserOperationClaims { get; set; }
         public DbSet<BookCategory> BookCategories { get; set; }
         public DbSet<BookAuthor> BookAuthors { get; set; }
 

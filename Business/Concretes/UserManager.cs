@@ -4,9 +4,10 @@ using Business.Constants;
 using Business.Dtos.Request.User;
 using Business.Dtos.Response.User;
 using Core.DataAccess.Paging;
+using Core.Entities.Concrete;
 using Core.Utilities.Results;
+using Core.Utilities.Security.Hashing;
 using DataAccess.Abstracts;
-using Entities.Concrete;
 using System;
 using System.Threading.Tasks;
 
@@ -38,7 +39,23 @@ namespace Business.Concretes
 
             return new SuccessResult(Messages.UserAdded);
         }
+        public async Task<IResult> Update(UpdateUserRequest request)
+        {
+            HashingHelper.CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
+            var user = new User() { PasswordHash = passwordHash, PasswordSalt = passwordSalt };
+
+            var mappedUser = _mapper.Map(request, user);
+
+            if (mappedUser is null)
+            {
+                return new ErrorResult(Messages.Error);
+            }
+
+            await _userDal.UpdateAsync(mappedUser);
+
+            return new SuccessResult(Messages.UserUpdated);
+        }
         public async Task<IResult> Delete(DeleteUserRequest request)
         {
             var userToDelete = await _userDal.GetAsync(u => u.UserId == request.UserId);
@@ -55,7 +72,6 @@ namespace Business.Concretes
 
             return new ErrorResult(Messages.Error);
         }
-
         public async Task<IDataResult<User>> GetAsync(Guid userId)
         {
             var result = await _userDal.GetAsync(u => u.UserId == userId);
@@ -67,7 +83,6 @@ namespace Business.Concretes
 
             return new ErrorDataResult<User>(Messages.Error);
         }
-
         public async Task<IDataResult<IPaginate<GetListUserResponse>>> GetListAsync(PageRequest pageRequest)
         {
             var data = await _userDal.GetListAsync(
@@ -85,24 +100,11 @@ namespace Business.Concretes
 
             return new ErrorDataResult<IPaginate<GetListUserResponse>>(Messages.Error);
         }
-
-        public async Task<IResult> Update(UpdateUserRequest request)
+        public async Task<User> GetByMail(string mail)
         {
-            var userToUpdate = await _userDal.GetAsync(u => u.UserId == request.UserId);
-
-            if (userToUpdate is null)
-            {
-                return new ErrorResult(Messages.Error);
-            }
-
-            _mapper.Map(request, userToUpdate);
-
-            await _userDal.UpdateAsync(userToUpdate);
-
-            return new SuccessResult(Messages.UserUpdated);
+            return await _userDal.GetAsync(predicate: u => u.Email == mail);
         }
-
-        public bool checkIfExistInDepositBook(Guid userId)
+        private bool checkIfExistInDepositBook(Guid userId)
         {
             if (_depositBookDal.GetAsync(d => d.UserId == userId) is null)
             {
@@ -110,7 +112,6 @@ namespace Business.Concretes
             }
             return true;
         }
-
-        
+       
     }
 }

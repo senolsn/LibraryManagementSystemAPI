@@ -2,7 +2,7 @@
 using Business.Dtos.Request.User;
 using Business.Dtos.Response.User;
 using Core.DataAccess.Paging;
-using Entities.Concrete;
+using Core.Entities.Concrete;
 
 namespace Business.Profiles
 {
