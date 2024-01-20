@@ -65,6 +65,9 @@ namespace DataAccess.Contexts
                 .WithMany(c => c.BookAuthors)
                 .HasForeignKey(bc => bc.AuthorId);
 
+            modelBuilder.Entity<OperationClaim>()
+                .HasKey(o => o.OperationId);
+
 
 
         }

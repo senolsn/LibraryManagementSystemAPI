@@ -1,5 +1,6 @@
 ﻿using Business.Abstracts;
 using Business.Concretes;
+using Core.Utilities.Security.JWT;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -20,6 +21,9 @@ namespace Business
             services.AddScoped<IBookService, BookManager>();
             services.AddScoped<IDepositBookService, DepositBookManager>();
             services.AddScoped<IUserService, UserManager>();
+            services.AddScoped<IAuthService,AuthManager>();
+            services.AddScoped<ITokenHelper,JwtHelper>();
+            
 
             return services;
         }

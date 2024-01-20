@@ -34,8 +34,6 @@ namespace DataAccess
             services.AddScoped<IBookAuthorDal, EfBookAuthorDal>();
             services.AddScoped<IBookCategoryDal, EfBookCategoryDal>();
 
-
-
             return services;
 
         }

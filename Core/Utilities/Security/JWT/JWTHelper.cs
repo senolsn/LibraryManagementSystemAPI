@@ -3,44 +3,46 @@ using Core.Extensions;
 using Core.Utilities.Security.Encryption;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System;
 using System.Collections.Generic;
+using System;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
+using System.Linq;
 
 namespace Core.Utilities.Security.JWT
 {
-    public class JWTHelper : ITokenHelper
+    public class JwtHelper : ITokenHelper
     {
-        private readonly IConfiguration Configuration;
-        private readonly TokenOptions _tokenOptions;
+        public IConfiguration Configuration { get; } //Appsetings dosyasını okumak için kullanılır.
+        private TokenOptions _tokenOptions;
         private DateTime _accessTokenExpiration;
 
-        public JWTHelper(IConfiguration configuration, TokenOptions tokenOptions, DateTime accessTokenExpiration)
+        public JwtHelper(IConfiguration configuration)
         {
             Configuration = configuration;
-            _tokenOptions = Configuration.GetSection("TokenOptions").Get<TokenOptions>();
-        }
+            _tokenOptions = Configuration.GetSection("TokenOptions").Get<TokenOptions>(); //Appsetings.json'daki Section'umu buradaki TokenOptions ile mapleyerek eşler.
 
-        public AccessToken CreateToken(User user, List<OperationClaim> claims)
+        }
+        public AccessToken CreateToken(User user, List<OperationClaim> operationClaims)
         {
-            _accessTokenExpiration = DateTime.UtcNow.AddMinutes(_tokenOptions.AccessTokenExpiration);
-            var securityKey = SecurityKeyHelper.CreateSecurityKey(_tokenOptions.SecurityKey);
-            var signingCredentials = SigningCredentialsHelper.CreateSigningCredentials(securityKey);
-            var jwt = CreateJwtSecurityToken(_tokenOptions, user, signingCredentials, claims);
+            _accessTokenExpiration = DateTime.Now.AddMinutes(_tokenOptions.AccessTokenExpiration); //_tokenOptions'dan alıyoruz yukarıda appsetingsten tokenoption ile eşitlemiştik.
+            var securityKey = SecurityKeyHelper.CreateSecurityKey(_tokenOptions.SecurityKey); //Key'i simetrik formata çevirecek bir helper yazmıştık onu kullanıyoruz.
+            var signingCredentials = SigningCredentialsHelper.CreateSigningCredentials(securityKey); //Burada da hangi algoritma ve key'i kullanayım diyor onun helperini de veriyoruz.
+            var jwt = CreateJwtSecurityToken(_tokenOptions, user, signingCredentials, operationClaims);
 
             var jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
             var token = jwtSecurityTokenHandler.WriteToken(jwt);
+
             return new AccessToken
             {
                 Token = token,
                 Expiration = _accessTokenExpiration
             };
+
         }
-        private JwtSecurityToken CreateJwtSecurityToken(TokenOptions tokenOptions, User user, SigningCredentials signingCredentials, List<OperationClaim> operationClaims)
+
+        public JwtSecurityToken CreateJwtSecurityToken(TokenOptions tokenOptions, User user,
+            SigningCredentials signingCredentials, List<OperationClaim> operationClaims)
         {
             var jwt = new JwtSecurityToken(
                 issuer: tokenOptions.Issuer,
@@ -52,6 +54,8 @@ namespace Core.Utilities.Security.JWT
             );
             return jwt;
         }
+
+        //Bu kod, bir kullanıcıya ait kimlik doğrulama taleplerini ve yetki taleplerini temsil eden bir dizi Claim nesnesi oluşturur.
         private IEnumerable<Claim> SetClaims(User user, List<OperationClaim> operationClaims)
         {
             var claims = new List<Claim>();

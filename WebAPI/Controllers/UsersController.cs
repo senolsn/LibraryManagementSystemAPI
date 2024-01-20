@@ -14,6 +14,11 @@ namespace WebAPI.Controllers
     {
         private readonly IUserService _userService;
 
+        public UsersController(IUserService userService)
+        {
+            _userService = userService;
+        }
+
         [HttpPost("Add")]
         public async Task<IActionResult> Add(User user)
         {
@@ -125,23 +130,18 @@ namespace WebAPI.Controllers
         [HttpGet("GetByMail")]
         public async Task<IActionResult> GetByMail(string mail)
         {
-            try
-            {
+           
                 var result = await _userService.GetByMail(mail);
 
                 if (result is null)
                 {
-                    return BadRequest(result);
+                    return NotFound(result);
                 }
 
                 return Ok(result);
 
-            }
-            catch (Exception ex)
-            {
-
-                return StatusCode(500, $"Error : {ex.Message}");
-            }
+            
+            
         }
     }
 }

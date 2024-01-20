@@ -17,11 +17,10 @@ namespace WebAPI.Controllers
             _authService = authService;
         }
 
-        [HttpPut("Register")]
+        [HttpPost("Register")]
         public async Task<IActionResult> Register(CreateRegisterRequest request)
         {
-            try
-            {
+            
                 var registerResult = await _authService.Register(request);
 
                 if(registerResult.IsSuccess) 
@@ -31,17 +30,11 @@ namespace WebAPI.Controllers
                 }
 
                 return BadRequest(registerResult.Data);
-            }
-            catch (Exception ex)
-            {
-
-                return StatusCode(500, $"Error : {ex.Message}");
-
-            }
+            
 
         }
 
-        [HttpPut("Login")]
+        [HttpPost("Login")]
         public async Task<IActionResult> Login(CreateLoginRequest request)
         {
             var userToLogin = await _authService.Login(request);

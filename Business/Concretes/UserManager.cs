@@ -101,7 +101,7 @@ namespace Business.Concretes
         }
         public async Task<User> GetByMail(string mail)
         {
-            return await _userDal.GetAsync(predicate: u => u.Email == mail);
+            return await _userDal.GetAsync(u => u.Email == mail);
         }
         private bool checkIfExistInDepositBook(Guid userId)
         {

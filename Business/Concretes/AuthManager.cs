@@ -50,7 +50,7 @@ namespace Business.Concretes
 
         public async Task<IDataResult<User>> Register(CreateRegisterRequest request)
         {
-            var userExists = CheckUserExists(request.Email);
+            var userExists = await CheckUserExists(request.Email);
 
             if(!userExists) 
             {
@@ -68,9 +68,9 @@ namespace Business.Concretes
             return new ErrorDataResult<User>();
         }
 
-        private bool CheckUserExists(string mail)
+        private async Task<bool> CheckUserExists(string mail)
         {
-            var result = _userService.GetByMail(mail);
+            var result = await _userService.GetByMail(mail);
 
             if (result is not null)
             {
