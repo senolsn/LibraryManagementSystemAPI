@@ -1,11 +1,6 @@
 
 using Business;
-using Business.Abstracts;
-using Business.Concretes;
 using DataAccess;
-using DataAccess.Abstracts;
-using DataAccess.Concretes;
-using DataAccess.Contexts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +10,9 @@ using Microsoft.IdentityModel.Tokens;
 using Core.Utilities.Security.Encryption;
 using Microsoft.Extensions.Configuration;
 using Core.Utilities.Security.JWT;
+using Autofac;
+using Business.DependencyResolvers.Autofac;
+using Autofac.Extensions.DependencyInjection;
 
 namespace WebAPI
 {
@@ -51,6 +49,11 @@ namespace WebAPI
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+            builder.Host.ConfigureContainer<ContainerBuilder>(builder =>
+            {
+                builder.RegisterModule(new AutofacBusinessModule());
+            });
 
 
             var app = builder.Build();

@@ -4,6 +4,7 @@ using Business.Constants;
 using Business.Dtos.Request.Category;
 using Business.Dtos.Response.Category;
 using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Validation;
 using Core.CrossCuttingConcerns.Validation;
 using Core.CrossCuttingConcerns.Validation.FluentValidation;
 using Core.DataAccess.Paging;
@@ -28,11 +29,10 @@ namespace Business.Concretes
             _bookDal = bookDal;
         }
 
+        [ValidationAspect(typeof(CategoryValidator))]
         public async Task<IResult> Add(CreateCategoryRequest request)
         {
             Category category = _mapper.Map<Category>(request);
-
-            ValidationTool.Validate(new CategoryValidator(), category);
 
             var createdCategory = await _categoryDal.AddAsync(category);
 

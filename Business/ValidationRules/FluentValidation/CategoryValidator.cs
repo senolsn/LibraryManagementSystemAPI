@@ -1,4 +1,5 @@
-﻿using Entities.Concrete;
+﻿using Business.Dtos.Request.Category;
+using Entities.Concrete;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Business.ValidationRules.FluentValidation
 {
-    public class CategoryValidator:AbstractValidator<Category>
+    public class CategoryValidator:AbstractValidator<CreateCategoryRequest>
     {
         public CategoryValidator()
         {

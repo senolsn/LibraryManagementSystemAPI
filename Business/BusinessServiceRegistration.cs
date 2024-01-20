@@ -1,5 +1,7 @@
 ﻿using Business.Abstracts;
 using Business.Concretes;
+using Castle.DynamicProxy;
+using Core.Utilities.Interceptors;
 using Core.Utilities.Security.JWT;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
@@ -23,7 +25,9 @@ namespace Business
             services.AddScoped<IUserService, UserManager>();
             services.AddScoped<IAuthService,AuthManager>();
             services.AddScoped<ITokenHelper,JwtHelper>();
-            
+
+           
+
 
             return services;
         }
