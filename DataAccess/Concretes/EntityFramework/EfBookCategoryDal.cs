@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataAccess.Concretes
+namespace DataAccess.Concretes.EntityFramework
 {
     public class EfBookCategoryDal : EfRepositoryBase<BookCategory, LibraryAPIDbContext>, IBookCategoryDal
     {

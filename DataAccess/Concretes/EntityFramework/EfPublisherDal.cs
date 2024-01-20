@@ -3,7 +3,7 @@ using DataAccess.Abstracts;
 using DataAccess.Contexts;
 using Entities.Concrete;
 
-namespace DataAccess.Concretes
+namespace DataAccess.Concretes.EntityFramework
 {
     public class EfPublisherDal : EfRepositoryBase<Publisher, LibraryAPIDbContext>, IPublisherDal
     {

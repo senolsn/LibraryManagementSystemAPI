@@ -1,5 +1,5 @@
 ﻿using DataAccess.Abstracts;
-using DataAccess.Concretes;
+using DataAccess.Concretes.EntityFramework;
 using DataAccess.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;

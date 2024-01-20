@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DataAccess.Concretes
+namespace DataAccess.Concretes.EntityFramework
 {
     public class EfUserDal : EfRepositoryBase<User, LibraryAPIDbContext>, IUserDal
     {
