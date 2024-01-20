@@ -1,6 +1,6 @@
-﻿using Core.Extensions;
+﻿using Core.Entities.Concrete;
+using Core.Extensions;
 using Core.Utilities.Security.Encryption;
-using Core.Utilities.Security.JWT;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -11,7 +11,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Entities.Concrete
+namespace Core.Utilities.Security.JWT
 {
     public class JWTHelper : ITokenHelper
     {

@@ -1,4 +1,6 @@
-﻿namespace Business.Constants
+﻿using Core.Entities.Concrete;
+
+namespace Business.Constants
 {
     public static class Messages
     {
@@ -68,5 +70,11 @@
         public static string LocationExistInBooks = "The location you want to delete is exist in books!";
         public static string LanguageExistInBooks = "The language you want to delete is exist in books!";
         public static string AuthorExistInBookAuthors = "The author you want to delete is exist in book authors!";
+
+        public static string UserAlreadyExists = "User already exists!";
+        public static string AccessTokenCreated = "Access Token Created Successfully";
+        public static string UserNotFound = "User not found!";
+        public static string WrongMailOrPassword = "Your email address or password is incorrect!";
+        public static string Loginned = "Login successful!";
     }
 }

@@ -9,6 +9,7 @@ using Core.Utilities.Results;
 using Core.Utilities.Security.Hashing;
 using DataAccess.Abstracts;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Business.Concretes
@@ -26,10 +27,8 @@ namespace Business.Concretes
             _depositBookDal = depositBookDal;
         }
 
-        public async Task<IResult> Add(CreateUserRequest request)
+        public async Task<IResult> Add(User user)
         {
-            User user = _mapper.Map<User>(request);
-
             var createdUser = await _userDal.AddAsync(user);
 
             if (createdUser is null)
@@ -112,6 +111,10 @@ namespace Business.Concretes
             }
             return true;
         }
-       
+        public List<OperationClaim> GetClaims(User user)
+        {
+            var result = _userDal.GetClaims(user);
+            return result; 
+        }
     }
 }
