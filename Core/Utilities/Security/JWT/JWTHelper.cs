@@ -2,12 +2,12 @@
 using Core.Extensions;
 using Core.Utilities.Security.Encryption;
 using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 using System.Collections.Generic;
 using System;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Linq;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Core.Utilities.Security.JWT
 {
