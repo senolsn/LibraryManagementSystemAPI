@@ -1,6 +1,7 @@
 ﻿using Business.Abstracts;
 using Business.Dtos.Request.User;
 using Core.DataAccess.Paging;
+using Core.Entities.Concrete;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -14,11 +15,11 @@ namespace WebAPI.Controllers
         private readonly IUserService _userService;
 
         [HttpPost("Add")]
-        public async Task<IActionResult> Add(CreateUserRequest request)
+        public async Task<IActionResult> Add(User user)
         {
             try
             {
-                var result = await _userService.Add(request);
+                var result = await _userService.Add(user);
 
                 if (!result.IsSuccess)
                 {
