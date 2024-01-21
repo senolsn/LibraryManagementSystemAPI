@@ -78,5 +78,7 @@ namespace Business.Constants
         public static string Loginned = "Login successful!";
 
         public static string BookListed = "The book has been successfully listed.";
+
+        public static string AuthorizationDenied = "Access Denied ";
     }
 }

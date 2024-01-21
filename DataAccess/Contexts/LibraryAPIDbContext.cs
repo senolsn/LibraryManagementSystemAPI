@@ -66,12 +66,7 @@ namespace DataAccess.Contexts
                 .HasForeignKey(bc => bc.AuthorId);
 
             modelBuilder.Entity<OperationClaim>()
-                .HasKey(o => o.OperationId);
-
-
-
+                .HasKey(o => o.OperationClaimId);
         }
     }
-
-
-    }
+}

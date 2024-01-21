@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Business
+namespace Core.Utilities.Business
 {
     public class BusinessRules
     {
@@ -13,7 +13,7 @@ namespace Core.Business
         {
             foreach (var logic in logics)
             {
-                if(!logic.IsSuccess)
+                if (!logic.IsSuccess)
                 {
                     return logic;
                 }

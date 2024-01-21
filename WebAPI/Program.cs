@@ -13,6 +13,10 @@ using Core.Utilities.Security.JWT;
 using Autofac;
 using Business.DependencyResolvers.Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Core.Utilities.IoC;
+using Core.DependencyResolvers;
+using Core.Extensions;
+
 
 namespace WebAPI
 {
@@ -43,6 +47,12 @@ namespace WebAPI
                     IssuerSigningKey = SecurityKeyHelper.CreateSecurityKey(tokenOptions.SecurityKey)
                 };
             });
+            ServiceTool.Create(builder.Services);
+
+            builder.Services.AddDependencyResolvers(new ICoreModule[]
+        {
+            new CoreModule()
+        });
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -66,6 +76,8 @@ namespace WebAPI
             }
 
             app.UseHttpsRedirection();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
 using Business.Abstracts;
+using Business.BusinessAspects;
 using Business.Constants;
 using Business.Dtos.Request.Category;
 using Business.Dtos.Response.Category;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
-using Core.Business;
 using Core.DataAccess.Paging;
+using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
 using Entities.Concrete;
@@ -28,6 +29,7 @@ namespace Business.Concretes
         }
 
         [ValidationAspect(typeof(CategoryValidator))]
+        [SecuredOperation("add")]
         public async Task<IResult> Add(CreateCategoryRequest request)
         {
             Category category = _mapper.Map<Category>(request);
