@@ -5,6 +5,7 @@ using Business.Dtos.Request.Category;
 using Business.Dtos.Response.Category;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
+using Core.Business;
 using Core.CrossCuttingConcerns.Validation;
 using Core.CrossCuttingConcerns.Validation.FluentValidation;
 using Core.DataAccess.Paging;
@@ -50,9 +51,10 @@ namespace Business.Concretes
 
             if (categoryToDelete is not null)
             {
-                if (checkIfExistInBooks(request.CategoryId))
+                var result = BusinessRules.Run(await checkIfExistInBooks(request.CategoryId));
+                if (result is not null)
                 {
-                    return new ErrorResult(Messages.CategoryExistInBooks);
+                    return result;
                 }
 
                 await _categoryDal.DeleteAsync(categoryToDelete);
@@ -109,13 +111,17 @@ namespace Business.Concretes
         }
 
 
-        public bool checkIfExistInBooks(Guid categoryId)
+        private async Task<IResult> checkIfExistInBooks(Guid categoryId)
         {
-            if (_bookDal.GetAsync(u => u.CategoryId == categoryId) is null)
+            var result = await _bookDal.GetAsync(c => c.CategoryId == categoryId);
+
+            if (result is not null)
             {
-                return false;
+                return new ErrorResult(Messages.CategoryExistInBooks);
             }
-            return true;
+            return new SuccessResult();
         }
+
+        
     }
 }

@@ -48,7 +48,7 @@ namespace WebAPI.Controllers
 
                 if (!result.IsSuccess)
                 {
-                    return NotFound(result);
+                    return BadRequest(result);
                 }
 
                 return Ok(result);
