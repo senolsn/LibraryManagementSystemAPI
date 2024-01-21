@@ -6,12 +6,9 @@ using Business.Dtos.Response.Category;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
 using Core.Business;
-using Core.CrossCuttingConcerns.Validation;
-using Core.CrossCuttingConcerns.Validation.FluentValidation;
 using Core.DataAccess.Paging;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
-using DataAccess.Concretes;
 using Entities.Concrete;
 using System;
 using System.Threading.Tasks;
@@ -21,13 +18,13 @@ namespace Business.Concretes
     public class CategoryManager : ICategoryService
     {
         protected readonly ICategoryDal _categoryDal;
-        protected readonly IBookDal _bookDal;
+        protected readonly IBookService _bookService;
         protected readonly IMapper _mapper;
-        public CategoryManager(ICategoryDal categoryDal, IBookDal bookDal, IMapper mapper)
+        public CategoryManager(ICategoryDal categoryDal, IBookService bookService, IMapper mapper)
         {
             _categoryDal = categoryDal;
             _mapper = mapper;
-            _bookDal = bookDal;
+            _bookService = bookService;
         }
 
         [ValidationAspect(typeof(CategoryValidator))]
@@ -113,7 +110,7 @@ namespace Business.Concretes
 
         private async Task<IResult> checkIfExistInBooks(Guid categoryId)
         {
-            var result = await _bookDal.GetAsync(c => c.CategoryId == categoryId);
+            var result = await _bookService.GetAsyncByCategoryId(categoryId);
 
             if (result is not null)
             {

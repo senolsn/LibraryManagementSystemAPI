@@ -15,8 +15,8 @@ namespace Business.Abstracts
         Task<IResult> Update(UpdateBookRequest request);
 
         Task<IResult> Delete(DeleteBookRequest request);
-
         Task<IDataResult<Book>> GetAsync(Guid bookId);
+        Task<IDataResult<Book>> GetAsyncByCategoryId(Guid categoryId);
         Task<IDataResult<IPaginate<GetListBookResponse>>> GetListAsync(PageRequest pageRequest);
         Task<IDataResult<IPaginate<GetListBookResponse>>> GetListAsyncByCategory(PageRequest pageRequest,Guid categoryId);
         Task<IDataResult<IPaginate<GetListBookResponse>>> GetListAsyncSortedByName(PageRequest pageRequest);

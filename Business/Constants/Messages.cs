@@ -76,5 +76,7 @@ namespace Business.Constants
         public static string UserNotFound = "User not found!";
         public static string WrongMailOrPassword = "Your email address or password is incorrect!";
         public static string Loginned = "Login successful!";
+
+        public static string BookListed = "The book has been successfully listed.";
     }
 }

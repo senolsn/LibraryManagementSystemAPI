@@ -74,9 +74,19 @@ namespace Business.Concretes
 
             if (result is not null)
             {
-                return new SuccessDataResult<Book>(result, Messages.AuthorListed);
+                return new SuccessDataResult<Book>(result, Messages.BookListed);
             }
 
+            return new ErrorDataResult<Book>(Messages.Error);
+        }
+        public async Task<IDataResult<Book>> GetAsyncByCategoryId(Guid categoryId)
+        {
+            var result = await _bookDal.GetAsync(b => b.CategoryId == categoryId);
+
+            if(result is not null)
+            {
+                return new SuccessDataResult<Book>(result, Messages.BookListed);
+            }
             return new ErrorDataResult<Book>(Messages.Error);
         }
 
