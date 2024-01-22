@@ -18,5 +18,6 @@ namespace Business.Abstracts
         Task<IDataResult<IPaginate<GetListUserResponse>>> GetListAsync(PageRequest pageRequest);
         List<OperationClaim> GetClaims(User user);
         Task<User> GetByMail(string mail);
-    }
+        Task<IResult> AddTransactionalTest(User user);
+	}
 }

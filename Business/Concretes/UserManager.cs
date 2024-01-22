@@ -3,6 +3,7 @@ using Business.Abstracts;
 using Business.Constants;
 using Business.Dtos.Request.User;
 using Business.Dtos.Response.User;
+using Core.Aspects.Autofac.Transaction;
 using Core.DataAccess.Paging;
 using Core.Entities.Concrete;
 using Core.Utilities.Results;
@@ -116,5 +117,11 @@ namespace Business.Concretes
             var result = _userDal.GetClaims(user);
             return result; 
         }
-    }
+
+		[TransactionScopeAspect]
+		public Task<IResult> AddTransactionalTest(User user)
+		{
+			throw new NotImplementedException();
+		}
+	}
 }
