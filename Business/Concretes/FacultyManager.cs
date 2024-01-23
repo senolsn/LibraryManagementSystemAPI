@@ -3,6 +3,7 @@ using Business.Abstracts;
 using Business.Constants;
 using Business.Dtos.Request.Faculty;
 using Business.Dtos.Response.Faculty;
+using Core.Aspects.Autofac.Caching;
 using Core.DataAccess.Paging;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
@@ -51,7 +52,7 @@ namespace Business.Concretes
 
             return new ErrorResult(Messages.Error);
         }
-
+        [CacheAspect()]
         public async Task<IDataResult<Faculty>> GetAsync(Guid facultyId)
         {
             var result = await _facultyDal.GetAsync(f => f.FacultyId == facultyId);

@@ -5,6 +5,7 @@ using Business.Constants;
 using Business.Dtos.Request.Category;
 using Business.Dtos.Response.Category;
 using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Validation;
 using Core.DataAccess.Paging;
 using Core.Utilities.Business;
@@ -63,6 +64,7 @@ namespace Business.Concretes
             return new ErrorResult(Messages.Error);
         }
 
+        [CacheAspect]
         public async Task<IDataResult<Category>> GetAsync(Guid categoryId)
         {
             var result = await _categoryDal.GetAsync(c => c.CategoryId == categoryId);
