@@ -123,5 +123,17 @@ namespace Business.Concretes
 		{
 			throw new NotImplementedException();
 		}
-	}
+
+        public async Task<IDataResult<User>> GetAsyncByFacultyId(Guid facultyId)
+        {
+            var result = await _userDal.GetAsync(u => u.FacultyId == facultyId);
+
+            if (result is not null)
+            {
+                return new SuccessDataResult<User>(result, Messages.UserListed);
+            }
+
+            return new ErrorDataResult<User>(Messages.Error);
+        }
+    }
 }

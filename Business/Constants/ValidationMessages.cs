@@ -13,5 +13,8 @@ namespace Business.Constants
 
         public static string LanguageNotEmpty = "Language name cannot be empty.";
         public static string LanguageMinLength = "Language name must be at least 3 characters long.";
+
+        public static string FacultyNotEmpty = "Faculty name cannot be empty.";
+        public static string FacultyMinLength = "Faculty name must be at least 3 characters long.";
     }
 }

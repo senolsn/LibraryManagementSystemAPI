@@ -143,8 +143,7 @@ namespace Business.Concretes
             var result = await _bookService.GetAsyncByLanguageId(languageId);
             if(result is not null)
             {
-            return new SuccessResult();
-
+                return new SuccessResult();
             }
             return new ErrorResult(Messages.LanguageExistInBooks);
         }
