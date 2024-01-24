@@ -29,10 +29,18 @@ namespace Business.Concretes
             _bookService = bookService;
         }
 
-        [ValidationAspect(typeof(CategoryValidator))]
-        [SecuredOperation("add")]
+        //[SecuredOperation("admin,add")]
+        [ValidationAspect(typeof (CategoryValidator))]
+        [CacheRemoveAspect("ICategoryService.Get")]
         public async Task<IResult> Add(CreateCategoryRequest request)
         {
+            var result = BusinessRules.Run(CapitalizeFirstLetter(request),await IsCategoryNameUnique(request.CategoryName));
+
+            if( result is not null)
+            {
+                return result;
+            }
+
             Category category = _mapper.Map<Category>(request);
 
             var createdCategory = await _categoryDal.AddAsync(category);
@@ -45,13 +53,15 @@ namespace Business.Concretes
             return new SuccessResult(Messages.CategoryAdded);
         }
 
+        [SecuredOperation("admin,delete")]
+        [CacheRemoveAspect("ICategoryService.Get")]
         public async Task<IResult> Delete(DeleteCategoryRequest request)
         {
             var categoryToDelete = await _categoryDal.GetAsync(c => c.CategoryId == request.CategoryId);
 
             if (categoryToDelete is not null)
             {
-                var result = BusinessRules.Run(await checkIfExistInBooks(request.CategoryId));
+                var result = BusinessRules.Run(await CheckIfCategoryHasBooks(request.CategoryId));
                 if (result is not null)
                 {
                     return result;
@@ -64,6 +74,32 @@ namespace Business.Concretes
             return new ErrorResult(Messages.Error);
         }
 
+        [SecuredOperation("admin,update")]
+        [ValidationAspect(typeof (CategoryValidator))]
+        [CacheRemoveAspect("ICategoryService.Get")]
+        public async Task<IResult> Update(UpdateCategoryRequest request)
+        {
+            var result = BusinessRules.Run(CapitalizeFirstLetter(request),await IsCategoryNameUnique(request.CategoryName));
+
+            if (result is not null)
+            {
+                return result;
+            }
+            var categoryToUpdate = await _categoryDal.GetAsync(c => c.CategoryId == request.CategoryId);
+
+            if (categoryToUpdate is null)
+            {
+                return new ErrorResult(Messages.Error);
+            }
+
+            _mapper.Map(request, categoryToUpdate);
+
+            await _categoryDal.UpdateAsync(categoryToUpdate);
+
+            return new SuccessResult(Messages.CategoryUpdated);
+        }
+
+        [SecuredOperation("admin,get")]
         [CacheAspect]
         public async Task<IDataResult<Category>> GetAsync(Guid categoryId)
         {
@@ -77,6 +113,8 @@ namespace Business.Concretes
             return new ErrorDataResult<Category>(Messages.Error);
         }
 
+        [SecuredOperation("admin,get")]
+        [CacheAspect]
         public async Task<IDataResult<IPaginate<GetListCategoryResponse>>> GetListAsync(PageRequest pageRequest)
         {
             var data = await _categoryDal.GetListAsync(
@@ -94,25 +132,10 @@ namespace Business.Concretes
 
             return new ErrorDataResult<IPaginate<GetListCategoryResponse>>(Messages.Error);
         }
-   
-        public async Task<IResult> Update(UpdateCategoryRequest request)
-        {
-            var categoryToUpdate = await _categoryDal.GetAsync(c => c.CategoryId == request.CategoryId);
 
-            if (categoryToUpdate is null)
-            {
-                return new ErrorResult(Messages.Error);
-            }
-
-            _mapper.Map(request, categoryToUpdate);
-
-            await _categoryDal.UpdateAsync(categoryToUpdate);
-
-            return new SuccessResult(Messages.CategoryUpdated);
-        }
-
-
-        private async Task<IResult> checkIfExistInBooks(Guid categoryId)
+        
+        #region Helper Methods
+        private async Task<IResult> CheckIfCategoryHasBooks(Guid categoryId)
         {
             var result = await _bookService.GetAsyncByCategoryId(categoryId);
 
@@ -123,6 +146,31 @@ namespace Business.Concretes
             return new SuccessResult();
         }
 
-        
+        private async Task<IResult> IsCategoryNameUnique(string categoryName)
+        {
+            var result = await _categoryDal.GetAsync(c => c.CategoryName == categoryName);
+
+            if(result is not null)
+            {
+                return new ErrorResult(Messages.CategoryNameNotUnique);
+            }
+            return new SuccessResult();
+        }
+
+        private IDataResult<CreateCategoryRequest> CapitalizeFirstLetter(CreateCategoryRequest request)
+        {
+            string capitalizedCategoryName = char.ToUpper(request.CategoryName[0]) + request.CategoryName.Substring(1);
+            request.CategoryName = capitalizedCategoryName;
+            return new SuccessDataResult<CreateCategoryRequest>(request);
+        }
+
+        private IDataResult<UpdateCategoryRequest> CapitalizeFirstLetter(UpdateCategoryRequest request)
+        {
+            string capitalizedCategoryName = char.ToUpper(request.CategoryName[0]) + request.CategoryName.Substring(1);
+            request.CategoryName = capitalizedCategoryName;
+            return new SuccessDataResult<UpdateCategoryRequest>(request);
+        }
+        #endregion
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using Business.Dtos.Request.Category;
+﻿using Business.Constants;
+using Business.Dtos.Request.Category;
 using Entities.Concrete;
 using FluentValidation;
 using System;
@@ -13,7 +14,8 @@ namespace Business.ValidationRules.FluentValidation
     {
         public CategoryValidator()
         {
-            RuleFor(c => c.CategoryName).MinimumLength(3);
+            RuleFor(c => c.CategoryName).MinimumLength(3).WithMessage(ValidationMessages.CategoryMinLength);
+            RuleFor(c => c.CategoryName).NotEmpty().WithMessage(ValidationMessages.CategoryNotEmpty);
         }
     }
 }

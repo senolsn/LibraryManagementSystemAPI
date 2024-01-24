@@ -4,6 +4,7 @@ namespace Business.Constants
 {
     public static class Messages
     {
+        
         public static string Error = "Something went wrong!";
 
         public static string AuthorAdded = "The author has successfully added.";
@@ -80,5 +81,8 @@ namespace Business.Constants
         public static string BookListed = "The book has been successfully listed.";
 
         public static string AuthorizationDenied = "Access Denied ";
+
+        public static string CategoryNameNotUnique = "Category name must be unique.";
+
     }
 }
