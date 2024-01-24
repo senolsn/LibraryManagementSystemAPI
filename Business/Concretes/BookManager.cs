@@ -89,7 +89,16 @@ namespace Business.Concretes
             }
             return new ErrorDataResult<Book>(Messages.Error);
         }
+        public async Task<IDataResult<Book>> GetAsyncByLanguageId(Guid languageId)
+        {
+            var result = await _bookDal.GetAsync(b => b.LanguageId == languageId);
 
+            if (result is not null)
+            {
+                return new SuccessDataResult<Book>(result, Messages.BookListed);
+            }
+            return new ErrorDataResult<Book>(Messages.Error);
+        }
         public async Task<IDataResult<IPaginate<GetListBookResponse>>> GetListAsync(PageRequest pageRequest)
         {
             var data = await _bookDal.GetListAsync(
@@ -101,7 +110,7 @@ namespace Business.Concretes
             {
                 var result = _mapper.Map<Paginate<GetListBookResponse>>(data);
 
-                return new SuccessDataResult<IPaginate<GetListBookResponse>>(result, Messages.AuthorsListed);
+                return new SuccessDataResult<IPaginate<GetListBookResponse>>(result, Messages.BooksListed);
             }
 
             return new ErrorDataResult<IPaginate<GetListBookResponse>>(Messages.Error);
@@ -119,7 +128,7 @@ namespace Business.Concretes
             {
                 var result = _mapper.Map<Paginate<GetListBookResponse>>(data);
 
-                return new SuccessDataResult<IPaginate<GetListBookResponse>>(result, Messages.AuthorsListed); 
+                return new SuccessDataResult<IPaginate<GetListBookResponse>>(result, Messages.BooksListed); 
             }
 
             return new ErrorDataResult<IPaginate<GetListBookResponse>>(Messages.Error);
@@ -138,7 +147,7 @@ namespace Business.Concretes
             {
                 var result = _mapper.Map<Paginate<GetListBookResponse>>(data);
 
-                return new SuccessDataResult<IPaginate<GetListBookResponse>>(result, Messages.AuthorsListed);
+                return new SuccessDataResult<IPaginate<GetListBookResponse>>(result, Messages.BooksListed);
             }
 
             return new ErrorDataResult<IPaginate<GetListBookResponse>>(Messages.Error);
@@ -157,10 +166,12 @@ namespace Business.Concretes
             {
                 var result = _mapper.Map<Paginate<GetListBookResponse>>(data);
 
-                return new SuccessDataResult<IPaginate<GetListBookResponse>>(result, Messages.AuthorsListed);
+                return new SuccessDataResult<IPaginate<GetListBookResponse>>(result, Messages.BooksListed);
             }
 
             return new ErrorDataResult<IPaginate<GetListBookResponse>>(Messages.Error);
         }
+
+       
     }
 }
