@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Business.ValidationRules.FluentValidation
 {
-    public class CategoryValidator:AbstractValidator<CreateCategoryRequest>
+    public class CategoryValidator:AbstractValidator<ICategoryRequest>
     {
         public CategoryValidator()
         {
