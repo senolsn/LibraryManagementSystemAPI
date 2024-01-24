@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Entities.Concrete.enums;
+using System;
 
 namespace Business.Dtos.Request.Book
 {
@@ -15,7 +16,7 @@ namespace Business.Dtos.Request.Book
         public DateTime PublishedDate { get; set; }
         public int PublishCount { get; set; }
         public int Stock { get; set; }
-        public bool Status { get; set; }
+        public BookStatus Status { get; set; }
         public string Interpreter { get; set; }
         public string FixtureNumber { get; set; }
     }
