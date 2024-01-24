@@ -1,12 +1,18 @@
 ﻿using AutoMapper;
 using Business.Abstracts;
+using Business.BusinessAspects;
 using Business.Constants;
 using Business.Dtos.Request.Faculty;
+using Business.Dtos.Request.Language;
 using Business.Dtos.Response.Faculty;
+using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Caching;
+using Core.Aspects.Autofac.Validation;
 using Core.DataAccess.Paging;
+using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
+using DataAccess.Concretes.EntityFramework;
 using Entities.Concrete;
 using System;
 using System.Threading.Tasks;
@@ -16,16 +22,27 @@ namespace Business.Concretes
     public class FacultyManager : IFacultyService
     {
         protected readonly IFacultyDal _facultyDal;
-        protected readonly IUserDal _userDal;
+        protected readonly IUserService _userService;
         protected readonly IMapper _mapper;
-        public FacultyManager(IFacultyDal facultyDal, IUserDal userDal, IMapper mapper)
+        public FacultyManager(IFacultyDal facultyDal, IUserService userService, IMapper mapper)
         {
             _facultyDal = facultyDal;
-            _userDal = userDal;
+            _userService = userService;
             _mapper = mapper;    
         }
+
+        //[SecuredOperation("admin,add")]
+        [ValidationAspect(typeof(FacultyValidator))]
+        [CacheRemoveAspect("IFacultyService.Get")]
         public async Task<IResult> Add(CreateFacultyRequest request)
         {
+            var result = BusinessRules.Run(CapitalizeFirstLetter(request), await IsFacultyNameUnique(request.FacultyName));
+            
+            if (result is not null)
+            {
+                return result;
+            }
+
             Faculty faculty = _mapper.Map<Faculty>(request);
             var createdFaculty = await _facultyDal.AddAsync(faculty);
             if(createdFaculty is null)
@@ -36,23 +53,56 @@ namespace Business.Concretes
             return new SuccessResult(Messages.FacultyAdded);
         }
 
+        //[SecuredOperation("admin,update")]
+        [ValidationAspect(typeof(FacultyValidator))]
+        [CacheRemoveAspect("IFacultyService.Get")]
+        public async Task<IResult> Update(UpdateFacultyRequest request)
+        {
+            var result = BusinessRules.Run(CapitalizeFirstLetter(request), await IsFacultyNameUnique(request.FacultyName));
+
+            if (result is not null)
+            {
+                return result;
+            }
+
+            var facultyToUpdate = await _facultyDal.GetAsync(f => f.FacultyId == request.FacultyId);
+
+            if (facultyToUpdate is null)
+            {
+                return new ErrorResult(Messages.Error);
+            }
+
+            _mapper.Map(request, facultyToUpdate);
+
+            await _facultyDal.UpdateAsync(facultyToUpdate);
+
+            return new SuccessResult(Messages.FacultyUpdated);
+        }
+
+        //[SecuredOperation("admin,delete")]
+        [CacheRemoveAspect("IFacultyService.Get")]
         public async Task<IResult> Delete(DeleteFacultyRequest request)
         {
+
             var facultyToDelete = await _facultyDal.GetAsync(f => f.FacultyId == request.FacultyId);
 
             if (facultyToDelete is not null)
             {
-                if (CheckIfExistInUsers(request.FacultyId))
+                var result = BusinessRules.Run(await CheckIfExistInUsers(request.FacultyId));
+
+                if (result is not null)
                 {
-                    return new ErrorResult(Messages.FacultyExistInUsers);
+                    return result;
                 }
+
                 await _facultyDal.DeleteAsync(facultyToDelete);
                 return new SuccessResult(Messages.FacultyDeleted);
             }
 
             return new ErrorResult(Messages.Error);
         }
-        [CacheAspect()]
+
+        [SecuredOperation("admin,get")]
         public async Task<IDataResult<Faculty>> GetAsync(Guid facultyId)
         {
             var result = await _facultyDal.GetAsync(f => f.FacultyId == facultyId);
@@ -65,6 +115,8 @@ namespace Business.Concretes
             return new ErrorDataResult<Faculty>(Messages.Error);
         }
 
+        //[SecuredOperation("admin,get")]
+        [CacheAspect]
         public async Task<IDataResult<IPaginate<GetListFacultyResponse>>> GetListAsync(PageRequest pageRequest)
         {
             var data = await _facultyDal.GetListAsync(
@@ -84,29 +136,36 @@ namespace Business.Concretes
             return new ErrorDataResult<IPaginate<GetListFacultyResponse>>(Messages.Error);
         }
 
-        public async Task<IResult> Update(UpdateFacultyRequest request)
+        #region Helper Methods
+        private async Task<IResult> CheckIfExistInUsers(Guid facultyId)
         {
-            var facultyToUpdate = await _facultyDal.GetAsync(f => f.FacultyId == request.FacultyId);
-
-            if (facultyToUpdate is null)
+            var result = await _userService.GetAsyncByFacultyId(facultyId);
+            if (result is not null)
             {
-                return new ErrorResult(Messages.Error);
+                return new SuccessResult();
             }
-
-            _mapper.Map(request, facultyToUpdate);
-
-            await _facultyDal.UpdateAsync(facultyToUpdate);
-
-            return new SuccessResult(Messages.FacultyUpdated);
+            return new ErrorResult(Messages.FacultyExistInUsers);
         }
 
-        private bool CheckIfExistInUsers(Guid facultyId)
+        private IDataResult<IFacultyRequest> CapitalizeFirstLetter(IFacultyRequest request)
         {
-            if(_userDal.GetAsync(u => u.FacultyId == facultyId) is null)
-            {
-                return false;
-            }
-            return true;
+            string capitalizedFacultyName = char.ToUpper(request.FacultyName[0]) + request.FacultyName.Substring(1).ToLower();
+            request.FacultyName = capitalizedFacultyName;
+            return new SuccessDataResult<IFacultyRequest>(request);
         }
+
+        private async Task<IResult> IsFacultyNameUnique(string facultyName)
+        {
+            var result = await _facultyDal.GetAsync(f => f.FacultyName.ToUpper() == facultyName.ToUpper());
+
+            if (result is not null)
+            {
+                return new ErrorResult(Messages.FacultyNameNotUnique);
+            }
+            return new SuccessResult();
+        }
+
+
+        #endregion
     }
 }

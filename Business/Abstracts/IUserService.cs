@@ -15,6 +15,7 @@ namespace Business.Abstracts
         Task<IResult> Update(UpdateUserRequest request);
         Task<IResult> Delete(DeleteUserRequest request);
         Task<IDataResult<User>> GetAsync(Guid userId);
+        Task<IDataResult<User>> GetAsyncByFacultyId(Guid facultyId);
         Task<IDataResult<IPaginate<GetListUserResponse>>> GetListAsync(PageRequest pageRequest);
         List<OperationClaim> GetClaims(User user);
         Task<User> GetByMail(string mail);
