@@ -79,10 +79,12 @@ namespace Business.Constants
         public static string Loginned = "Login successful!";
 
         public static string BookListed = "The book has been successfully listed.";
+        public static string BooksListed = "Books has been successfully listed.";
 
         public static string AuthorizationDenied = "Access Denied ";
 
         public static string CategoryNameNotUnique = "Category name must be unique.";
+        public static string LanguageNameNotUnique = "Language name must be unique.";
 
     }
 }

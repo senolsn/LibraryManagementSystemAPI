@@ -29,7 +29,7 @@ namespace Business.Concretes
             _bookService = bookService;
         }
 
-        //[SecuredOperation("admin,add")]
+        [SecuredOperation("admin,add")]
         [ValidationAspect(typeof (CategoryValidator))]
         [CacheRemoveAspect("ICategoryService.Get")]
         public async Task<IResult> Add(CreateCategoryRequest request)
@@ -85,6 +85,7 @@ namespace Business.Concretes
             {
                 return result;
             }
+
             var categoryToUpdate = await _categoryDal.GetAsync(c => c.CategoryId == request.CategoryId);
 
             if (categoryToUpdate is null)
@@ -141,9 +142,10 @@ namespace Business.Concretes
 
             if (result is not null)
             {
-                return new ErrorResult(Messages.CategoryExistInBooks);
-            }
             return new SuccessResult();
+
+            }
+            return new ErrorResult(Messages.CategoryExistInBooks);
         }
 
         private async Task<IResult> IsCategoryNameUnique(string categoryName)
