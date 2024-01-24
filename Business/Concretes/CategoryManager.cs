@@ -159,14 +159,14 @@ namespace Business.Concretes
 
         private IDataResult<CreateCategoryRequest> CapitalizeFirstLetter(CreateCategoryRequest request)
         {
-            string capitalizedCategoryName = char.ToUpper(request.CategoryName[0]) + request.CategoryName.Substring(1);
+            string capitalizedCategoryName = char.ToUpper(request.CategoryName[0]) + request.CategoryName.Substring(1).ToLower();
             request.CategoryName = capitalizedCategoryName;
             return new SuccessDataResult<CreateCategoryRequest>(request);
         }
 
         private IDataResult<UpdateCategoryRequest> CapitalizeFirstLetter(UpdateCategoryRequest request)
         {
-            string capitalizedCategoryName = char.ToUpper(request.CategoryName[0]) + request.CategoryName.Substring(1);
+            string capitalizedCategoryName = char.ToUpper(request.CategoryName[0]) + request.CategoryName.Substring(1).ToLower();
             request.CategoryName = capitalizedCategoryName;
             return new SuccessDataResult<UpdateCategoryRequest>(request);
         }
