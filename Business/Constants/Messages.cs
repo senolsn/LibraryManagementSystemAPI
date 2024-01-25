@@ -75,7 +75,13 @@ namespace Business.Constants
         public static string UserAlreadyExists = "User already exists!";
         public static string AccessTokenCreated = "Access Token Created Successfully";
         public static string UserNotFound = "User not found!";
-        public static string WrongMailOrPassword = "Your email address or password is incorrect!";
+		public static string UsersNotFound = "Users not found!";
+		public static string UserEmailNotUnique = "User Email must be unique.";
+        public static string UserFetched = "User ";
+
+
+
+		public static string WrongMailOrPassword = "Your email address or password is incorrect!";
         public static string Loginned = "Login successful!";
 
         public static string BookListed = "The book has been successfully listed.";
@@ -87,5 +93,6 @@ namespace Business.Constants
         public static string LanguageNameNotUnique = "Language name must be unique.";
         public static string FacultyNameNotUnique = "Faculty name must be unique.";
 
+        
     }
 }
