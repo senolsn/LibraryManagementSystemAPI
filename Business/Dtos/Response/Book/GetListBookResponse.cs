@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Business.Dtos.Response.Author;
+using Entities.Concrete;
+using System;
+using System.Collections.Generic;
 
 namespace Business.Dtos.Response.Book
 {
@@ -18,5 +21,6 @@ namespace Business.Dtos.Response.Book
         public bool Status { get; set; }
         public string Interpreter { get; set; }
         public string FixtureNumber { get; set; }
+        public List<GetListAuthorResponse> Authors { get; set; }
     }
 }

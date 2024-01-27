@@ -1,4 +1,4 @@
-﻿namespace Business.Dtos.Request.Author
+﻿namespace Business.Dtos.Request.AuthorRequests
 {
     public class CreateAuthorRequest
     {

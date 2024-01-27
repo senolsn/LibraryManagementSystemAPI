@@ -1,6 +1,7 @@
 ﻿using Core.Entities.Concrete;
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Entities.Concrete
 {
@@ -20,7 +21,6 @@ namespace Entities.Concrete
         public bool Status { get; set; }
         public string Interpreter { get; set; }
         public string FixtureNumber { get; set; }
-        public List<BookCategory> BookCategories { get; set; }
-        public List<BookAuthor> BookAuthors { get; set; }
+        public ICollection<Author> BookAuthors { get; set; }
     }
 }

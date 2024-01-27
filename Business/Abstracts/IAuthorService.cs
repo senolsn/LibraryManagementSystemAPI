@@ -1,4 +1,4 @@
-﻿using Business.Dtos.Request.Author;
+﻿using Business.Dtos.Request.AuthorRequests;
 using Business.Dtos.Response.Author;
 using Core.DataAccess.Paging;
 using Core.Utilities.Results;

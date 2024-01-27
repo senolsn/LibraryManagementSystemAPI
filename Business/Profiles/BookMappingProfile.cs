@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
-using Business.Dtos.Request.Book;
+using Business.Dtos.Request.BookRequests;
 using Business.Dtos.Response.Book;
 using Core.DataAccess.Paging;
 using Entities.Concrete;
+using System;
+using System.Collections.Generic;
 
 namespace Business.Profiles
 {

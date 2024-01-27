@@ -31,7 +31,9 @@ namespace Business.Concretes
 
             var createdPublisher = await _publisherDal.AddAsync(publisher);
 
-            if (createdPublisher is null)
+            var dbResult = await _publisherDal.SaveChangesAsync();
+
+            if (!dbResult)
             {
                 return new ErrorResult(Messages.Error);
             }

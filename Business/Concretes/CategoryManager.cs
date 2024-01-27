@@ -29,7 +29,7 @@ namespace Business.Concretes
             _bookService = bookService;
         }
 
-        [SecuredOperation("admin,add")]
+        //[SecuredOperation("admin,add")]
         [ValidationAspect(typeof (CategoryValidator))]
         [CacheRemoveAspect("ICategoryService.Get")]
         public async Task<IResult> Add(CreateCategoryRequest request)
@@ -106,7 +106,9 @@ namespace Business.Concretes
         {
             var result = await _categoryDal.GetAsync(c => c.CategoryId == categoryId);
 
-            if (result is not null)
+            var dbResult = await _categoryDal.SaveChangesAsync();
+
+            if (!dbResult)
             {
                 return new SuccessDataResult<Category>(result, Messages.CategoryListed);
             }
@@ -114,7 +116,7 @@ namespace Business.Concretes
             return new ErrorDataResult<Category>(Messages.Error);
         }
 
-        [SecuredOperation("admin,get")]
+        //[SecuredOperation("admin,get")]
         [CacheAspect]
         public async Task<IDataResult<IPaginate<GetListCategoryResponse>>> GetListAsync(PageRequest pageRequest)
         {

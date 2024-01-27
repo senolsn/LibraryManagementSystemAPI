@@ -31,7 +31,9 @@ namespace Business.Concretes
 
             var createdLocation = await _locationDal.AddAsync(location);
 
-            if(createdLocation is null) 
+            var dbResult = await _locationDal.SaveChangesAsync();
+
+            if(!dbResult) 
             {
                 return new ErrorResult(Messages.Error);
             }

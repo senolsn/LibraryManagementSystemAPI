@@ -25,13 +25,19 @@ namespace Core.DataAccess.Repositories
 
         public IQueryable<TEntity> Query() => Context.Set<TEntity>();
 
-        public async Task<TEntity> AddAsync(TEntity entity)
+        public async virtual Task<TEntity> AddAsync(TEntity entity)
         {
             entity.CreatedDate = DateTime.Now;
             await Context.AddAsync(entity);
             await Context.SaveChangesAsync();
             return entity;
         }
+        public async Task<bool> SaveChangesAsync()
+        {
+           return await Context.SaveChangesAsync() > 0;
+        }
+        //SaveChangesAsync'lerin hepsini sil.
+        //Dışarda metodu çağırdıktan sonra savechangesasync çağır. Bir metodda birden fazla ekleme yapabiliriz. sonra savechanges yapmak daha performanslı.
 
         public async Task<TEntity> DeleteAsync(TEntity entity, bool permanent)
         {
@@ -266,6 +272,8 @@ namespace Core.DataAccess.Repositories
 
             Context.Update(entity);
         }
+
+       
         #endregion
     }
 }
