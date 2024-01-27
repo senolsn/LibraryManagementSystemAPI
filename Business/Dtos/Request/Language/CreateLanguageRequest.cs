@@ -1,6 +1,6 @@
 ﻿namespace Business.Dtos.Request.Language
 {
-    public class CreateLanguageRequest
+    public class CreateLanguageRequest : ILanguageRequest
     {
         public string? LanguageName { get; set; }
     }

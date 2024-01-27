@@ -1,14 +1,14 @@
-﻿using Core.Entities.Concrete;
-using Entities.Concrete.enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Entities.Concrete
+namespace Business.Dtos.Request.Book
 {
-    public class Book:BaseEntity
+    public interface IBookRequest
     {
-        public Guid BookId { get; set; }
+        public Guid AuthorId { get; set; }
         public Guid LanguageId { get; set; }
         public Guid CategoryId { get; set; }
         public Guid PublisherId { get; set; }
@@ -19,9 +19,8 @@ namespace Entities.Concrete
         public DateTime PublishedDate { get; set; }
         public int PublishCount { get; set; }
         public int Stock { get; set; }
-        public BookStatus Status { get; set; }
+        public bool Status { get; set; }
         public string Interpreter { get; set; }
         public string FixtureNumber { get; set; }
-        public ICollection<Author> BookAuthors { get; set; }
     }
 }

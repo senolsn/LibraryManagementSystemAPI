@@ -1,8 +1,12 @@
 ﻿using AutoMapper;
 using Business.Abstracts;
+using Business.BusinessAspects;
 using Business.Constants;
 using Business.Dtos.Request.BookRequests;
 using Business.Dtos.Response.Book;
+using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Caching;
+using Core.Aspects.Autofac.Validation;
 using Core.DataAccess.Paging;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
@@ -29,6 +33,9 @@ namespace Business.Concretes
             _authorService = authorService;
         }
 
+        [SecuredOperation("admin,add")]
+        [ValidationAspect(typeof (BookValidator))]
+        [CacheRemoveAspect("IBookService.Get")]
         public async Task<IResult> Add(CreateBookRequest request)
         {
 
@@ -56,6 +63,9 @@ namespace Business.Concretes
             return new SuccessResult(Messages.BookListed);
         }
 
+        [SecuredOperation("admin,update")]
+        [ValidationAspect(typeof (BookValidator))]
+        [CacheRemoveAspect("IBookService.Get")]
         public async Task<IResult> Update(UpdateBookRequest request)
         {
             var bookToUpdate = await _bookDal.GetAsync(b => b.BookId == request.BookId);
@@ -72,6 +82,9 @@ namespace Business.Concretes
             return new SuccessResult(Messages.AuthorUpdated);
         }
 
+        [SecuredOperation("admin,delete")]
+        [ValidationAspect(typeof (BookValidator))]
+        [CacheRemoveAspect("IBookService.Get")]
         public async Task<IResult> Delete(DeleteBookRequest request)
         {
             var bookToDelete = await _bookDal.GetAsync(b => b.BookId == request.BookId);
@@ -85,6 +98,7 @@ namespace Business.Concretes
             return new ErrorResult(Messages.Error);
         }
 
+        [SecuredOperation("admin,get")]
         public async Task<IDataResult<Book>> GetAsync(Guid bookId)
         {
             var result = await _bookDal.GetAsync(b => b.BookId == bookId);
@@ -96,6 +110,8 @@ namespace Business.Concretes
 
             return new ErrorDataResult<Book>(Messages.Error);
         }
+
+        [SecuredOperation("admin,get")]
         public async Task<IDataResult<Book>> GetAsyncByCategoryId(Guid categoryId)
         {
             var result = await _bookDal.GetAsync(b => b.CategoryId == categoryId);
@@ -106,6 +122,8 @@ namespace Business.Concretes
             }
             return new ErrorDataResult<Book>(Messages.Error);
         }
+
+        [SecuredOperation("admin,get")]
         public async Task<IDataResult<Book>> GetAsyncByLanguageId(Guid languageId)
         {
             var result = await _bookDal.GetAsync(b => b.LanguageId == languageId);
@@ -116,6 +134,8 @@ namespace Business.Concretes
             }
             return new ErrorDataResult<Book>(Messages.Error);
         }
+
+        [SecuredOperation("admin,get")]
         public async Task<IDataResult<IPaginate<GetListBookResponse>>> GetListAsync(PageRequest pageRequest)
         {
             var data = await _bookDal.GetListAsync(
@@ -133,6 +153,7 @@ namespace Business.Concretes
             return new ErrorDataResult<IPaginate<GetListBookResponse>>(Messages.Error);
         }
 
+        [SecuredOperation("admin,get")]
         public async Task<IDataResult<IPaginate<GetListBookResponse>>> GetListAsyncByCategory(PageRequest pageRequest, Guid categoryId)
         {
             var data = await _bookDal.GetListAsync(
@@ -151,6 +172,7 @@ namespace Business.Concretes
             return new ErrorDataResult<IPaginate<GetListBookResponse>>(Messages.Error);
         }
 
+        [SecuredOperation("admin,get")]
         public async Task<IDataResult<IPaginate<GetListBookResponse>>> GetListAsyncSortedByName(PageRequest pageRequest)
         {
             var data = await _bookDal.GetListAsyncOrderBy(
@@ -170,6 +192,7 @@ namespace Business.Concretes
             return new ErrorDataResult<IPaginate<GetListBookResponse>>(Messages.Error);
         }
 
+        [SecuredOperation("admin,get")]
         public async Task<IDataResult<IPaginate<GetListBookResponse>>> GetListAsyncSortedByCreatedDate(PageRequest pageRequest)
         {
             var data = await _bookDal.GetListAsyncOrderBy(
@@ -205,5 +228,6 @@ namespace Business.Concretes
 
             return new ErrorDataResult<IPaginate<Book>>(Messages.Error);
         }
+
     }
 }

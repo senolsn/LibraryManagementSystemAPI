@@ -1,7 +1,8 @@
-﻿using Business.Dtos.Request.AuthorRequests;
+using Business.Dtos.Request.AuthorRequests;
 using Entities.Concrete;
 using System;
 using System.Collections.Generic;
+using Entities.Concrete.enums;
 
 namespace Business.Dtos.Request.BookRequests
 {
@@ -19,7 +20,7 @@ namespace Business.Dtos.Request.BookRequests
         public DateTime PublishedDate { get; set; }
         public int PublishCount { get; set; }
         public int Stock { get; set; }
-        public bool Status { get; set; }
+        public BookStatus Status { get; set; }
         public string Interpreter { get; set; }
         public string FixtureNumber { get; set; }
     }

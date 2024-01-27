@@ -161,7 +161,7 @@ namespace Business.Concretes
             return new SuccessResult();
         }
 
-        private IDataResult<CreateCategoryRequest> CapitalizeFirstLetter(CreateCategoryRequest request)
+        private IDataResult<ICategoryRequest> CapitalizeFirstLetter(ICategoryRequest request)
         {
             var stringToArray = request.CategoryName.Split(' ', ',', '.');
             string[] arrayToString = new string[stringToArray.Length];
@@ -175,24 +175,7 @@ namespace Business.Concretes
             }
             request.CategoryName = string.Join(" ", arrayToString);
 
-            return new SuccessDataResult<CreateCategoryRequest>(request);
-        }
-
-        private IDataResult<UpdateCategoryRequest> CapitalizeFirstLetter(UpdateCategoryRequest request)
-        {
-            var stringToArray = request.CategoryName.Split(' ', ',','.');
-            string[] arrayToString = new string[stringToArray.Length];
-            int count = 0;
-
-            foreach (var word in stringToArray)
-            {
-                var capitalizedCategoryName = char.ToUpper(word[0]) + word.Substring(1).ToLower();
-                arrayToString[count] = capitalizedCategoryName;
-                count++;
-            }
-            request.CategoryName = string.Join(" ", arrayToString);
-
-            return new SuccessDataResult<UpdateCategoryRequest>(request);
+            return new SuccessDataResult<ICategoryRequest>(request);
         }
         #endregion
 

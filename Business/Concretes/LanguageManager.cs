@@ -149,18 +149,11 @@ namespace Business.Concretes
             }
             return new ErrorResult(Messages.LanguageExistInBooks);
         }
-        private IDataResult<CreateLanguageRequest> CapitalizeFirstLetter(CreateLanguageRequest request)
+        private IDataResult<ILanguageRequest> CapitalizeFirstLetter(ILanguageRequest request)
         {
             string capitalizedLanguageName = char.ToUpper(request.LanguageName[0]) + request.LanguageName.Substring(1).ToLower();
             request.LanguageName = capitalizedLanguageName;
-            return new SuccessDataResult<CreateLanguageRequest>(request);
-        }
-
-        private IDataResult<UpdateLanguageRequest> CapitalizeFirstLetter(UpdateLanguageRequest request)
-        {
-            string capitalizedLanguageName = char.ToUpper(request.LanguageName[0]) + request.LanguageName.Substring(1).ToLower();
-            request.LanguageName = capitalizedLanguageName;
-            return new SuccessDataResult<UpdateLanguageRequest>(request);
+            return new SuccessDataResult<ILanguageRequest>(request);
         }
 
         private async Task<IResult> IsLanguageNameUnique(string languageName)
