@@ -1,5 +1,5 @@
 ﻿using Business.Abstracts;
-using Business.Dtos.Request.Book;
+using Business.Dtos.Request.BookRequests;
 using Core.DataAccess.Paging;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -21,8 +21,7 @@ namespace WebAPI.Controllers
         [HttpPost("Add")]
         public async Task<IActionResult> Add(CreateBookRequest request)
         {
-            try
-            {
+          
                 var result = await _bookService.Add(request);
 
                 if (!result.IsSuccess)
@@ -31,11 +30,7 @@ namespace WebAPI.Controllers
                 }
 
                 return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Error : {ex.Message}");
-            }
+          
         }
 
         [HttpPut("Update")]
@@ -122,6 +117,28 @@ namespace WebAPI.Controllers
                 return StatusCode(500, $"Error : {ex.Message}");
             }
         }
+
+        [HttpGet("GetPagedListWithAuthorsAsync")]
+        public async Task<IActionResult> GetPagedListWithAuthorsAsync([FromQuery] PageRequest pageRequest)
+        {
+            try
+            {
+                var result = await _bookService.GetListWithAuthors(null, pageRequest);
+
+                if (!result.IsSuccess)
+                {
+                    return BadRequest(result);
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, $"Error : {ex.Message}");
+            }
+        }
+
 
         [HttpGet("GetPagedListAsyncByCategory")]
         public async Task<IActionResult> GetPagedListAsyncByCategory([FromQuery] PageRequest pageRequest,Guid categoryId)

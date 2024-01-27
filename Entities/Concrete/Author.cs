@@ -1,6 +1,7 @@
 ﻿using Core.Entities.Concrete;
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Entities.Concrete
 {
@@ -9,8 +10,8 @@ namespace Entities.Concrete
         public Guid AuthorId { get; set; }
         public string AuthorFirstName { get; set; }
         public string AuthorLastName { get; set; }
-        public List<BookAuthor> BookAuthors { get; set; }
 
-
+        [JsonIgnore]
+        public virtual ICollection<Book>? AuthorBooks { get; set; }
     }
 }

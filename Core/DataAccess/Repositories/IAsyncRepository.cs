@@ -11,7 +11,7 @@ namespace Core.DataAccess.Repositories
     public interface IAsyncRepository<TEntity>:IQuery<TEntity> where TEntity : IEntity
     {
         Task<TEntity?> GetAsync(
-           Expression<Func<TEntity, bool>> predicate,
+           Expression<Func<TEntity, bool>> predicate, 
            bool withDeleted = false,
            bool enableTracking = true,
            CancellationToken cancellationToken = default
@@ -41,6 +41,8 @@ namespace Core.DataAccess.Repositories
         Task<TEntity> UpdateAsync(TEntity entity);
 
         Task<TEntity> DeleteAsync(TEntity entity, bool permanent = false);
+
+        Task <bool> SaveChangesAsync();
 
             
     }

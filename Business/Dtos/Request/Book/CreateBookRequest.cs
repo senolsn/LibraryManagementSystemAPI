@@ -1,11 +1,15 @@
-﻿using Entities.Concrete.enums;
+using Business.Dtos.Request.AuthorRequests;
+using Entities.Concrete;
 using System;
+using System.Collections.Generic;
+using Entities.Concrete.enums;
 
-namespace Business.Dtos.Request.Book
+namespace Business.Dtos.Request.BookRequests
 {
     public class CreateBookRequest
     {
-        public Guid AuthorId { get; set; }
+        //public Guid AuthorId { get; set; }
+        public List<Guid> Authors { get; set; }
         public Guid LanguageId { get; set; }
         public Guid CategoryId { get; set; }
         public Guid PublisherId { get; set; }

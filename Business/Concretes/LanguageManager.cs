@@ -31,7 +31,7 @@ namespace Business.Concretes
             _mapper = mapper;
         }
 
-        [SecuredOperation("admin,add")]
+        //[SecuredOperation("admin,add")]
         [ValidationAspect(typeof (LanguageValidator))]
         [CacheRemoveAspect("ILanguageService.Get")]
         public async Task<IResult> Add(CreateLanguageRequest request)
@@ -47,7 +47,9 @@ namespace Business.Concretes
 
             var createdLanguage = await _languageDal.AddAsync(language);
 
-            if (createdLanguage is null)
+            var dbResult = await _languageDal.SaveChangesAsync();
+
+            if (!dbResult)
             {
                 return new ErrorResult(Messages.Error);
             }
@@ -117,7 +119,7 @@ namespace Business.Concretes
             return new ErrorDataResult<Language>(Messages.Error);
         }
 
-        [SecuredOperation("admin,get")]
+        //[SecuredOperation("admin,get")]
         [CacheAspect]
         public async Task<IDataResult<IPaginate<GetListLanguageResponse>>> GetListAsync(PageRequest pageRequest)
         {
