@@ -16,7 +16,7 @@ namespace Business.Abstracts
 
         Task<IResult> Delete(DeleteDepartmentRequest request);
 
-        Task<IDataResult<IPaginate<GetListDepartmentResponse>>> GetListAsync(PageRequest pageRequest);
+        Task<IDataResult<IPaginate<GetListDepartmentResponse>>> GetPaginatedListAsync(PageRequest pageRequest);
 
         Task<IDataResult<Department>> GetAsync(Guid departmentId);
     }

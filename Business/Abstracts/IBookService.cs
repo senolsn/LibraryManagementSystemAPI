@@ -13,17 +13,14 @@ namespace Business.Abstracts
     public interface IBookService
     {
         Task<IResult> Add(CreateBookRequest request);
-
         Task<IResult> Update(UpdateBookRequest request);
-
         Task<IResult> Delete(DeleteBookRequest request);
         Task<IDataResult<Book>> GetAsync(Guid bookId);
-        Task<IDataResult<Book>> GetAsyncByCategoryId(Guid categoryId);
-        Task<IDataResult<Book>> GetAsyncByLanguageId(Guid languageId);
-        Task<IDataResult<IPaginate<GetListBookResponse>>> GetListAsync(PageRequest pageRequest);
-        Task<IDataResult<IPaginate<GetListBookResponse>>> GetListWithAuthors(Expression<Func<Book, bool>> predicate, PageRequest pageRequest);
-        Task<IDataResult<IPaginate<GetListBookResponse>>> GetListAsyncByCategory(PageRequest pageRequest,Guid categoryId);
-        Task<IDataResult<IPaginate<GetListBookResponse>>> GetListAsyncSortedByName(PageRequest pageRequest);
-        Task<IDataResult<IPaginate<GetListBookResponse>>> GetListAsyncSortedByCreatedDate(PageRequest pageRequest);
+        Task<IDataResult<IPaginate<GetListBookResponse>>> GetPaginatedListAsync(PageRequest pageRequest);
+        Task<IDataResult<IPaginate<GetListBookResponse>>> GetPaginatedListWithAuthors(Expression<Func<Book, bool>> predicate, PageRequest pageRequest);
+        Task<IDataResult<IPaginate<GetListBookResponse>>> GetPaginatedListAsyncByCategory(PageRequest pageRequest, List<Guid> categoryIds);
+        Task<IDataResult<IPaginate<GetListBookResponse>>> GetPaginatedListAsyncByLanguage(PageRequest pageRequest, List<Guid> languageIds);
+        Task<IDataResult<IPaginate<GetListBookResponse>>> GetPaginatedListAsyncSortedByName(PageRequest pageRequest);
+        Task<IDataResult<IPaginate<GetListBookResponse>>> GetPaginatedListAsyncSortedByCreatedDate(PageRequest pageRequest);
     }
 }

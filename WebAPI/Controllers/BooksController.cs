@@ -3,6 +3,7 @@ using Business.Dtos.Request.BookRequests;
 using Core.DataAccess.Paging;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace WebAPI.Controllers
@@ -102,7 +103,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                var result = await _bookService.GetListAsync(pageRequest);
+                var result = await _bookService.GetPaginatedListAsync(pageRequest);
 
                 if (!result.IsSuccess)
                 {
@@ -123,7 +124,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                var result = await _bookService.GetListWithAuthors(null, pageRequest);
+                var result = await _bookService.GetPaginatedListWithAuthors(null, pageRequest);
 
                 if (!result.IsSuccess)
                 {
@@ -141,11 +142,33 @@ namespace WebAPI.Controllers
 
 
         [HttpGet("GetPagedListAsyncByCategory")]
-        public async Task<IActionResult> GetPagedListAsyncByCategory([FromQuery] PageRequest pageRequest,Guid categoryId)
+        public async Task<IActionResult> GetPagedListAsyncByCategory([FromQuery] PageRequest pageRequest, [FromQuery]List<Guid> categoryIds)
         {
             try
             {
-                var result = await _bookService.GetListAsyncByCategory(pageRequest,categoryId);
+                var result = await _bookService.GetPaginatedListAsyncByCategory(pageRequest, categoryIds);
+
+                if (!result.IsSuccess)
+                {
+                    return BadRequest(result);
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, $"Error : {ex.Message}");
+            }
+        }
+
+
+        [HttpGet("GetPagedListAsyncByLanguage")]
+        public async Task<IActionResult> GetPagedListAsyncByLanguage([FromQuery] PageRequest pageRequest, [FromQuery] List<Guid> languageIds)
+        {
+            try
+            {
+                var result = await _bookService.GetPaginatedListAsyncByLanguage(pageRequest, languageIds);
 
                 if (!result.IsSuccess)
                 {
@@ -166,7 +189,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                var result = await _bookService.GetListAsyncSortedByName(pageRequest);
+                var result = await _bookService.GetPaginatedListAsyncSortedByName(pageRequest);
 
                 if (!result.IsSuccess)
                 {
@@ -187,7 +210,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                var result = await _bookService.GetListAsyncSortedByCreatedDate(pageRequest);
+                var result = await _bookService.GetPaginatedListAsyncSortedByCreatedDate(pageRequest);
 
                 if (!result.IsSuccess)
                 {

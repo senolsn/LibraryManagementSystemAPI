@@ -121,9 +121,9 @@ namespace Business.Concretes
 
         //[SecuredOperation("admin,get")]
         [CacheAspect]
-        public async Task<IDataResult<IPaginate<GetListLanguageResponse>>> GetListAsync(PageRequest pageRequest)
+        public async Task<IDataResult<IPaginate<GetListLanguageResponse>>> GetPaginatedListAsync(PageRequest pageRequest)
         {
-            var data = await _languageDal.GetListAsync(
+            var data = await _languageDal.GetPaginatedListAsync(
                 null, 
                 index : pageRequest.PageIndex,
                 size : pageRequest.PageSize,
@@ -142,8 +142,8 @@ namespace Business.Concretes
         #region Helper Methods
         private async Task<IResult> CheckIfExistInBooks(Guid languageId)
         {
-            var result = await _bookDal.GetAsyncByLanguageId(languageId);
-            if(result is not null)
+            var result = 1;//await _bookDal.GetAsyncByLanguageId(languageId); 
+            if(result is not 0)
             {
                 return new SuccessResult();
             }

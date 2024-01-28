@@ -18,7 +18,7 @@ namespace Business.Abstracts
 
         Task<IDataResult<Author>> GetAsync(Guid authorId);
 
-        Task<IDataResult<IPaginate<GetListAuthorResponse>>> GetListAsync(PageRequest pageRequest);
+        Task<IDataResult<IPaginate<GetListAuthorResponse>>> GetPaginatedListAsync(PageRequest pageRequest);
 
     }
 }

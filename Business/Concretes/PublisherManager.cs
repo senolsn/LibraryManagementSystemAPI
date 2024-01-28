@@ -66,9 +66,9 @@ namespace Business.Concretes
             return new ErrorDataResult<Publisher>(Messages.Error);
         }
 
-        public async Task<IDataResult<IPaginate<GetListPublisherResponse>>> GetListAsync(PageRequest pageRequest)
+        public async Task<IDataResult<IPaginate<GetListPublisherResponse>>> GetPaginatedListAsync(PageRequest pageRequest)
         {
-            var data = await _publisherDal.GetListAsync(
+            var data = await _publisherDal.GetPaginatedListAsync(
                 null,
                 index: pageRequest.PageIndex,
                 size: pageRequest.PageSize,
