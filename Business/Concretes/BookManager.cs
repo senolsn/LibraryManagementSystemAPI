@@ -3,7 +3,11 @@ using Business.Abstracts;
 using Business.BusinessAspects;
 using Business.Constants;
 using Business.Dtos.Request.BookRequests;
+using Business.Dtos.Response.Author;
 using Business.Dtos.Response.Book;
+using Business.Dtos.Response.Category;
+using Business.Dtos.Response.Language;
+using Business.Dtos.Response.Publisher;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Validation;
@@ -24,16 +28,22 @@ namespace Business.Concretes
     {
         protected readonly IBookDal _bookDal;
         protected readonly IMapper _mapper;
-        private readonly IAuthorService _authorService;
+        private readonly Lazy<IAuthorService> _authorService;
+        private readonly Lazy<ICategoryService> _categoryService;
+        private readonly Lazy<ILanguageService> _languageService;
+        private readonly Lazy<IPublisherService> _publisherService;
 
-        public BookManager(IBookDal bookDal, IMapper mapper, IAuthorService authorService)
+        public BookManager(IBookDal bookDal, IMapper mapper, Lazy<IAuthorService> authorService, Lazy<IPublisherService> publisherService, Lazy<ICategoryService> categoryService, Lazy<ILanguageService> languageService)
         {
             _bookDal = bookDal;
             _mapper = mapper;
             _authorService = authorService;
+            _publisherService = publisherService;
+            _categoryService = categoryService;
+            _languageService = languageService;
         }
 
-        [SecuredOperation("admin,add")]
+        //[SecuredOperation("admin,add")]
         [ValidationAspect(typeof (BookValidator))]
         [CacheRemoveAspect("IBookService.Get")]
         public async Task<IResult> Add(CreateBookRequest request)
@@ -42,18 +52,35 @@ namespace Business.Concretes
             Book book = _mapper.Map<Book>(request);
 
             book.BookAuthors = new List<Author>();
+            book.BookCategories = new List<Category>();
+            book.BookLanguages = new List<Language>();
 
             foreach (var authorId in request.Authors)
             {
-                var result = await _authorService.GetAsync(authorId);
-                ArgumentNullException.ThrowIfNull(result.Data , "Yazar");
+                var result = await _authorService.Value.GetAsync(authorId);
+                ArgumentNullException.ThrowIfNull(result.Data , "Author");
                 book.BookAuthors.Add(result.Data);
             }
 
+            foreach (var categoryId in request.Categories)
+            {
+                var result = await _categoryService.Value.GetAsync(categoryId);
+                ArgumentNullException.ThrowIfNull(result.Data, "Category");
+                book.BookCategories.Add(result.Data);
+
+            }
+
+            foreach(var languageId in request.Languages)
+            {
+                var result = await _languageService.Value.GetAsync(languageId);
+                ArgumentNullException.ThrowIfNull(result.Data, "Language");
+                book.BookLanguages.Add(result.Data);
+            }
+
+            var publisherResult = await _publisherService.Value.GetAsync(request.PublisherId);
+            book.Publisher = publisherResult.Data;
 
             var createdBook = await _bookDal.AddAsync(book);
-
-            //var dbResult = await _bookDal.SaveChangesAsync();
 
             if (createdBook is null)
             {
@@ -98,7 +125,7 @@ namespace Business.Concretes
             return new ErrorResult(Messages.Error);
         }
 
-        [SecuredOperation("admin,get")]
+        //[SecuredOperation("admin,get")]
         public async Task<IDataResult<Book>> GetAsync(Guid bookId)
         {
             var result = await _bookDal.GetAsync(b => b.BookId == bookId);
@@ -111,7 +138,7 @@ namespace Business.Concretes
             return new ErrorDataResult<Book>(Messages.Error);
         }
 
-        [SecuredOperation("admin,get")]
+        //[SecuredOperation("admin,get")]
         public async Task<IDataResult<Book>> GetAsyncByCategoryId(Guid categoryId)
         {
             var result = await _bookDal.GetAsync(b => b.CategoryId == categoryId);
@@ -123,7 +150,7 @@ namespace Business.Concretes
             return new ErrorDataResult<Book>(Messages.Error);
         }
 
-        [SecuredOperation("admin,get")]
+        //[SecuredOperation("admin,get")]
         public async Task<IDataResult<Book>> GetAsyncByLanguageId(Guid languageId)
         {
             var result = await _bookDal.GetAsync(b => b.LanguageId == languageId);
@@ -135,7 +162,7 @@ namespace Business.Concretes
             return new ErrorDataResult<Book>(Messages.Error);
         }
 
-        [SecuredOperation("admin,get")]
+        //[SecuredOperation("admin,get")]
         public async Task<IDataResult<IPaginate<GetListBookResponse>>> GetListAsync(PageRequest pageRequest)
         {
             var data = await _bookDal.GetListAsync(
@@ -153,7 +180,7 @@ namespace Business.Concretes
             return new ErrorDataResult<IPaginate<GetListBookResponse>>(Messages.Error);
         }
 
-        [SecuredOperation("admin,get")]
+        //[SecuredOperation("admin,get")]
         public async Task<IDataResult<IPaginate<GetListBookResponse>>> GetListAsyncByCategory(PageRequest pageRequest, Guid categoryId)
         {
             var data = await _bookDal.GetListAsync(
@@ -172,7 +199,7 @@ namespace Business.Concretes
             return new ErrorDataResult<IPaginate<GetListBookResponse>>(Messages.Error);
         }
 
-        [SecuredOperation("admin,get")]
+        //[SecuredOperation("admin,get")]
         public async Task<IDataResult<IPaginate<GetListBookResponse>>> GetListAsyncSortedByName(PageRequest pageRequest)
         {
             var data = await _bookDal.GetListAsyncOrderBy(
@@ -212,21 +239,50 @@ namespace Business.Concretes
             return new ErrorDataResult<IPaginate<GetListBookResponse>>(Messages.Error);
         }
 
-        public async Task<IDataResult<IPaginate<Book>>> GetListWithAuthors(Expression<Func<Book, bool>> predicate, PageRequest pageRequest)
+        public async Task<IDataResult<IPaginate<GetListBookResponse>>> GetListWithAuthors(Expression<Func<Book, bool>> predicate, PageRequest pageRequest)
         {
             var data = await _bookDal.GetListWithAuthors(
                null,
                index: pageRequest.PageIndex,
                size: pageRequest.PageSize);
 
+
             if (data is not null)
             {
-                var result = _mapper.Map<Paginate<Book>>(data);
+                List<GetListBookResponse> booksResponse = new();
+                foreach(var item in data.Items)
+                {
+                    GetListBookResponse response = new GetListBookResponse()
+                    {
+                        BookId = item.BookId,
+                        BookName = item.BookName,
+                        ISBNNumber = item.ISBNNumber,
+                        CategoryId = item.CategoryId,
+                        LocationId = item.LocationId,
+                        Interpreter = item.Interpreter,
+                        PublisherId = item.PublisherId,
+                        Stock = item.Stock,
+                        Status = item.Status,
+                        PageCount = item.PageCount,
+                        BookAuthors = _mapper.Map<List<GetListAuthorResponse>>(item.BookAuthors),
+                        BookCategories = _mapper.Map<List<GetListCategoryResponse>>(item.BookCategories),
+                        BookLanguages = _mapper.Map<List<GetListLanguageResponse>>(item.BookLanguages),
+                        FixtureNumber = item.FixtureNumber,
+                        LanguageId = item.LanguageId,
+                        PublishCount = item.PublishCount,
+                        PublishedDate = item.PublishedDate,
+                        Publisher = _mapper.Map<GetListPublisherResponse>(item.Publisher)
+                    };
+                    booksResponse.Add(response);
+                }
 
-                return new SuccessDataResult<IPaginate<Book>>(result, Messages.BooksListed);
+                Paginate<GetListBookResponse> paginatedBooksResponse = new();
+                paginatedBooksResponse.Items = booksResponse;
+
+                return new SuccessDataResult<IPaginate<GetListBookResponse>>(paginatedBooksResponse, Messages.BooksListed);
             }
 
-            return new ErrorDataResult<IPaginate<Book>>(Messages.Error);
+            return new ErrorDataResult<IPaginate<GetListBookResponse>>(Messages.Error);
         }
 
     }

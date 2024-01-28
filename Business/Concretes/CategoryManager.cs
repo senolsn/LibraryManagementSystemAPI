@@ -53,7 +53,7 @@ namespace Business.Concretes
             return new SuccessResult(Messages.CategoryAdded);
         }
 
-        [SecuredOperation("admin,delete")]
+        //[SecuredOperation("admin,delete")]
         [CacheRemoveAspect("ICategoryService.Get")]
         public async Task<IResult> Delete(DeleteCategoryRequest request)
         {
@@ -74,7 +74,7 @@ namespace Business.Concretes
             return new ErrorResult(Messages.Error);
         }
 
-        [SecuredOperation("admin,update")]
+        //[SecuredOperation("admin,update")]
         [ValidationAspect(typeof (CategoryValidator))]
         [CacheRemoveAspect("ICategoryService.Get")]
         public async Task<IResult> Update(UpdateCategoryRequest request)
@@ -100,7 +100,7 @@ namespace Business.Concretes
             return new SuccessResult(Messages.CategoryUpdated);
         }
 
-        [SecuredOperation("admin,get")]
+        //[SecuredOperation("admin,get")]
         [CacheAspect]
         public async Task<IDataResult<Category>> GetAsync(Guid categoryId)
         {
