@@ -56,7 +56,7 @@ namespace Core.DataAccess.Repositories
             return entity;
         }
 
-        public async Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> predicate, bool withDeleted = false, bool enableTracking = true, CancellationToken cancellationToken = default)
+        public virtual async Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> predicate, bool withDeleted = false, bool enableTracking = true, CancellationToken cancellationToken = default)
         {
             IQueryable<TEntity> queryable = Query();
             if (!enableTracking)

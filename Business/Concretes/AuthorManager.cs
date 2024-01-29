@@ -24,7 +24,6 @@ namespace Business.Concretes
             _authorDal = authorDal;
             _mapper = mapper;
         }
-
         public async Task<IResult> Add(CreateAuthorRequest request)
         {
             Author author = _mapper.Map<Author>(request);
@@ -38,7 +37,6 @@ namespace Business.Concretes
 
             return new SuccessResult(Messages.AuthorAdded);
         }
-
         public async Task<IResult> Update(UpdateAuthorRequest request)
         {
             var authorToUpdate = await _authorDal.GetAsync(a => a.AuthorId == request.AuthorId);
@@ -54,7 +52,6 @@ namespace Business.Concretes
 
             return new SuccessResult(Messages.AuthorUpdated);
         }
-
         public async Task<IResult> Delete(DeleteAuthorRequest request)
         {
             var authorToDelete = await _authorDal.GetAsync(a => a.AuthorId == request.AuthorId);
@@ -67,7 +64,6 @@ namespace Business.Concretes
 
             return new ErrorResult(Messages.Error);
         }
-
         public async Task<IDataResult<Author>> GetAsync(Guid authorId)
         {
             var result = await _authorDal.GetAsync(a => a.AuthorId == authorId);
@@ -80,7 +76,6 @@ namespace Business.Concretes
             return new ErrorDataResult<Author>(Messages.Error);
             
         }
-
         public async Task<IDataResult<IPaginate<GetListAuthorResponse>>> GetPaginatedListAsync(PageRequest pageRequest)
         {
             var data = await _authorDal.GetPaginatedListAsync(
@@ -97,7 +92,6 @@ namespace Business.Concretes
 
             return new ErrorDataResult<IPaginate<GetListAuthorResponse>>(Messages.Error);
         }
-
         public async Task<IDataResult<List<GetListAuthorResponse>>> GetListAsync()
         {
             var data = await _authorDal.GetListAsync(null);

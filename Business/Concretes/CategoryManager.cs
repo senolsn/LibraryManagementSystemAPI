@@ -64,8 +64,8 @@ namespace Business.Concretes
 
             if (categoryToDelete is not null)
             {
-                //var result = BusinessRules.Run(await CheckIfCategoryHasBooks(request.CategoryId));
-                var result = BusinessRules.Run();
+                var result = BusinessRules.Run(CheckIfCategoryHasBooks(categoryToDelete.CategoryBooks));
+
                 if (result is not null)
                 {
                     return result;
@@ -189,15 +189,15 @@ namespace Business.Concretes
 
 
         #region Helper Methods
-        private async Task<IResult> CheckIfCategoryHasBooks(List<Guid> categoryIds)
+        private IResult CheckIfCategoryHasBooks(ICollection<Book> categoryBooks)
         {
-            var result = 1; //await _bookService.GetListAsyncByCategory(categoryIds);
 
-            if (result is not 0)
+            if (categoryBooks is null && categoryBooks.Count < 0)
             {
-            return new SuccessResult();
+                return new SuccessResult();
 
             }
+
             return new ErrorResult(Messages.CategoryExistInBooks);
         }
 
