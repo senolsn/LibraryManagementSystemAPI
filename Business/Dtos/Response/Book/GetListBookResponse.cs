@@ -22,7 +22,6 @@ namespace Business.Dtos.Response.Book
         public int PublishCount { get; set; }
         public int Stock { get; set; }
         public BookStatus Status { get; set; }
-        public string Interpreter { get; set; }
         public string FixtureNumber { get; set; }
         public List<GetListAuthorResponse> BookAuthors { get; set; }
         public List<GetListCategoryResponse> BookCategories { get; set; }
