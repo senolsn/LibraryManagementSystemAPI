@@ -16,8 +16,8 @@ namespace DataAccess.Contexts
         }
 
         //string connectionString = "Server=94.73.147.32;User=u0756268_user16;Password=ASD123_Asd123_asd123;database=u0756268_dblms";    //DbConfiguration.ConnectionString;
-        //string connectionString = "Server=94.73.147.32;User=u0756268_testdbl;Password=Xb1_4R9UraH.3x::;database=u0756268_testdbl";    //DbConfiguration.ConnectionString;
-        string connectionString = "Server=94.73.147.32;User=u0756268_test13;Password=-qm3LN.85.0eW@Pf;database=u0756268_test13";    //DbConfiguration.ConnectionString;
+        string connectionString = "Server=94.73.147.32;User=u0756268_testdbl;Password=Xb1_4R9UraH.3x::;database=u0756268_testdbl";    //DbConfiguration.ConnectionString;
+        //string connectionString = "Server=94.73.147.32;User=u0756268_test13;Password=-qm3LN.85.0eW@Pf;database=u0756268_test13";    //DbConfiguration.ConnectionString;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -88,47 +88,193 @@ namespace DataAccess.Contexts
                });
 
 
-            Guid language1Guid = Guid.Parse("70660874-271f-4c35-af1c-7a363df319af");
-            Guid language2Guid = Guid.Parse("70660874-271f-4c35-af1c-7a363df319af");
-            Guid language3Guid = Guid.Parse("70660874-271f-4c35-af1c-7a363df319af");
-            Guid language4Guid = Guid.Parse("70660874-271f-4c35-af1c-7a363df319af");
-            Guid language5Guid = Guid.Parse("70660874-271f-4c35-af1c-7a363df319af");
+            Guid language1Guid = Guid.Parse("f72c1123-5065-4e3c-aa99-a53c004e05cf");
+            Guid language2Guid = Guid.Parse("15857832-efe5-4efc-a9a9-7cf8c2374858");
+            Guid language3Guid = Guid.Parse("1cc01062-f1d0-413c-90f6-e1b33d340e78");
+            Guid language4Guid = Guid.Parse("637a6eec-508c-4358-ab20-78c82e7a0601");
+            Guid language5Guid = Guid.Parse("f8937ba1-4d7a-44fd-aed9-bb2860bf8132");
 
             modelBuilder.Entity<Language>().HasData(new Language
             {
-                LanguageId = Guid.NewGuid(),
+                LanguageId = language1Guid,
                 LanguageName = "Türkçe"
             });
 
             modelBuilder.Entity<Language>().HasData(new Language
             {
-                LanguageId = Guid.NewGuid(),
+                LanguageId = language2Guid,
                 LanguageName = "Danca"
             });
 
+            modelBuilder.Entity<Language>().HasData(new Language
+            {
+                LanguageId = language3Guid,
+                LanguageName = "İngilizce"
+            });
+
+            modelBuilder.Entity<Language>().HasData(new Language
+            {
+                LanguageId = language4Guid,
+                LanguageName = "Almanca"
+            });
+
+            modelBuilder.Entity<Language>().HasData(new Language
+            {
+                LanguageId = language5Guid,
+                LanguageName = "Arapça"
+            });
+
+            Guid publisher1Guid = Guid.Parse("914cf986-bc1b-4e3f-a674-3e4f2a71e38b");
+            Guid publisher2Guid = Guid.Parse("69daac5d-30e0-4f57-8d6b-664a047c160c");
+            Guid publisher3Guid = Guid.Parse("ca7ee10f-a5f7-4339-82ff-3f661fc4dcf6");
+            Guid publisher4Guid = Guid.Parse("be85ed7e-74f7-421a-bdf2-8a792b8fcfb2");
+            Guid publisher5Guid = Guid.Parse("a33642e6-386c-4375-ad1b-790c51da3e14");
+
+
             modelBuilder.Entity<Publisher>().HasData(new Publisher
             {
-                PublisherId = Guid.NewGuid(),
-                PublisherName = "Abc"
+                PublisherId = publisher1Guid,
+                PublisherName = "Ithaki"
             });
 
             modelBuilder.Entity<Publisher>().HasData(new Publisher
             {
-                PublisherId = Guid.NewGuid(),
-                PublisherName = "Bca"
+                PublisherId = publisher2Guid,
+                PublisherName = "Kültür"
+            });
+
+            modelBuilder.Entity<Publisher>().HasData(new Publisher
+            {
+                PublisherId = publisher3Guid,
+                PublisherName = "Mecaz"
+            });
+
+            modelBuilder.Entity<Publisher>().HasData(new Publisher
+            {
+                PublisherId = publisher4Guid,
+                PublisherName = "Can"
+            });
+
+            modelBuilder.Entity<Publisher>().HasData(new Publisher
+            {
+                PublisherId = publisher5Guid,
+                PublisherName = "İş Bankası"
+            });
+
+            Guid category1Guid = Guid.Parse("1a0e88d2-2d26-41b6-93b1-735d468ca181");
+            Guid category2Guid = Guid.Parse("e52bb2b5-cffd-4822-8901-474db975313e");
+            Guid category3Guid = Guid.Parse("c140fe74-88d7-4b49-8dfa-7eca685c58a4");
+            Guid category4Guid = Guid.Parse("1c324b42-280c-4ff4-b051-22673a8117aa");
+            Guid category5Guid = Guid.Parse("c70c610e-f442-4e6c-ad2d-55940e4f9ea2");
+
+            modelBuilder.Entity<Category>().HasData(new Category
+            {
+                CategoryId = category1Guid,
+                CategoryName = "Şiir"
             });
 
             modelBuilder.Entity<Category>().HasData(new Category
             {
-                CategoryId = Guid.NewGuid(),
-                CategoryName = "Category"
+                CategoryId = category2Guid,
+                CategoryName = "Hikaye"
             });
 
             modelBuilder.Entity<Category>().HasData(new Category
             {
-                CategoryId = Guid.NewGuid(),
-                CategoryName = "Category"
+                CategoryId = category3Guid,
+                CategoryName = "Roman"
             });
+
+            modelBuilder.Entity<Category>().HasData(new Category
+            {
+                CategoryId = category4Guid,
+                CategoryName = "Deneme"
+            });
+
+            modelBuilder.Entity<Category>().HasData(new Category
+            {
+                CategoryId = category5Guid,
+                CategoryName = "Anı"
+            });
+
+            Guid interpreter1Guid = Guid.Parse("d7163905-df9b-4ed6-a426-ab1d09fba731");
+            Guid interpreter2Guid = Guid.Parse("366243fd-e87c-422f-bea6-050d6b9016af");
+            Guid interpreter3Guid = Guid.Parse("7653730d-4b8e-4b71-a9f6-55e6772ee808");
+            Guid interpreter4Guid = Guid.Parse("6d36c961-649f-47fa-955c-142e60121aa1");
+            Guid interpreter5Guid = Guid.Parse("5b908681-6f3b-4463-928f-40de9c9ff054");
+
+            modelBuilder.Entity<Interpreter>().HasData(new Interpreter
+            {
+                InterpreterId = interpreter1Guid,
+                InterpreterFirstName = "Mustafa",
+                InterpreterLastName = "Kaya"
+            });
+
+            modelBuilder.Entity<Interpreter>().HasData(new Interpreter
+            {
+                InterpreterId = interpreter2Guid,
+                InterpreterFirstName = "Halil Eren",
+                InterpreterLastName = "Yazıcı"
+            });
+
+            modelBuilder.Entity<Interpreter>().HasData(new Interpreter
+            {
+                InterpreterId = interpreter3Guid,
+                InterpreterFirstName = "Kadir",
+                InterpreterLastName = "Korkmaz"
+            });
+
+            modelBuilder.Entity<Interpreter>().HasData(new Interpreter
+            {
+                InterpreterId = interpreter4Guid,
+                InterpreterFirstName = "Baha",
+                InterpreterLastName = "Can"
+            });
+
+            modelBuilder.Entity<Interpreter>().HasData(new Interpreter
+            {
+                InterpreterId = interpreter5Guid,
+                InterpreterFirstName = "Berkay",
+                InterpreterLastName = "Gürcan"
+            });
+
+            Guid location1Guid = Guid.Parse("ed1dd8b8-4186-4a53-a847-7d8e6943dd85");
+            Guid location2Guid = Guid.Parse("a6161ff7-0ba4-48bd-bed5-6004fa894265");
+            Guid location3Guid = Guid.Parse("5a70e086-d809-435f-9cf1-9fd4afbde054");
+            Guid location4Guid = Guid.Parse("3a1c8bd9-578e-408f-a7b7-7d4a0c302a07");
+            Guid location5Guid = Guid.Parse("49e649bc-0f72-4ca5-9283-d4eef26b7a0f");
+
+            modelBuilder.Entity<Location>().HasData(new Location
+            {
+                LocationId = location1Guid,
+                Shelf = "A1"
+            });
+
+            modelBuilder.Entity<Location>().HasData(new Location
+            {
+                LocationId = location2Guid,
+                Shelf = "A2"
+            });
+
+            modelBuilder.Entity<Location>().HasData(new Location
+            {
+                LocationId = location3Guid,
+                Shelf = "B1"
+            });
+
+            modelBuilder.Entity<Location>().HasData(new Location
+            {
+                LocationId = location4Guid,
+                Shelf = "B2"
+            });
+
+            modelBuilder.Entity<Location>().HasData(new Location
+            {
+                LocationId = location5Guid,
+                Shelf = "C1"
+            });
+
+
         }
     }
 }
