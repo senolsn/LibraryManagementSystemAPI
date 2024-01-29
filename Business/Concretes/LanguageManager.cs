@@ -14,6 +14,10 @@ using DataAccess.Abstracts;
 using Entities.Concrete;
 using System;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using Business.Dtos.Response.Department;
+using DataAccess.Concretes.EntityFramework;
+using System.Linq;
 
 namespace Business.Concretes
 {
@@ -119,6 +123,48 @@ namespace Business.Concretes
             return new ErrorDataResult<Language>(Messages.Error);
         }
 
+        public async Task<IDataResult<List<GetListLanguageResponse>>> GetListAsync()
+        {
+            var data = await _languageDal.GetListAsync(null);
+
+            if (data is not null)
+            {
+                var languagesResponse = _mapper.Map<List<GetListLanguageResponse>>(data);
+
+                return new SuccessDataResult<List<GetListLanguageResponse>>(languagesResponse, Messages.BooksListed);
+            }
+
+            return new ErrorDataResult<List<GetListLanguageResponse>>(Messages.Error);
+        }
+
+        public async Task<IDataResult<List<GetListLanguageResponse>>> GetListAsyncSortedByName()
+        {
+            var data = await _languageDal.GetListAsyncOrderBy(null, orderBy: q => q.OrderBy(l => l.LanguageName));
+
+            if (data is not null)
+            {
+                var languagesResponse = _mapper.Map<List<GetListLanguageResponse>>(data);
+
+                return new SuccessDataResult<List<GetListLanguageResponse>>(languagesResponse, Messages.BooksListed);
+            }
+
+            return new ErrorDataResult<List<GetListLanguageResponse>>(Messages.Error);
+        }
+
+        public async Task<IDataResult<List<GetListLanguageResponse>>> GetListAsyncSortedByCreatedDate()
+        {
+            var data = await _languageDal.GetListAsyncOrderBy(null, orderBy: q => q.OrderByDescending(l => l.CreatedDate));
+
+            if (data is not null)
+            {
+                var languagesResponse = _mapper.Map<List<GetListLanguageResponse>>(data);
+
+                return new SuccessDataResult<List<GetListLanguageResponse>>(languagesResponse, Messages.BooksListed);
+            }
+
+            return new ErrorDataResult<List<GetListLanguageResponse>>(Messages.Error);
+        }
+
         //[SecuredOperation("admin,get")]
         [CacheAspect]
         public async Task<IDataResult<IPaginate<GetListLanguageResponse>>> GetPaginatedListAsync(PageRequest pageRequest)
@@ -166,6 +212,8 @@ namespace Business.Concretes
             }
             return new SuccessResult();
         }
+
+       
 
         #endregion
     }
