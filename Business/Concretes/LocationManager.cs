@@ -102,7 +102,7 @@ namespace Business.Concretes
         
         private bool CheckIfExistInBooks(Guid locationId)
         {
-            if(_bookDal.GetAsync(b => b.LocationId == locationId) is null)
+            if(_bookDal.GetAsync(b => b.Location.LocationId == locationId) is null)
             {
                 return false;
             }

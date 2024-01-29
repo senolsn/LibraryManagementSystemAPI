@@ -11,9 +11,9 @@ namespace Entities.Concrete
         public Guid BookId { get; set; }
         //public Guid LanguageId { get; set; }
         //public Guid CategoryId { get; set; }
-        public Guid PublisherId { get; set; }
+        //public Guid PublisherId { get; set; }
         public Publisher Publisher { get; set; }
-        public Guid LocationId { get; set; }
+        public Location Location { get; set; }
         public string BookName { get; set; }
         public int PageCount { get; set; }
         public string ISBNNumber { get; set; }

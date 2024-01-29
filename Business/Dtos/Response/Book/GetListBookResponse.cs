@@ -2,8 +2,8 @@
 using Business.Dtos.Response.Category;
 using Business.Dtos.Response.InterpreterResponses;
 using Business.Dtos.Response.Language;
+using Business.Dtos.Response.Location;
 using Business.Dtos.Response.Publisher;
-using Entities.Concrete;
 using Entities.Concrete.enums;
 using System;
 using System.Collections.Generic;
@@ -13,11 +13,8 @@ namespace Business.Dtos.Response.Book
     public class GetListBookResponse
     {
         public Guid BookId { get; set; }
-        public Guid LanguageId { get; set; }
-        public Guid CategoryId { get; set; }
-        public Guid PublisherId { get; set; }
         public GetListPublisherResponse Publisher { get; set; }
-        public Guid LocationId { get; set; }
+        public GetListLocationResponse Location { get; set; }
         public string BookName { get; set; }
         public int PageCount { get; set; }
         public string ISBNNumber { get; set; }

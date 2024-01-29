@@ -18,6 +18,6 @@ namespace Business.Abstracts
 
         Task<IDataResult<IPaginate<GetListLocationResponse>>> GetPaginatedListAsync(PageRequest pageRequest);
 
-        Task<IDataResult<Location>> GetAsync(Guid departmentId);
+        Task<IDataResult<Location>> GetAsync(Guid locationId);
     }
 }

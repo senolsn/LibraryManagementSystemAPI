@@ -33,17 +33,21 @@ namespace Business.Concretes
         private readonly Lazy<ILanguageService> _languageService;
         private readonly Lazy<IPublisherService> _publisherService;
         private readonly Lazy<IInterpreterService> _interpreterService;
+        private readonly Lazy<ILocationService> _locationService;
 
-        public BookManager(IBookDal bookDal, IMapper mapper, Lazy<IAuthorService> authorService, Lazy<IPublisherService> publisherService, Lazy<ICategoryService> categoryService, Lazy<ILanguageService> languageService, Lazy<IInterpreterService> interpreterService)
+        public BookManager(IBookDal bookDal, IMapper mapper, Lazy<IAuthorService> authorService, Lazy<ICategoryService> categoryService, Lazy<ILanguageService> languageService, Lazy<IPublisherService> publisherService, Lazy<IInterpreterService> interpreterService, Lazy<ILocationService> locationService)
         {
             _bookDal = bookDal;
             _mapper = mapper;
             _authorService = authorService;
-            _publisherService = publisherService;
             _categoryService = categoryService;
             _languageService = languageService;
+            _publisherService = publisherService;
             _interpreterService = interpreterService;
+            _locationService = locationService;
         }
+
+
 
         //[SecuredOperation("admin,add")]
         [ValidationAspect(typeof (BookValidator))]
@@ -89,6 +93,9 @@ namespace Business.Concretes
 
             var publisherResult = await _publisherService.Value.GetAsync(request.PublisherId);
             book.Publisher = publisherResult.Data;
+
+            var locationResult = await _locationService.Value.GetAsync(request.LocationId);
+            book.Location = locationResult.Data;
 
 
             var createdBook = await _bookDal.AddAsync(book);
