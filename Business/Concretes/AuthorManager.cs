@@ -8,6 +8,8 @@ using Core.Utilities.Results;
 using DataAccess.Abstracts;
 using Entities.Concrete;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Business.Concretes
@@ -96,5 +98,46 @@ namespace Business.Concretes
             return new ErrorDataResult<IPaginate<GetListAuthorResponse>>(Messages.Error);
         }
 
+        public async Task<IDataResult<List<GetListAuthorResponse>>> GetListAsync()
+        {
+            var data = await _authorDal.GetListAsync(null);
+
+            if (data is not null)
+            {
+                var authorResponse = _mapper.Map<List<GetListAuthorResponse>>(data);
+                return new SuccessDataResult<List<GetListAuthorResponse>>(authorResponse, Messages.AuthorsListed);
+            }
+            return new ErrorDataResult<List<GetListAuthorResponse>> (Messages.Error);
+        }
+        public async Task<IDataResult<List<GetListAuthorResponse>>> GetListAsyncSortedByName()
+        {
+            var data = await _authorDal.GetListAsyncOrderBy(
+                predicate: null,
+                orderBy: q => q.OrderBy(a => a.AuthorFirstName)
+                );
+
+            if(data is not null)
+            {
+                var authorResponse = _mapper.Map<List<GetListAuthorResponse>>(data);
+                return new SuccessDataResult<List<GetListAuthorResponse>>(authorResponse,Messages.AuthorsListed);
+            }
+
+            return new ErrorDataResult<List<GetListAuthorResponse>>(Messages.Error);
+        }
+        public async Task<IDataResult<List<GetListAuthorResponse>>> GetListAsyncSortedByCreatedDate()
+        {
+            var data = await _authorDal.GetListAsyncOrderBy(
+                predicate: null,
+                orderBy: q => q.OrderBy(a => a.CreatedDate)
+                );
+
+            if( data is not null)
+            {
+                var authorResponse = _mapper.Map<List<GetListAuthorResponse>>(data);
+                return new SuccessDataResult<List<GetListAuthorResponse>>(authorResponse);
+            }
+
+            return new ErrorDataResult<List<GetListAuthorResponse>>(Messages.Error);
+        }
     }
 }
