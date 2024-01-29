@@ -8,6 +8,8 @@ using Core.Utilities.Results;
 using DataAccess.Abstracts;
 using Entities.Concrete;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Business.Concretes
@@ -83,23 +85,68 @@ namespace Business.Concretes
             return new ErrorDataResult<Location>(Messages.Error);
         }
 
-        public async Task<IDataResult<IPaginate<GetListLocationResponse>>> GetPaginatedListAsync(PageRequest pageRequest)
+        public async Task<IDataResult<List<GetListLocationResponse>>> GetListAsync()
         {
-            var data = await _locationDal.GetPaginatedListAsync(
-                null,
-                index: pageRequest.PageIndex,
-                size: pageRequest.PageSize);
+            var data = await _locationDal.GetListAsync(null);
 
             if (data is not null)
             {
-                var result = _mapper.Map<Paginate<GetListLocationResponse>>(data);
+                var locationResponse = _mapper.Map<List<GetListLocationResponse>>(data);
 
-                return new SuccessDataResult<IPaginate<GetListLocationResponse>>(result, Messages.AuthorsListed);
+                return new SuccessDataResult<List<GetListLocationResponse>>(locationResponse, Messages.AuthorsListed);
             }
 
-            return new ErrorDataResult<IPaginate<GetListLocationResponse>>(Messages.Error);
+            return new ErrorDataResult<List<GetListLocationResponse>>(Messages.Error);
         }
-        
+        public async Task<IDataResult<IPaginate<GetListLocationResponse>>> GetPaginatedListAsync(PageRequest pageRequest)
+            {
+                var data = await _locationDal.GetPaginatedListAsync(
+                    null,
+                    index: pageRequest.PageIndex,
+                    size: pageRequest.PageSize);
+
+                if (data is not null)
+                {
+                    var result = _mapper.Map<Paginate<GetListLocationResponse>>(data);
+
+                    return new SuccessDataResult<IPaginate<GetListLocationResponse>>(result, Messages.AuthorsListed);
+                }
+
+                return new ErrorDataResult<IPaginate<GetListLocationResponse>>(Messages.Error);
+            }
+
+            public async Task<IDataResult<List<GetListLocationResponse>>> GetListAsyncSortedByName()
+        {
+            var data = await _locationDal.GetListAsyncOrderBy(
+                predicate: null,
+                orderBy: q => q.OrderBy(l => l.Shelf)
+                );
+
+            if (data is not null)
+            {
+                var locationResponse = _mapper.Map<List<GetListLocationResponse>>(data);
+                return new SuccessDataResult<List<GetListLocationResponse>>(locationResponse);
+            }
+            return new ErrorDataResult<List<GetListLocationResponse>>(Messages.Error);
+        }
+
+        public async Task<IDataResult<List<GetListLocationResponse>>> GetListAsyncSortedByCreatedDate()
+        {
+            var data = await _locationDal.GetListAsyncOrderBy(
+              predicate: null,
+              orderBy: q => q.OrderBy(l => l.CreatedDate)
+              );
+
+            if (data is not null)
+            {
+                var locationResponse = _mapper.Map<List<GetListLocationResponse>>(data);
+                return new SuccessDataResult<List<GetListLocationResponse>>(locationResponse);
+            }
+            return new ErrorDataResult<List<GetListLocationResponse>>(Messages.Error);
+        }
+
+
+        #region Helpers Method
         private bool CheckIfExistInBooks(Guid locationId)
         {
             if(_bookDal.GetAsync(b => b.Location.LocationId == locationId) is null)
@@ -108,7 +155,7 @@ namespace Business.Concretes
             }
             return true;
         }
+        #endregion
 
-       
     }
 }

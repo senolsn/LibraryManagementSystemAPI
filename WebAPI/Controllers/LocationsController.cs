@@ -105,12 +105,75 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpGet("GetPagedListAsync")]
-        public async Task<IActionResult> GetPagedListAsync([FromQuery] PageRequest pageRequest)
+        [HttpGet("GetPaginatedListAsync")]
+        public async Task<IActionResult> GetPaginatedListAsync([FromQuery] PageRequest pageRequest)
         {
             try
             {
                 var result = await _locationService.GetPaginatedListAsync(pageRequest);
+
+                if (!result.IsSuccess)
+                {
+                    return BadRequest(result);
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, $"Error : {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetListAsync")]
+        public async Task<IActionResult> GetListAsync()
+        {
+            try
+            {
+                var result = await _locationService.GetListAsync();
+
+                if (!result.IsSuccess)
+                {
+                    return BadRequest(result);
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, $"Error : {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetListAsyncSortedByName")]
+        public async Task<IActionResult> GetListAsyncSortedByName()
+        {
+            try
+            {
+                var result = await _locationService.GetListAsyncSortedByName();
+
+                if (!result.IsSuccess)
+                {
+                    return BadRequest(result);
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, $"Error : {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetListAsyncSortedByCreatedDate")]
+        public async Task<IActionResult> GetListAsyncSortedByCreatedDate()
+        {
+            try
+            {
+                var result = await _locationService.GetListAsyncSortedByCreatedDate();
 
                 if (!result.IsSuccess)
                 {
