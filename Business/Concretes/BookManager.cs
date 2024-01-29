@@ -209,12 +209,17 @@ namespace Business.Concretes
         {
             var data = await _bookDal.GetListAsync(null);
 
+            List<GetListBookResponse> responseBooks = new List<GetListBookResponse>();
             if (data is not null)
             {
-                var booksResponse = _mapper.Map<List<GetListBookResponse>>(data);
+                foreach (var item in data)
+                {
+                    var bookResponse = _mapper.Map<GetListBookResponse>(item);
+                    responseBooks.Add(bookResponse);
 
+                }
 
-                return new SuccessDataResult<List<GetListBookResponse>>(booksResponse, Messages.BooksListed);
+                return new SuccessDataResult<List<GetListBookResponse>>(responseBooks, Messages.BooksListed);
             }
 
             return new ErrorDataResult<List<GetListBookResponse>>(Messages.Error);
