@@ -6,6 +6,5 @@ namespace Business.Dtos.Response.Location
     {
         public Guid LocationId { get; set; }
         public string? Shelf { get; set; }
-        public Guid CategoryId { get; set; }
     }
 }
