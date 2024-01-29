@@ -110,7 +110,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                var result = await _authorService.GetListAsync(pageRequest);
+                var result = await _authorService.GetPaginatedListAsync(pageRequest);
 
                 if (!result.IsSuccess)
                 {

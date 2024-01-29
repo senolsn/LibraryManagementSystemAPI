@@ -19,8 +19,7 @@ namespace Business
             services.AddScoped<ICategoryService, CategoryManager>();
             services.AddScoped<IFacultyService, FacultyManager>();
             services.AddScoped<IPublisherService, PublisherManager>();
-            services.AddScoped<ILanguageService, LanguageManager>();
-            services.AddScoped<IBookService, BookManager>();
+            //services.AddScoped<IBookService, BookManager>();
             services.AddScoped<IDepositBookService, DepositBookManager>();
             services.AddScoped<IUserService, UserManager>();
             services.AddScoped<IAuthService,AuthManager>();

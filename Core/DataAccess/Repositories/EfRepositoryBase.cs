@@ -3,9 +3,11 @@ using Core.Entities.Abstract;
 using Core.Entities.Concrete;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -64,7 +66,22 @@ namespace Core.DataAccess.Repositories
             return await queryable.FirstOrDefaultAsync(predicate, cancellationToken);
         }
 
-        public async Task<IPaginate<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> predicate, int index = 0, int size = 10, bool withDeleted = false, bool enableTracking = true, CancellationToken cancellationToken = default)
+        /*Non-paginated list metodu*/
+        public virtual async Task<ICollection<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> predicate, bool withDeleted = false, bool enableTracking = true, CancellationToken cancellationToken = default)
+        {
+            IQueryable<TEntity> queryable = Query();
+
+            if (!enableTracking)
+                queryable = queryable.AsNoTracking();
+            if (withDeleted)
+                queryable = queryable.IgnoreQueryFilters().Where(field => field.DeletedDate == null); //Girdiğim filter koşulunu sağlayan verileri topla.
+            if (predicate != null)
+                queryable = queryable.Where(predicate);
+            return await queryable.ToListAsync(cancellationToken);
+        }
+
+        /*Paginated list metodu*/
+        public virtual async Task<IPaginate<TEntity>> GetPaginatedListAsync(Expression<Func<TEntity, bool>> predicate, int index = 0, int size = 10, bool withDeleted = false, bool enableTracking = true, CancellationToken cancellationToken = default)
         {
             IQueryable<TEntity> queryable = Query();
 
@@ -273,7 +290,9 @@ namespace Core.DataAccess.Repositories
             Context.Update(entity);
         }
 
-       
+      
+
+
         #endregion
     }
 }

@@ -1,5 +1,7 @@
 ﻿using Core.Entities.Concrete;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Entities.Concrete
 {
@@ -7,6 +9,7 @@ namespace Entities.Concrete
     {
         public Guid LanguageId { get; set; }
         public string? LanguageName { get; set; }
+        public ICollection<Book> LanguageBooks { get; set; }
 
     }
 }

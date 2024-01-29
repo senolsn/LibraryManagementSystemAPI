@@ -110,7 +110,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                var result = await _locationService.GetListAsync(pageRequest);
+                var result = await _locationService.GetPaginatedListAsync(pageRequest);
 
                 if (!result.IsSuccess)
                 {

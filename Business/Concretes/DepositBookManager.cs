@@ -100,9 +100,9 @@ namespace Business.Concretes
             return new ErrorDataResult<DepositBook>(Messages.Error);
         }
 
-        public async Task<IDataResult<IPaginate<GetListDepositBookResponse>>> GetListAsync(PageRequest pageRequest)
+        public async Task<IDataResult<IPaginate<GetListDepositBookResponse>>> GetPaginatedListAsync(PageRequest pageRequest)
         {
-            var data = await _depositBookDal.GetListAsync(
+            var data = await _depositBookDal.GetPaginatedListAsync(
                null,
                index: pageRequest.PageIndex,
                size: pageRequest.PageSize,
@@ -147,9 +147,9 @@ namespace Business.Concretes
             return new ErrorDataResult<DepositBook>(Messages.Error);
         }
 
-        public async Task<IDataResult<IPaginate<GetListDepositBookResponse>>> GetListAsyncUndeposited(PageRequest pageRequest)
+        public async Task<IDataResult<IPaginate<GetListDepositBookResponse>>> GetPaginatedListAsyncUndeposited(PageRequest pageRequest)
         {
-            var data = await _depositBookDal.GetListAsync(
+            var data = await _depositBookDal.GetPaginatedListAsync(
                predicate: d => d.Status == DepositBookStatus.NOT_RECEIVED,
                index: pageRequest.PageIndex,
                size: pageRequest.PageSize,
@@ -166,9 +166,9 @@ namespace Business.Concretes
             return new ErrorDataResult<IPaginate<GetListDepositBookResponse>>(Messages.Error);
         }
 
-        public async Task<IDataResult<IPaginate<GetListDepositBookResponse>>> GetListAsyncDeposited(PageRequest pageRequest)
+        public async Task<IDataResult<IPaginate<GetListDepositBookResponse>>> GetPaginatedListAsyncDeposited(PageRequest pageRequest)
         {
-            var data = await _depositBookDal.GetListAsync(
+            var data = await _depositBookDal.GetPaginatedListAsync(
                predicate: d => d.Status == DepositBookStatus.RECEIVED,
                index: pageRequest.PageIndex,
                size: pageRequest.PageSize,
@@ -185,9 +185,9 @@ namespace Business.Concretes
             return new ErrorDataResult<IPaginate<GetListDepositBookResponse>>(Messages.Error);
         }
 
-        public async Task<IDataResult<IPaginate<GetListDepositBookResponse>>> GetListAsyncByUserId(PageRequest pageRequest, Guid userId)
+        public async Task<IDataResult<IPaginate<GetListDepositBookResponse>>> GetPaginatedListAsyncByUserId(PageRequest pageRequest, Guid userId)
         {
-            var data = await _depositBookDal.GetListAsync(
+            var data = await _depositBookDal.GetPaginatedListAsync(
                predicate: d => d.UserId == userId,
                index: pageRequest.PageIndex,
                size: pageRequest.PageSize,
@@ -204,9 +204,9 @@ namespace Business.Concretes
             return new ErrorDataResult<IPaginate<GetListDepositBookResponse>>(Messages.Error);
         }
 
-        public async Task<IDataResult<IPaginate<GetListDepositBookResponse>>> GetListAsyncUndepositedByUserId(PageRequest pageRequest, Guid userId)
+        public async Task<IDataResult<IPaginate<GetListDepositBookResponse>>> GetPaginatedListAsyncUndepositedByUserId(PageRequest pageRequest, Guid userId)
         {
-            var data = await _depositBookDal.GetListAsync(
+            var data = await _depositBookDal.GetPaginatedListAsync(
                predicate: d => d.UserId == userId && d.Status == DepositBookStatus.NOT_RECEIVED,
                index: pageRequest.PageIndex,
                size: pageRequest.PageSize,
@@ -223,9 +223,9 @@ namespace Business.Concretes
             return new ErrorDataResult<IPaginate<GetListDepositBookResponse>>(Messages.Error);
         }
 
-        public async Task<IDataResult<IPaginate<GetListDepositBookResponse>>> GetListAsyncByBookId(PageRequest pageRequest, Guid bookId)
+        public async Task<IDataResult<IPaginate<GetListDepositBookResponse>>> GetPaginatedListAsyncByBookId(PageRequest pageRequest, Guid bookId)
         {
-            var data = await _depositBookDal.GetListAsync(
+            var data = await _depositBookDal.GetPaginatedListAsync(
                predicate: d => d.BookId == bookId,
                index: pageRequest.PageIndex,
                size: pageRequest.PageSize,

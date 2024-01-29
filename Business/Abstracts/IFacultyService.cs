@@ -18,6 +18,6 @@ namespace Business.Abstracts
 
         Task<IDataResult<Faculty>> GetAsync(Guid facultyId);
 
-        Task<IDataResult<IPaginate<GetListFacultyResponse>>> GetListAsync(PageRequest pageRequest);
+        Task<IDataResult<IPaginate<GetListFacultyResponse>>> GetPaginatedListAsync(PageRequest pageRequest);
     }
 }

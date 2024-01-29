@@ -83,9 +83,9 @@ namespace Business.Concretes
             return new ErrorDataResult<Department>(Messages.Error);
         }
 
-        public async Task<IDataResult<IPaginate<GetListDepartmentResponse>>> GetListAsync(PageRequest pageRequest)
+        public async Task<IDataResult<IPaginate<GetListDepartmentResponse>>> GetPaginatedListAsync(PageRequest pageRequest)
         {
-            var data = await _departmentDal.GetListAsync(
+            var data = await _departmentDal.GetPaginatedListAsync(
                 null,
                 index: pageRequest.PageIndex,
                 size: pageRequest.PageSize

@@ -3,6 +3,7 @@ using System;
 using DataAccess.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(LibraryAPIDbContext))]
-    partial class LibraryAPIDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240128113744_mig_15")]
+    partial class mig15
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,21 +50,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("CategoryBooksBookId");
 
                     b.ToTable("BookCategory");
-                });
-
-            modelBuilder.Entity("BookLanguage", b =>
-                {
-                    b.Property<Guid>("BookLanguagesLanguageId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid>("LanguageBooksBookId")
-                        .HasColumnType("char(36)");
-
-                    b.HasKey("BookLanguagesLanguageId", "LanguageBooksBookId");
-
-                    b.HasIndex("LanguageBooksBookId");
-
-                    b.ToTable("BookLanguage");
                 });
 
             modelBuilder.Entity("Core.Entities.Concrete.OperationClaim", b =>
@@ -469,21 +457,6 @@ namespace DataAccess.Migrations
                     b.HasOne("Entities.Concrete.Book", null)
                         .WithMany()
                         .HasForeignKey("CategoryBooksBookId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("BookLanguage", b =>
-                {
-                    b.HasOne("Entities.Concrete.Language", null)
-                        .WithMany()
-                        .HasForeignKey("BookLanguagesLanguageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Entities.Concrete.Book", null)
-                        .WithMany()
-                        .HasForeignKey("LanguageBooksBookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

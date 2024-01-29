@@ -8,10 +8,9 @@ namespace Business.Dtos.Request.BookRequests
 {
     public class CreateBookRequest
     {
-        //public Guid AuthorId { get; set; }
         public List<Guid> Authors { get; set; }
-        public Guid LanguageId { get; set; }
-        public Guid CategoryId { get; set; }
+        public List<Guid> Categories { get; set; }
+        public List<Guid> Languages { get; set; }
         public Guid PublisherId { get; set; }
         public Guid LocationId { get; set; }
         public string BookName { get; set; }

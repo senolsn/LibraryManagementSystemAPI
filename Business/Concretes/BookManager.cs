@@ -3,7 +3,11 @@ using Business.Abstracts;
 using Business.BusinessAspects;
 using Business.Constants;
 using Business.Dtos.Request.BookRequests;
+using Business.Dtos.Response.Author;
 using Business.Dtos.Response.Book;
+using Business.Dtos.Response.Category;
+using Business.Dtos.Response.Language;
+using Business.Dtos.Response.Publisher;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Validation;
@@ -24,16 +28,22 @@ namespace Business.Concretes
     {
         protected readonly IBookDal _bookDal;
         protected readonly IMapper _mapper;
-        private readonly IAuthorService _authorService;
+        private readonly Lazy<IAuthorService> _authorService;
+        private readonly Lazy<ICategoryService> _categoryService;
+        private readonly Lazy<ILanguageService> _languageService;
+        private readonly Lazy<IPublisherService> _publisherService;
 
-        public BookManager(IBookDal bookDal, IMapper mapper, IAuthorService authorService)
+        public BookManager(IBookDal bookDal, IMapper mapper, Lazy<IAuthorService> authorService, Lazy<IPublisherService> publisherService, Lazy<ICategoryService> categoryService, Lazy<ILanguageService> languageService)
         {
             _bookDal = bookDal;
             _mapper = mapper;
             _authorService = authorService;
+            _publisherService = publisherService;
+            _categoryService = categoryService;
+            _languageService = languageService;
         }
 
-        [SecuredOperation("admin,add")]
+        //[SecuredOperation("admin,add")]
         [ValidationAspect(typeof (BookValidator))]
         [CacheRemoveAspect("IBookService.Get")]
         public async Task<IResult> Add(CreateBookRequest request)
@@ -42,18 +52,35 @@ namespace Business.Concretes
             Book book = _mapper.Map<Book>(request);
 
             book.BookAuthors = new List<Author>();
+            book.BookCategories = new List<Category>();
+            book.BookLanguages = new List<Language>();
 
             foreach (var authorId in request.Authors)
             {
-                var result = await _authorService.GetAsync(authorId);
-                ArgumentNullException.ThrowIfNull(result.Data , "Yazar");
+                var result = await _authorService.Value.GetAsync(authorId);
+                ArgumentNullException.ThrowIfNull(result.Data , "Author");
                 book.BookAuthors.Add(result.Data);
             }
 
+            foreach (var categoryId in request.Categories)
+            {
+                var result = await _categoryService.Value.GetAsync(categoryId);
+                ArgumentNullException.ThrowIfNull(result.Data, "Category");
+                book.BookCategories.Add(result.Data);
+
+            }
+
+            foreach(var languageId in request.Languages)
+            {
+                var result = await _languageService.Value.GetAsync(languageId);
+                ArgumentNullException.ThrowIfNull(result.Data, "Language");
+                book.BookLanguages.Add(result.Data);
+            }
+
+            var publisherResult = await _publisherService.Value.GetAsync(request.PublisherId);
+            book.Publisher = publisherResult.Data;
 
             var createdBook = await _bookDal.AddAsync(book);
-
-            //var dbResult = await _bookDal.SaveChangesAsync();
 
             if (createdBook is null)
             {
@@ -98,7 +125,7 @@ namespace Business.Concretes
             return new ErrorResult(Messages.Error);
         }
 
-        [SecuredOperation("admin,get")]
+        //[SecuredOperation("admin,get")]
         public async Task<IDataResult<Book>> GetAsync(Guid bookId)
         {
             var result = await _bookDal.GetAsync(b => b.BookId == bookId);
@@ -111,69 +138,105 @@ namespace Business.Concretes
             return new ErrorDataResult<Book>(Messages.Error);
         }
 
-        [SecuredOperation("admin,get")]
-        public async Task<IDataResult<Book>> GetAsyncByCategoryId(Guid categoryId)
+        //[SecuredOperation("admin,get")]
+        public async Task<IDataResult<IPaginate<GetListBookResponse>>> GetPaginatedListAsyncByCategory(PageRequest pageRequest, List<Guid> categoryIds)
         {
-            var result = await _bookDal.GetAsync(b => b.CategoryId == categoryId);
+            var data = await _bookDal.GetPaginatedListAsync(
+              null,
+              index: pageRequest.PageIndex,
+              size: pageRequest.PageSize);
 
-            if (result is not null)
+            var filteredBooks = data.Items.Where(book => book.BookCategories.Any(category => categoryIds.Contains(category.CategoryId))).ToList();
+            if (data is not null)
             {
-                return new SuccessDataResult<Book>(result, Messages.BookListed);
+                var booksResponse = _mapper.Map<List<GetListBookResponse>>(filteredBooks);
+
+                var paginatedBooksResponse = new Paginate<GetListBookResponse>
+                {
+                    Items = booksResponse
+                };
+
+
+                return new SuccessDataResult<IPaginate<GetListBookResponse>>(paginatedBooksResponse, Messages.BooksListed);
             }
-            return new ErrorDataResult<Book>(Messages.Error);
+            return new ErrorDataResult<IPaginate<GetListBookResponse>>(Messages.Error);
         }
 
-        [SecuredOperation("admin,get")]
-        public async Task<IDataResult<Book>> GetAsyncByLanguageId(Guid languageId)
+        //[SecuredOperation("admin,get")]
+        public async Task<IDataResult<IPaginate<GetListBookResponse>>> GetPaginatedListAsyncByLanguage(PageRequest pageRequest, List<Guid> languageIds)
         {
-            var result = await _bookDal.GetAsync(b => b.LanguageId == languageId);
+            var data = await _bookDal.GetPaginatedListAsync(
+               null,
+               index: pageRequest.PageIndex,
+               size: pageRequest.PageSize); 
 
-            if (result is not null)
+            var filteredBooks = data.Items.Where(book => book.BookLanguages.Any(lang => languageIds.Contains(lang.LanguageId))).ToList();
+
+            if (data is not null)
             {
-                return new SuccessDataResult<Book>(result, Messages.BookListed);
+                var booksResponse = _mapper.Map<List<GetListBookResponse>>(filteredBooks);
+
+                var paginatedBooksResponse = new Paginate<GetListBookResponse>
+                {
+                    Items = booksResponse
+                };
+
+
+                return new SuccessDataResult<IPaginate<GetListBookResponse>>(paginatedBooksResponse, Messages.BooksListed);
             }
-            return new ErrorDataResult<Book>(Messages.Error);
+            return new ErrorDataResult<IPaginate<GetListBookResponse>>(Messages.Error);
         }
 
-        [SecuredOperation("admin,get")]
-        public async Task<IDataResult<IPaginate<GetListBookResponse>>> GetListAsync(PageRequest pageRequest)
+        //[SecuredOperation("admin,get")]
+        public async Task<IDataResult<IPaginate<GetListBookResponse>>> GetPaginatedListAsync(PageRequest pageRequest)
         {
-            var data = await _bookDal.GetListAsync(
+            var data = await _bookDal.GetPaginatedListAsync(
                null,
                index: pageRequest.PageIndex,
                size: pageRequest.PageSize);
 
             if (data is not null)
             {
-                var result = _mapper.Map<Paginate<GetListBookResponse>>(data);
+                var booksResponse = _mapper.Map<List<GetListBookResponse>>(data.Items);
 
-                return new SuccessDataResult<IPaginate<GetListBookResponse>>(result, Messages.BooksListed);
+                var paginatedBooksResponse = new Paginate<GetListBookResponse>
+                {
+                    Items = booksResponse
+                };
+
+
+                return new SuccessDataResult<IPaginate<GetListBookResponse>>(paginatedBooksResponse, Messages.BooksListed);
             }
 
             return new ErrorDataResult<IPaginate<GetListBookResponse>>(Messages.Error);
         }
 
-        [SecuredOperation("admin,get")]
-        public async Task<IDataResult<IPaginate<GetListBookResponse>>> GetListAsyncByCategory(PageRequest pageRequest, Guid categoryId)
+        public async Task<IDataResult<IPaginate<GetListBookResponse>>> GetPaginatedListWithAuthors(Expression<Func<Book, bool>> predicate, PageRequest pageRequest)
         {
-            var data = await _bookDal.GetListAsync(
-                predicate: b => b.CategoryId == categoryId,
-                index: pageRequest.PageIndex,
-                size: pageRequest.PageSize
-                );
+            var data = await _bookDal.GetListWithAuthors(
+               null,
+               index: pageRequest.PageIndex,
+               size: pageRequest.PageSize);
+
 
             if (data is not null)
             {
-                var result = _mapper.Map<Paginate<GetListBookResponse>>(data);
+                var booksResponse = _mapper.Map<List<GetListBookResponse>>(data.Items);
 
-                return new SuccessDataResult<IPaginate<GetListBookResponse>>(result, Messages.BooksListed);
+                var paginatedBooksResponse = new Paginate<GetListBookResponse>
+                {
+                    Items = booksResponse
+                };
+
+
+                return new SuccessDataResult<IPaginate<GetListBookResponse>>(paginatedBooksResponse, Messages.BooksListed);
             }
 
             return new ErrorDataResult<IPaginate<GetListBookResponse>>(Messages.Error);
         }
 
-        [SecuredOperation("admin,get")]
-        public async Task<IDataResult<IPaginate<GetListBookResponse>>> GetListAsyncSortedByName(PageRequest pageRequest)
+        //[SecuredOperation("admin,get")]
+        public async Task<IDataResult<IPaginate<GetListBookResponse>>> GetPaginatedListAsyncSortedByName(PageRequest pageRequest)
         {
             var data = await _bookDal.GetListAsyncOrderBy(
                 predicate: null,
@@ -184,16 +247,22 @@ namespace Business.Concretes
 
             if (data is not null)
             {
-                var result = _mapper.Map<Paginate<GetListBookResponse>>(data);
+                var booksResponse = _mapper.Map<List<GetListBookResponse>>(data.Items);
 
-                return new SuccessDataResult<IPaginate<GetListBookResponse>>(result, Messages.BooksListed);
+                var paginatedBooksResponse = new Paginate<GetListBookResponse>
+                {
+                    Items = booksResponse
+                };
+
+
+                return new SuccessDataResult<IPaginate<GetListBookResponse>>(paginatedBooksResponse, Messages.BooksListed);
             }
 
             return new ErrorDataResult<IPaginate<GetListBookResponse>>(Messages.Error);
         }
 
         [SecuredOperation("admin,get")]
-        public async Task<IDataResult<IPaginate<GetListBookResponse>>> GetListAsyncSortedByCreatedDate(PageRequest pageRequest)
+        public async Task<IDataResult<IPaginate<GetListBookResponse>>> GetPaginatedListAsyncSortedByCreatedDate(PageRequest pageRequest)
         {
             var data = await _bookDal.GetListAsyncOrderBy(
                 predicate: null,
@@ -204,30 +273,21 @@ namespace Business.Concretes
 
             if (data is not null)
             {
-                var result = _mapper.Map<Paginate<GetListBookResponse>>(data);
+                var booksResponse = _mapper.Map<List<GetListBookResponse>>(data.Items);
 
-                return new SuccessDataResult<IPaginate<GetListBookResponse>>(result, Messages.BooksListed);
+                var paginatedBooksResponse = new Paginate<GetListBookResponse>
+                {
+                    Items = booksResponse
+                };
+
+
+                return new SuccessDataResult<IPaginate<GetListBookResponse>>(paginatedBooksResponse, Messages.BooksListed);
             }
 
             return new ErrorDataResult<IPaginate<GetListBookResponse>>(Messages.Error);
         }
 
-        public async Task<IDataResult<IPaginate<Book>>> GetListWithAuthors(Expression<Func<Book, bool>> predicate, PageRequest pageRequest)
-        {
-            var data = await _bookDal.GetListWithAuthors(
-               null,
-               index: pageRequest.PageIndex,
-               size: pageRequest.PageSize);
-
-            if (data is not null)
-            {
-                var result = _mapper.Map<Paginate<Book>>(data);
-
-                return new SuccessDataResult<IPaginate<Book>>(result, Messages.BooksListed);
-            }
-
-            return new ErrorDataResult<IPaginate<Book>>(Messages.Error);
-        }
+        
 
     }
 }

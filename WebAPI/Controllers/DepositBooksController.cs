@@ -149,7 +149,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                var result = await _depositBookService.GetListAsync(pageRequest);
+                var result = await _depositBookService.GetPaginatedListAsync(pageRequest);
 
                 if (!result.IsSuccess)
                 {
@@ -168,7 +168,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                var result = await _depositBookService.GetListAsyncUndeposited(pageRequest);
+                var result = await _depositBookService.GetPaginatedListAsyncUndeposited(pageRequest);
 
                 if (!result.IsSuccess)
                 {
@@ -187,7 +187,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                var result = await _depositBookService.GetListAsyncDeposited(pageRequest);
+                var result = await _depositBookService.GetPaginatedListAsyncDeposited(pageRequest);
 
                 if (!result.IsSuccess)
                 {
@@ -206,7 +206,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                var result = await _depositBookService.GetListAsyncByUserId(pageRequest, userId);
+                var result = await _depositBookService.GetPaginatedListAsyncByUserId(pageRequest, userId);
 
                 if (!result.IsSuccess)
                 {
@@ -225,7 +225,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                var result = await _depositBookService.GetListAsyncByBookId(pageRequest, bookId);
+                var result = await _depositBookService.GetPaginatedListAsyncByBookId(pageRequest, bookId);
 
                 if (!result.IsSuccess)
                 {
@@ -244,7 +244,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                var result = await _depositBookService.GetListAsyncUndepositedByUserId(pageRequest, userId);
+                var result = await _depositBookService.GetPaginatedListAsyncUndepositedByUserId(pageRequest, userId);
 
                 if (!result.IsSuccess)
                 {
