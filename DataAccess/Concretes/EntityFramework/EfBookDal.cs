@@ -43,7 +43,9 @@ namespace DataAccess.Concretes.EntityFramework
             queryable = queryable.Include(x => x.BookCategories).ThenInclude(x => x.CategoryBooks);
             queryable = queryable.Include(x => x.BookLanguages).ThenInclude(x => x.LanguageBooks);
             queryable = queryable.Include(x => x.BookInterpreters).ThenInclude(x => x.InterpreterBooks);
+            queryable = queryable.Include(x => x.BookInterpreters).ThenInclude(x => x.InterpreterBooks);
             queryable = queryable.Include(p => p.Publisher);
+            queryable = queryable.Include(p => p.Location);
 
 
             if (!enableTracking)
@@ -64,6 +66,7 @@ namespace DataAccess.Concretes.EntityFramework
             queryable = queryable.Include(x => x.BookLanguages).ThenInclude(x => x.LanguageBooks);
             queryable = queryable.Include(x => x.BookInterpreters).ThenInclude(x => x.InterpreterBooks);
             queryable = queryable.Include(p => p.Publisher);
+            queryable = queryable.Include(p => p.Location);
 
 
             if (!enableTracking)
@@ -86,6 +89,7 @@ namespace DataAccess.Concretes.EntityFramework
             queryable = queryable.Include(x => x.BookLanguages).ThenInclude(x => x.LanguageBooks);
             queryable = queryable.Include(x => x.BookInterpreters).ThenInclude(x => x.InterpreterBooks);
             queryable = queryable.Include(p => p.Publisher);
+            queryable = queryable.Include(p => p.Location);
 
 
             if (!enableTracking)
