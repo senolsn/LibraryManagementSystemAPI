@@ -98,6 +98,27 @@ namespace WebAPI.Controllers
             }
         }
 
+        [HttpGet("GetPaginatedListAsync")]
+        public async Task<IActionResult> GetPagedListAsync([FromQuery] PageRequest pageRequest)
+        {
+            try
+            {
+                var result = await _bookService.GetPaginatedListAsync(pageRequest);
+
+                if (!result.IsSuccess)
+                {
+                    return BadRequest(result);
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, $"Error : {ex.Message}");
+            }
+        }
+
         [HttpGet("GetListAsync")]
         public async Task<IActionResult> GetListAsync()
         {
@@ -119,97 +140,12 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpGet("GetPagedListAsync")]
-        public async Task<IActionResult> GetPagedListAsync([FromQuery] PageRequest pageRequest)
-        {
-            try
-            {
-                var result = await _bookService.GetPaginatedListAsync(pageRequest);
-
-                if (!result.IsSuccess)
-                {
-                    return BadRequest(result);
-                }
-
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-
-                return StatusCode(500, $"Error : {ex.Message}");
-            }
-        }
-
-        [HttpGet("GetPagedListAsyncByCategory")]
+        [HttpGet("GetPaginatedListAsyncByCategory")]
         public async Task<IActionResult> GetPagedListAsyncByCategory([FromQuery] PageRequest pageRequest, [FromQuery]List<Guid> categoryIds)
         {
             try
             {
                 var result = await _bookService.GetPaginatedListAsyncByCategory(pageRequest, categoryIds);
-
-                if (!result.IsSuccess)
-                {
-                    return BadRequest(result);
-                }
-
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-
-                return StatusCode(500, $"Error : {ex.Message}");
-            }
-        }
-
-
-        [HttpGet("GetPagedListAsyncByLanguage")]
-        public async Task<IActionResult> GetPagedListAsyncByLanguage([FromQuery] PageRequest pageRequest, [FromQuery] List<Guid> languageIds)
-        {
-            try
-            {
-                var result = await _bookService.GetPaginatedListAsyncByLanguage(pageRequest, languageIds);
-
-                if (!result.IsSuccess)
-                {
-                    return BadRequest(result);
-                }
-
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-
-                return StatusCode(500, $"Error : {ex.Message}");
-            }
-        }
-
-        [HttpGet("GetListAsyncSortedByName")]
-        public async Task<IActionResult> GetListAsyncSortedByName([FromQuery] PageRequest pageRequest)
-        {
-            try
-            {
-                var result = await _bookService.GetPaginatedListAsyncSortedByName(pageRequest);
-
-                if (!result.IsSuccess)
-                {
-                    return BadRequest(result);
-                }
-
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-
-                return StatusCode(500, $"Error : {ex.Message}");
-            }
-        }
-
-        [HttpGet("GetListAsyncSortedByCreatedDate")]
-        public async Task<IActionResult> GetListAsyncSortedByCreatedDate([FromQuery] PageRequest pageRequest)
-        {
-            try
-            {
-                var result = await _bookService.GetPaginatedListAsyncSortedByCreatedDate(pageRequest);
 
                 if (!result.IsSuccess)
                 {
@@ -231,6 +167,132 @@ namespace WebAPI.Controllers
             try
             {
                 var result = await _bookService.GetListAsyncByCategory(categoryIds);
+
+                if (!result.IsSuccess)
+                {
+                    return BadRequest(result);
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, $"Error : {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetPaginatedListAsyncByLanguage")]
+        public async Task<IActionResult> GetPagedListAsyncByLanguage([FromQuery] PageRequest pageRequest, [FromQuery] List<Guid> languageIds)
+        {
+            try
+            {
+                var result = await _bookService.GetPaginatedListAsyncByLanguage(pageRequest, languageIds);
+
+                if (!result.IsSuccess)
+                {
+                    return BadRequest(result);
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, $"Error : {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetListAsyncByLanguage")]
+        public async Task<IActionResult> GetListAsyncByLanguage([FromQuery] List<Guid> languageIds)
+        {
+            try
+            {
+                var result = await _bookService.GetListAsyncByLanguage(languageIds);
+
+                if (!result.IsSuccess)
+                {
+                    return BadRequest(result);
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, $"Error : {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetPaginatedListAsyncSortedByName")]
+        public async Task<IActionResult> GetListAsyncSortedByName([FromQuery] PageRequest pageRequest)
+        {
+            try
+            {
+                var result = await _bookService.GetPaginatedListAsyncSortedByName(pageRequest);
+
+                if (!result.IsSuccess)
+                {
+                    return BadRequest(result);
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, $"Error : {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetListAsyncSortedByName")]
+        public async Task<IActionResult> GetListAsyncSortedByName()
+        {
+            try
+            {
+                var result = await _bookService.GetListAsyncSortedByName();
+
+                if (!result.IsSuccess)
+                {
+                    return BadRequest(result);
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, $"Error : {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetPaginatedListAsyncSortedByCreatedDate")]
+        public async Task<IActionResult> GetPaginatedListAsyncSortedByCreatedDate([FromQuery] PageRequest pageRequest)
+        {
+            try
+            {
+                var result = await _bookService.GetPaginatedListAsyncSortedByCreatedDate(pageRequest);
+
+                if (!result.IsSuccess)
+                {
+                    return BadRequest(result);
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, $"Error : {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetListAsyncSortedByCreatedDate")]
+        public async Task<IActionResult> GetListAsyncSortedByCreatedDate()
+        {
+            try
+            {
+                var result = await _bookService.GetListAsyncSortedByCreatedDate();
 
                 if (!result.IsSuccess)
                 {
