@@ -2,13 +2,17 @@
 using Business.Abstracts;
 using Business.Constants;
 using Business.Dtos.Request.DepositBook;
+using Business.Dtos.Response.Book;
 using Business.Dtos.Response.DepositBook;
 using Core.DataAccess.Paging;
+using Core.Entities.Concrete;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
 using Entities.Concrete;
 using Entities.Concrete.enums;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -147,6 +151,146 @@ namespace Business.Concretes
             return new ErrorDataResult<DepositBook>(Messages.Error);
         }
 
+        public async Task<IDataResult<List<GetListDepositBookResponse>>> GetListAsync()
+        {
+            var data = await _depositBookDal.GetListAsync(null);
+
+            List<GetListDepositBookResponse> responseBooks = new List<GetListDepositBookResponse>();
+            if (data is not null)
+            {
+                foreach (var item in data)
+                {
+                    var bookResponse = _mapper.Map<GetListDepositBookResponse>(item);
+                    responseBooks.Add(bookResponse);
+
+                }
+
+                return new SuccessDataResult<List<GetListDepositBookResponse>>(responseBooks, Messages.BooksListed);
+            }
+
+            return new ErrorDataResult<List<GetListDepositBookResponse>>(Messages.Error);
+        }
+        
+        public async Task<IDataResult<List<GetListDepositBookResponse>>> GetListAsyncSortedByCreatedDate()
+        {
+            var data = await _depositBookDal.GetListAsyncOrderBy(predicate: null, orderBy: q => q.OrderByDescending(b => b.CreatedDate));
+
+            List<GetListDepositBookResponse> responseBooks = new List<GetListDepositBookResponse>();
+            if (data is not null)
+            {
+                foreach (var item in data)
+                {
+                    var bookResponse = _mapper.Map<GetListDepositBookResponse>(item);
+                    responseBooks.Add(bookResponse);
+
+                }
+
+                return new SuccessDataResult<List<GetListDepositBookResponse>>(responseBooks, Messages.BooksListed);
+            }
+
+            return new ErrorDataResult<List<GetListDepositBookResponse>>(Messages.Error);
+        }
+
+        public async Task<IDataResult<List<GetListDepositBookResponse>>> GetListAsyncUndeposited()
+        {
+            var data = await _depositBookDal.GetListAsync(predicate: d => d.Status == DepositBookStatus.NOT_RECEIVED);
+
+            List<GetListDepositBookResponse> responseBooks = new List<GetListDepositBookResponse>();
+            if (data is not null)
+            {
+                foreach (var item in data)
+                {
+                    var bookResponse = _mapper.Map<GetListDepositBookResponse>(item);
+                    responseBooks.Add(bookResponse);
+
+                }
+
+                return new SuccessDataResult<List<GetListDepositBookResponse>>(responseBooks, Messages.BooksListed);
+            }
+
+            return new ErrorDataResult<List<GetListDepositBookResponse>>(Messages.Error);
+        }
+
+        public async Task<IDataResult<List<GetListDepositBookResponse>>> GetListAsyncDeposited()
+        {
+            var data = await _depositBookDal.GetListAsync(predicate: d => d.Status == DepositBookStatus.RECEIVED);
+
+            List<GetListDepositBookResponse> responseBooks = new List<GetListDepositBookResponse>();
+            if (data is not null)
+            {
+                foreach (var item in data)
+                {
+                    var bookResponse = _mapper.Map<GetListDepositBookResponse>(item);
+                    responseBooks.Add(bookResponse);
+
+                }
+
+                return new SuccessDataResult<List<GetListDepositBookResponse>>(responseBooks, Messages.BooksListed);
+            }
+
+            return new ErrorDataResult<List<GetListDepositBookResponse>>(Messages.Error);
+        }
+
+        public async Task<IDataResult<List<GetListDepositBookResponse>>> GetListAsyncByUserId(Guid userId)
+        {
+            var data = await _depositBookDal.GetListAsync(predicate: d => d.UserId == userId);
+
+            List<GetListDepositBookResponse> responseBooks = new List<GetListDepositBookResponse>();
+            if (data is not null)
+            {
+                foreach (var item in data)
+                {
+                    var bookResponse = _mapper.Map<GetListDepositBookResponse>(item);
+                    responseBooks.Add(bookResponse);
+
+                }
+
+                return new SuccessDataResult<List<GetListDepositBookResponse>>(responseBooks, Messages.BooksListed);
+            }
+
+            return new ErrorDataResult<List<GetListDepositBookResponse>>(Messages.Error);
+        }
+
+        public async Task<IDataResult<List<GetListDepositBookResponse>>> GetListAsyncByBookId(Guid bookId)
+        {
+            var data = await _depositBookDal.GetListAsync(predicate: d => d.BookId == bookId);
+
+            List<GetListDepositBookResponse> responseBooks = new List<GetListDepositBookResponse>();
+            if (data is not null)
+            {
+                foreach (var item in data)
+                {
+                    var bookResponse = _mapper.Map<GetListDepositBookResponse>(item);
+                    responseBooks.Add(bookResponse);
+
+                }
+
+                return new SuccessDataResult<List<GetListDepositBookResponse>>(responseBooks, Messages.BooksListed);
+            }
+
+            return new ErrorDataResult<List<GetListDepositBookResponse>>(Messages.Error);
+        }
+
+        public async Task<IDataResult<List<GetListDepositBookResponse>>> GetPaginatedListAsyncUndepositedByUserId(Guid userId)
+        {
+            var data = await _depositBookDal.GetListAsync(predicate: d => d.Status == DepositBookStatus.NOT_RECEIVED && d.UserId == userId);
+
+            List<GetListDepositBookResponse> responseBooks = new List<GetListDepositBookResponse>();
+            if (data is not null)
+            {
+                foreach (var item in data)
+                {
+                    var bookResponse = _mapper.Map<GetListDepositBookResponse>(item);
+                    responseBooks.Add(bookResponse);
+
+                }
+
+                return new SuccessDataResult<List<GetListDepositBookResponse>>(responseBooks, Messages.BooksListed);
+            }
+
+            return new ErrorDataResult<List<GetListDepositBookResponse>>(Messages.Error);
+        }
+
         public async Task<IDataResult<IPaginate<GetListDepositBookResponse>>> GetPaginatedListAsyncUndeposited(PageRequest pageRequest)
         {
             var data = await _depositBookDal.GetPaginatedListAsync(
@@ -266,6 +410,6 @@ namespace Business.Concretes
             }
         }
 
-      
+       
     }
 }
