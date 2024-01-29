@@ -28,6 +28,8 @@ namespace Core.DataAccess.Repositories
            CancellationToken cancellationToken = default
         );
 
+        Task<ICollection<TEntity>> GetListAsyncOrderBy(Expression<Func<TEntity, bool>>? predicate = null, bool withDeleted = false, bool enableTracking = true, CancellationToken cancellationToken = default);
+
         Task<ICollection<TEntity>> GetListAsync(
           Expression<Func<TEntity, bool>> predicate,
           bool withDeleted = false,
@@ -35,7 +37,7 @@ namespace Core.DataAccess.Repositories
           CancellationToken cancellationToken = default
        );
 
-        Task<IPaginate<TEntity>> GetListAsyncOrderBy(
+        Task<IPaginate<TEntity>> GetListPaginatedAsyncOrderBy(
        Expression<Func<TEntity, bool>>? predicate = null,
        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
        int index = 0,

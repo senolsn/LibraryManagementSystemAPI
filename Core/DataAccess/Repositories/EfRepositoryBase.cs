@@ -94,7 +94,24 @@ namespace Core.DataAccess.Repositories
             return await queryable.ToPaginateAsync(index, size, from: 0, cancellationToken);
         }
 
-        public async Task<IPaginate<TEntity>> GetListAsyncOrderBy(
+        /*Non-paginated list metodu*/
+        public virtual async Task<ICollection<TEntity>> GetListAsyncOrderBy(Expression<Func<TEntity, bool>>? predicate = null,bool withDeleted = false, bool enableTracking = true, CancellationToken cancellationToken = default
+        )
+        {
+            IQueryable<TEntity> queryable = Query();
+
+            if (!enableTracking)
+                queryable = queryable.AsNoTracking();
+            if (withDeleted)
+                queryable = queryable.IgnoreQueryFilters().Where(field => field.DeletedDate == null);
+            if (predicate != null)
+                queryable = queryable.Where(predicate);
+
+            return await queryable.ToListAsync(cancellationToken);
+        }
+
+        /*Paginated list metodu*/
+        public async Task<IPaginate<TEntity>> GetListPaginatedAsyncOrderBy(
         Expression<Func<TEntity, bool>>? predicate = null, 
         Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
         int index = 0,
@@ -116,8 +133,6 @@ namespace Core.DataAccess.Repositories
                 return await orderBy(queryable).ToPaginateAsync(index, size, from: 0, cancellationToken);
             return await queryable.ToPaginateAsync(index, size, from: 0, cancellationToken);
         }
-
-
 
         #region Helper Methods
 
@@ -289,10 +304,6 @@ namespace Core.DataAccess.Repositories
 
             Context.Update(entity);
         }
-
-      
-
-
         #endregion
     }
 }

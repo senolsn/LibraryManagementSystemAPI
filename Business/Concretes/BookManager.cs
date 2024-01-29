@@ -256,7 +256,7 @@ namespace Business.Concretes
         //[SecuredOperation("admin,get")]
         public async Task<IDataResult<IPaginate<GetListBookResponse>>> GetPaginatedListAsyncSortedByName(PageRequest pageRequest)
         {
-            var data = await _bookDal.GetListAsyncOrderBy(
+            var data = await _bookDal.GetListPaginatedAsyncOrderBy(
                 predicate: null,
                 orderBy: q => q.OrderBy(b => b.BookName),
                 index: pageRequest.PageIndex,
@@ -282,7 +282,7 @@ namespace Business.Concretes
         [SecuredOperation("admin,get")]
         public async Task<IDataResult<IPaginate<GetListBookResponse>>> GetPaginatedListAsyncSortedByCreatedDate(PageRequest pageRequest)
         {
-            var data = await _bookDal.GetListAsyncOrderBy(
+            var data = await _bookDal.GetListPaginatedAsyncOrderBy(
                 predicate: null,
                 orderBy: q => q.OrderByDescending(b => b.CreatedDate),
                 index: pageRequest.PageIndex,
