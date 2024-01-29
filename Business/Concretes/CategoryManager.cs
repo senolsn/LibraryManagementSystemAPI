@@ -3,6 +3,7 @@ using Business.Abstracts;
 using Business.BusinessAspects;
 using Business.Constants;
 using Business.Dtos.Request.Category;
+using Business.Dtos.Response.Book;
 using Business.Dtos.Response.Category;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Caching;
@@ -14,6 +15,7 @@ using DataAccess.Abstracts;
 using Entities.Concrete;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Business.Concretes
@@ -138,7 +140,54 @@ namespace Business.Concretes
             return new ErrorDataResult<IPaginate<GetListCategoryResponse>>(Messages.Error);
         }
 
-        
+        public async Task<IDataResult<List<GetListCategoryResponse>>> GetListAsync()
+        {
+            var data = await _categoryDal.GetListAsync(null);
+
+            if (data is not null)
+            {
+                var categoryResponse = _mapper.Map<List<GetListCategoryResponse>>(data);
+
+                return new SuccessDataResult<List<GetListCategoryResponse>>(categoryResponse, Messages.BooksListed);
+            }
+
+            return new ErrorDataResult<List<GetListCategoryResponse>>(Messages.Error);
+        }
+
+        public async Task<IDataResult<List<GetListCategoryResponse>>> GetListAsyncSortedByName()
+        {
+            var data = await _categoryDal.GetListAsyncOrderBy(
+                predicate: null,
+                orderBy: q => q.OrderBy(c => c.CategoryName)
+                );
+
+            if(data is not null)
+            {
+                var categoryResponse = _mapper.Map<List<GetListCategoryResponse>>(data);
+
+                return new SuccessDataResult<List<GetListCategoryResponse>>(categoryResponse, Messages.CategoriesListed);
+            }
+            return new ErrorDataResult<List<GetListCategoryResponse>>(Messages.Error);
+        }
+
+        public async Task<IDataResult<List<GetListCategoryResponse>>> GetListAsyncSortedByCreatedDate()
+        {
+            var data = await _categoryDal.GetListAsyncOrderBy(
+                predicate: null,
+                orderBy: q => q.OrderBy(c => c.CreatedDate)
+                );
+
+            if(data is not null)
+            {
+                var categoryResponse = _mapper.Map<List<GetListCategoryResponse>>(data);
+
+                return new SuccessDataResult<List<GetListCategoryResponse>>(categoryResponse, Messages.CategoriesListed);
+
+            }
+            return new ErrorDataResult<List<GetListCategoryResponse>>(Messages.Error);
+        }
+
+
         #region Helper Methods
         private async Task<IResult> CheckIfCategoryHasBooks(List<Guid> categoryIds)
         {

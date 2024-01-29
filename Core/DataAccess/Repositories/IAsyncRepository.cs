@@ -31,8 +31,7 @@ namespace Core.DataAccess.Repositories
         Task<ICollection<TEntity>> GetListAsyncOrderBy(
             Expression<Func<TEntity, bool>>? predicate = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
-            bool withDeleted = false,
-            bool enableTracking = true,
+            bool withDeleted = false, bool enableTracking = true,
             CancellationToken cancellationToken = default);
 
         Task<ICollection<TEntity>> GetListAsync(
