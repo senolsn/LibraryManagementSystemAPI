@@ -225,6 +225,7 @@ namespace Business.Concretes
             return new ErrorDataResult<List<GetListBookResponse>>(Messages.Error);
         }
 
+
         //[SecuredOperation("admin,get")]
         public async Task<IDataResult<IPaginate<GetListBookResponse>>> GetPaginatedListAsync(PageRequest pageRequest)
         {
@@ -232,30 +233,6 @@ namespace Business.Concretes
                null,
                index: pageRequest.PageIndex,
                size: pageRequest.PageSize);
-
-            if (data is not null)
-            {
-                var booksResponse = _mapper.Map<List<GetListBookResponse>>(data.Items);
-
-                var paginatedBooksResponse = new Paginate<GetListBookResponse>
-                {
-                    Items = booksResponse
-                };
-
-
-                return new SuccessDataResult<IPaginate<GetListBookResponse>>(paginatedBooksResponse, Messages.BooksListed);
-            }
-
-            return new ErrorDataResult<IPaginate<GetListBookResponse>>(Messages.Error);
-        }
-
-        public async Task<IDataResult<IPaginate<GetListBookResponse>>> GetPaginatedListWithAuthors(Expression<Func<Book, bool>> predicate, PageRequest pageRequest)
-        {
-            var data = await _bookDal.GetListWithAuthors(
-               null,
-               index: pageRequest.PageIndex,
-               size: pageRequest.PageSize);
-
 
             if (data is not null)
             {
@@ -325,6 +302,23 @@ namespace Business.Concretes
             return new ErrorDataResult<IPaginate<GetListBookResponse>>(Messages.Error);
         }
 
-       
+     
+
+        public async Task<IDataResult<List<GetListBookResponse>>> GetListAsyncByCategory(List<Guid> categoryIds)
+        {
+            var data = await _bookDal.GetListAsync(
+                predicate: book => book.BookCategories.Any(category => categoryIds.Contains(category.CategoryId))
+                );
+
+            if(data is not null) 
+            {
+                var bookResponse = _mapper.Map<List<GetListBookResponse>>(data);
+
+                return new SuccessDataResult<List<GetListBookResponse>>(bookResponse, Messages.BooksListed);
+            }
+            return new ErrorDataResult<List<GetListBookResponse>>(Messages.Error);
+        }
+
+        
     }
 }

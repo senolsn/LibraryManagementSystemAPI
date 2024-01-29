@@ -140,28 +140,6 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpGet("GetPagedListWithAuthorsAsync")]
-        public async Task<IActionResult> GetPagedListWithAuthorsAsync([FromQuery] PageRequest pageRequest)
-        {
-            try
-            {
-                var result = await _bookService.GetPaginatedListWithAuthors(null, pageRequest);
-
-                if (!result.IsSuccess)
-                {
-                    return BadRequest(result);
-                }
-
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-
-                return StatusCode(500, $"Error : {ex.Message}");
-            }
-        }
-
-
         [HttpGet("GetPagedListAsyncByCategory")]
         public async Task<IActionResult> GetPagedListAsyncByCategory([FromQuery] PageRequest pageRequest, [FromQuery]List<Guid> categoryIds)
         {
@@ -232,6 +210,27 @@ namespace WebAPI.Controllers
             try
             {
                 var result = await _bookService.GetPaginatedListAsyncSortedByCreatedDate(pageRequest);
+
+                if (!result.IsSuccess)
+                {
+                    return BadRequest(result);
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, $"Error : {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetListAsyncByCategory")]
+        public async Task<IActionResult> GetListAsyncByCategory([FromQuery] List<Guid> categoryIds)
+        {
+            try
+            {
+                var result = await _bookService.GetListAsyncByCategory(categoryIds);
 
                 if (!result.IsSuccess)
                 {
