@@ -8,6 +8,8 @@ using Core.Utilities.Results;
 using DataAccess.Abstracts;
 using Entities.Concrete;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Business.Concretes
@@ -83,6 +85,48 @@ namespace Business.Concretes
             return new ErrorDataResult<Department>(Messages.Error);
         }
 
+        public async Task<IDataResult<List<GetListDepartmentResponse>>> GetListAsync()
+        {
+            var data = await _departmentDal.GetListAsync(null);
+
+            if (data is not null)
+            {
+                var departmentsResponse = _mapper.Map<List<GetListDepartmentResponse>>(data);
+
+                return new SuccessDataResult<List<GetListDepartmentResponse>>(departmentsResponse, Messages.BooksListed);
+            }
+
+            return new ErrorDataResult<List<GetListDepartmentResponse>>(Messages.Error);
+        }
+
+        public async Task<IDataResult<List<GetListDepartmentResponse>>> GetListAsyncSortedByName()
+        {
+            var data = await _departmentDal.GetListAsyncOrderBy(null, orderBy: q => q.OrderBy(d => d.DepartmentName));
+
+            if (data is not null)
+            {
+                var departmentsResponse = _mapper.Map<List<GetListDepartmentResponse>>(data);
+
+                return new SuccessDataResult<List<GetListDepartmentResponse>>(departmentsResponse, Messages.BooksListed);
+            }
+
+            return new ErrorDataResult<List<GetListDepartmentResponse>>(Messages.Error);
+        }
+
+        public async Task<IDataResult<List<GetListDepartmentResponse>>> GetListAsyncSortedByCreatedDate()
+        {
+            var data = await _departmentDal.GetListAsyncOrderBy(null, orderBy: q => q.OrderByDescending(b => b.CreatedDate));
+
+            if (data is not null)
+            {
+                var departmentsResponse = _mapper.Map<List<GetListDepartmentResponse>>(data);
+
+                return new SuccessDataResult<List<GetListDepartmentResponse>>(departmentsResponse, Messages.BooksListed);
+            }
+
+            return new ErrorDataResult<List<GetListDepartmentResponse>>(Messages.Error);
+        }
+
         public async Task<IDataResult<IPaginate<GetListDepartmentResponse>>> GetPaginatedListAsync(PageRequest pageRequest)
         {
             var data = await _departmentDal.GetPaginatedListAsync(
@@ -108,5 +152,7 @@ namespace Business.Concretes
             }
             return true;
         }
+
+        
     }
 }

@@ -10,10 +10,10 @@ using System.Threading.Tasks;
 
 namespace Core.DataAccess.Repositories
 {
-    public interface IAsyncRepository<TEntity>:IQuery<TEntity> where TEntity : IEntity
+    public interface IAsyncRepository<TEntity> : IQuery<TEntity> where TEntity : IEntity
     {
         Task<TEntity?> GetAsync(
-           Expression<Func<TEntity, bool>> predicate, 
+           Expression<Func<TEntity, bool>> predicate,
            bool withDeleted = false,
            bool enableTracking = true,
            CancellationToken cancellationToken = default
@@ -28,7 +28,12 @@ namespace Core.DataAccess.Repositories
            CancellationToken cancellationToken = default
         );
 
-        Task<ICollection<TEntity>> GetListAsyncOrderBy(Expression<Func<TEntity, bool>>? predicate = null, bool withDeleted = false, bool enableTracking = true, CancellationToken cancellationToken = default);
+        Task<ICollection<TEntity>> GetListAsyncOrderBy(
+            Expression<Func<TEntity, bool>>? predicate = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
+            bool withDeleted = false,
+            bool enableTracking = true,
+            CancellationToken cancellationToken = default);
 
         Task<ICollection<TEntity>> GetListAsync(
           Expression<Func<TEntity, bool>>? predicate,
@@ -53,8 +58,8 @@ namespace Core.DataAccess.Repositories
 
         Task<TEntity> DeleteAsync(TEntity entity, bool permanent = false);
 
-        Task <bool> SaveChangesAsync();
+        Task<bool> SaveChangesAsync();
 
-            
+
     }
 }
