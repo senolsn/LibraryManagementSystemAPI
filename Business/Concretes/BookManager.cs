@@ -205,6 +205,21 @@ namespace Business.Concretes
             return new ErrorDataResult<IPaginate<GetListBookResponse>>(Messages.Error);
         }
 
+        public async Task<IDataResult<List<GetListBookResponse>>> GetListAsync()
+        {
+            var data = await _bookDal.GetListAsync(null);
+
+            if (data is not null)
+            {
+                var booksResponse = _mapper.Map<List<GetListBookResponse>>(data);
+
+
+                return new SuccessDataResult<List<GetListBookResponse>>(booksResponse, Messages.BooksListed);
+            }
+
+            return new ErrorDataResult<List<GetListBookResponse>>(Messages.Error);
+        }
+
         //[SecuredOperation("admin,get")]
         public async Task<IDataResult<IPaginate<GetListBookResponse>>> GetPaginatedListAsync(PageRequest pageRequest)
         {
@@ -305,7 +320,6 @@ namespace Business.Concretes
             return new ErrorDataResult<IPaginate<GetListBookResponse>>(Messages.Error);
         }
 
-        
-
+       
     }
 }
