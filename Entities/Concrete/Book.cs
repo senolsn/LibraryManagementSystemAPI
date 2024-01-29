@@ -20,8 +20,8 @@ namespace Entities.Concrete
         public int PublishCount { get; set; }
         public int Stock { get; set; }
         public BookStatus Status { get; set; }
-        public string Interpreter { get; set; }
         public string FixtureNumber { get; set; }
         public ICollection<Author> BookAuthors { get; set; }
+        public ICollection<Interpreter> BookInterpreters { get; set; }
     }
 }
