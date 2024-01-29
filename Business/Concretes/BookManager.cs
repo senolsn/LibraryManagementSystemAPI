@@ -205,6 +205,27 @@ namespace Business.Concretes
             return new ErrorDataResult<IPaginate<GetListBookResponse>>(Messages.Error);
         }
 
+        public async Task<IDataResult<List<GetListBookResponse>>> GetListAsync()
+        {
+            var data = await _bookDal.GetListAsync(null);
+
+            List<GetListBookResponse> responseBooks = new List<GetListBookResponse>();
+            if (data is not null)
+            {
+                foreach (var item in data)
+                {
+                    var bookResponse = _mapper.Map<GetListBookResponse>(item);
+                    responseBooks.Add(bookResponse);
+
+                }
+
+                return new SuccessDataResult<List<GetListBookResponse>>(responseBooks, Messages.BooksListed);
+            }
+
+            return new ErrorDataResult<List<GetListBookResponse>>(Messages.Error);
+        }
+
+
         //[SecuredOperation("admin,get")]
         public async Task<IDataResult<IPaginate<GetListBookResponse>>> GetPaginatedListAsync(PageRequest pageRequest)
         {

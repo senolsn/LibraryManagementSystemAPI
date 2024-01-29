@@ -2,12 +2,16 @@
 using Business.Abstracts;
 using Business.Constants;
 using Business.Dtos.Request.Publisher;
+using Business.Dtos.Response.Language;
 using Business.Dtos.Response.Publisher;
 using Core.DataAccess.Paging;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
+using DataAccess.Concretes.EntityFramework;
 using Entities.Concrete;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Business.Concretes
@@ -64,6 +68,48 @@ namespace Business.Concretes
             }
 
             return new ErrorDataResult<Publisher>(Messages.Error);
+        }
+
+        public async Task<IDataResult<List<GetListPublisherResponse>>> GetListAsync()
+        {
+            var data = await _publisherDal.GetListAsync(null);
+
+            if (data is not null)
+            {
+                var publishersResponse = _mapper.Map<List<GetListPublisherResponse>>(data);
+
+                return new SuccessDataResult<List<GetListPublisherResponse>>(publishersResponse, Messages.BooksListed);
+            }
+
+            return new ErrorDataResult<List<GetListPublisherResponse>>(Messages.Error);
+        }
+
+        public async Task<IDataResult<List<GetListPublisherResponse>>> GetListAsyncSortedByCreatedDate()
+        {
+            var data = await _publisherDal.GetListAsyncOrderBy(null, orderBy: q => q.OrderByDescending(p => p.CreatedDate));
+
+            if (data is not null)
+            {
+                var publishersResponse = _mapper.Map<List<GetListPublisherResponse>>(data);
+
+                return new SuccessDataResult<List<GetListPublisherResponse>>(publishersResponse, Messages.BooksListed);
+            }
+
+            return new ErrorDataResult<List<GetListPublisherResponse>>(Messages.Error);
+        }
+
+        public async Task<IDataResult<List<GetListPublisherResponse>>> GetListAsyncSortedByName()
+        {
+            var data = await _publisherDal.GetListAsyncOrderBy(null, orderBy: q => q.OrderBy(p => p.PublisherName));
+
+            if (data is not null)
+            {
+                var publishersResponse = _mapper.Map<List<GetListPublisherResponse>>(data);
+
+                return new SuccessDataResult<List<GetListPublisherResponse>>(publishersResponse, Messages.BooksListed);
+            }
+
+            return new ErrorDataResult<List<GetListPublisherResponse>>(Messages.Error);
         }
 
         public async Task<IDataResult<IPaginate<GetListPublisherResponse>>> GetPaginatedListAsync(PageRequest pageRequest)
