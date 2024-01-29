@@ -16,6 +16,7 @@ namespace Business.Abstracts
         Task<IResult> Update(UpdateBookRequest request);
         Task<IResult> Delete(DeleteBookRequest request);
         Task<IDataResult<Book>> GetAsync(Guid bookId);
+        Task<IDataResult<List<GetListBookResponse>>> GetListAsync();
         Task<IDataResult<IPaginate<GetListBookResponse>>> GetPaginatedListAsync(PageRequest pageRequest);
         Task<IDataResult<IPaginate<GetListBookResponse>>> GetPaginatedListWithAuthors(Expression<Func<Book, bool>> predicate, PageRequest pageRequest);
         Task<IDataResult<IPaginate<GetListBookResponse>>> GetPaginatedListAsyncByCategory(PageRequest pageRequest, List<Guid> categoryIds);
