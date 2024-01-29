@@ -79,9 +79,9 @@ namespace Business.Concretes
             
         }
 
-        public async Task<IDataResult<IPaginate<GetListAuthorResponse>>> GetListAsync(PageRequest pageRequest)
+        public async Task<IDataResult<IPaginate<GetListAuthorResponse>>> GetPaginatedListAsync(PageRequest pageRequest)
         {
-            var data = await _authorDal.GetListAsync(
+            var data = await _authorDal.GetPaginatedListAsync(
                 null,
                 index: pageRequest.PageIndex,
                 size: pageRequest.PageSize);

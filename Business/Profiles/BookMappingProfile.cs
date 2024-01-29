@@ -16,7 +16,7 @@ namespace Business.Profiles
 
             CreateMap<Book, UpdateBookRequest>().ReverseMap();
 
-            CreateMap<IPaginate<Book>, Paginate<GetListBookResponse>>().ReverseMap();
+            //CreateMap<IPaginate<Book>, Paginate<GetListBookResponse>>().ReverseMap();
             CreateMap<Book, GetListBookResponse>().ReverseMap();
         }
     }

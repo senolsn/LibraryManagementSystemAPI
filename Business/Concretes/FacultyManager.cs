@@ -117,9 +117,9 @@ namespace Business.Concretes
 
         //[SecuredOperation("admin,get")]
         [CacheAspect]
-        public async Task<IDataResult<IPaginate<GetListFacultyResponse>>> GetListAsync(PageRequest pageRequest)
+        public async Task<IDataResult<IPaginate<GetListFacultyResponse>>> GetPaginatedListAsync(PageRequest pageRequest)
         {
-            var data = await _facultyDal.GetListAsync(
+            var data = await _facultyDal.GetPaginatedListAsync(
                null,
                index: pageRequest.PageIndex,
                size: pageRequest.PageSize,

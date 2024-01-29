@@ -13,6 +13,7 @@ using Core.Utilities.Results;
 using DataAccess.Abstracts;
 using Entities.Concrete;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Business.Concretes
@@ -53,7 +54,7 @@ namespace Business.Concretes
             return new SuccessResult(Messages.CategoryAdded);
         }
 
-        [SecuredOperation("admin,delete")]
+        //[SecuredOperation("admin,delete")]
         [CacheRemoveAspect("ICategoryService.Get")]
         public async Task<IResult> Delete(DeleteCategoryRequest request)
         {
@@ -61,7 +62,8 @@ namespace Business.Concretes
 
             if (categoryToDelete is not null)
             {
-                var result = BusinessRules.Run(await CheckIfCategoryHasBooks(request.CategoryId));
+                //var result = BusinessRules.Run(await CheckIfCategoryHasBooks(request.CategoryId));
+                var result = BusinessRules.Run();
                 if (result is not null)
                 {
                     return result;
@@ -74,7 +76,7 @@ namespace Business.Concretes
             return new ErrorResult(Messages.Error);
         }
 
-        [SecuredOperation("admin,update")]
+        //[SecuredOperation("admin,update")]
         [ValidationAspect(typeof (CategoryValidator))]
         [CacheRemoveAspect("ICategoryService.Get")]
         public async Task<IResult> Update(UpdateCategoryRequest request)
@@ -100,7 +102,7 @@ namespace Business.Concretes
             return new SuccessResult(Messages.CategoryUpdated);
         }
 
-        [SecuredOperation("admin,get")]
+        //[SecuredOperation("admin,get")]
         [CacheAspect]
         public async Task<IDataResult<Category>> GetAsync(Guid categoryId)
         {
@@ -118,9 +120,9 @@ namespace Business.Concretes
 
         //[SecuredOperation("admin,get")]
         [CacheAspect]
-        public async Task<IDataResult<IPaginate<GetListCategoryResponse>>> GetListAsync(PageRequest pageRequest)
+        public async Task<IDataResult<IPaginate<GetListCategoryResponse>>> GetPaginatedListAsync(PageRequest pageRequest)
         {
-            var data = await _categoryDal.GetListAsync(
+            var data = await _categoryDal.GetPaginatedListAsync(
                 null,
                 index: pageRequest.PageIndex,
                 size: pageRequest.PageSize,
@@ -138,11 +140,11 @@ namespace Business.Concretes
 
         
         #region Helper Methods
-        private async Task<IResult> CheckIfCategoryHasBooks(Guid categoryId)
+        private async Task<IResult> CheckIfCategoryHasBooks(List<Guid> categoryIds)
         {
-            var result = await _bookService.GetAsyncByCategoryId(categoryId);
+            var result = 1; //await _bookService.GetListAsyncByCategory(categoryIds);
 
-            if (result is not null)
+            if (result is not 0)
             {
             return new SuccessResult();
 

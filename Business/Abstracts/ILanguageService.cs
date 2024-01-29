@@ -16,7 +16,7 @@ namespace Business.Abstracts
 
         Task<IResult> Delete (DeleteLanguageRequest request);
 
-        Task<IDataResult<IPaginate<GetListLanguageResponse>>> GetListAsync(PageRequest pageRequest);
+        Task<IDataResult<IPaginate<GetListLanguageResponse>>> GetPaginatedListAsync(PageRequest pageRequest);
 
         Task<IDataResult<Language>> GetAsync(Guid languageId);
     }
