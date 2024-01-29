@@ -144,6 +144,139 @@ namespace WebAPI.Controllers
             }
         }
 
+        [HttpGet("GetListAsync")]
+        public async Task<IActionResult> GetListAsync()
+        {
+            try
+            {
+                var result = await _depositBookService.GetListAsync();
+
+                if (!result.IsSuccess)
+                {
+                    return NotFound(result);
+                }
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error : {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetListAsyncSortedByCreatedDate")]
+        public async Task<IActionResult> GetListAsyncSortedByCreatedDate()
+        {
+            try
+            {
+                var result = await _depositBookService.GetListAsyncSortedByCreatedDate();
+
+                if (!result.IsSuccess)
+                {
+                    return NotFound(result);
+                }
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error : {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetListAsyncUndeposited")]
+        public async Task<IActionResult> GetListAsyncUndeposited()
+        {
+            try
+            {
+                var result = await _depositBookService.GetListAsyncUndeposited();
+
+                if (!result.IsSuccess)
+                {
+                    return NotFound(result);
+                }
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error : {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetListAsyncDeposited")]
+        public async Task<IActionResult> GetListAsyncDeposited()
+        {
+            try
+            {
+                var result = await _depositBookService.GetListAsyncDeposited();
+
+                if (!result.IsSuccess)
+                {
+                    return NotFound(result);
+                }
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error : {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetListAsyncByUserId")]
+        public async Task<IActionResult> GetListAsyncByUserId([FromQuery] Guid userId)
+        {
+            try
+            {
+                var result = await _depositBookService.GetListAsyncByUserId(userId);
+
+                if (!result.IsSuccess)
+                {
+                    return NotFound(result);
+                }
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error : {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetListAsyncByBookId")]
+        public async Task<IActionResult> GetListAsyncByBookId([FromQuery] Guid bookId)
+        {
+            try
+            {
+                var result = await _depositBookService.GetListAsyncByBookId(bookId);
+
+                if (!result.IsSuccess)
+                {
+                    return NotFound(result);
+                }
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error : {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetPaginatedListAsyncUndepositedByUserId")]
+        public async Task<IActionResult> GetPaginatedListAsyncUndepositedByUserId([FromQuery] Guid userId)
+        {
+            try
+            {
+                var result = await _depositBookService.GetListAsyncByBookId(userId);
+
+                if (!result.IsSuccess)
+                {
+                    return NotFound(result);
+                }
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error : {ex.Message}");
+            }
+        }
+
         [HttpGet("GetPagedListAsync")]
         public async Task<IActionResult> GetPagedListAsync([FromQuery] PageRequest pageRequest)
         {

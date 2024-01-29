@@ -4,6 +4,7 @@ using Core.DataAccess.Paging;
 using Core.Utilities.Results;
 using Entities.Concrete;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Business.Abstracts
@@ -17,6 +18,13 @@ namespace Business.Abstracts
         Task<IDataResult<DepositBook>> GetAsync(Guid depositBookId);
         Task<IDataResult<DepositBook>> GetAsyncByUserId(Guid userId);
         Task<IDataResult<DepositBook>> GetAsyncByBookAndUserId(Guid bookId, Guid userId);
+        Task<IDataResult<List<GetListDepositBookResponse>>> GetListAsync();
+        Task<IDataResult<List<GetListDepositBookResponse>>> GetListAsyncSortedByCreatedDate();
+        Task<IDataResult<List<GetListDepositBookResponse>>> GetListAsyncUndeposited();
+        Task<IDataResult<List<GetListDepositBookResponse>>> GetListAsyncDeposited();
+        Task<IDataResult<List<GetListDepositBookResponse>>> GetListAsyncByUserId(Guid userId);
+        Task<IDataResult<List<GetListDepositBookResponse>>> GetListAsyncByBookId(Guid bookId);
+        Task<IDataResult<List<GetListDepositBookResponse>>> GetPaginatedListAsyncUndepositedByUserId(Guid userId);
         Task<IDataResult<IPaginate<GetListDepositBookResponse>>> GetPaginatedListAsync(PageRequest pageRequest);
         Task<IDataResult<IPaginate<GetListDepositBookResponse>>> GetPaginatedListAsyncUndeposited(PageRequest pageRequest);
         Task<IDataResult<IPaginate<GetListDepositBookResponse>>> GetPaginatedListAsyncDeposited(PageRequest pageRequest);
