@@ -302,20 +302,7 @@ namespace Business.Concretes
             return new ErrorDataResult<IPaginate<GetListBookResponse>>(Messages.Error);
         }
 
-        public async Task<IDataResult<List<GetListBookResponse>>> GetListAsync()
-        {
-            var data = await _bookDal.GetListAsync(null);
-
-            if (data is not null)
-            {
-                var booksResponse = _mapper.Map<List<GetListBookResponse>>(data);
-
-
-                return new SuccessDataResult<List<GetListBookResponse>>(booksResponse, Messages.BooksListed);
-            }
-
-            return new ErrorDataResult<List<GetListBookResponse>>(Messages.Error);
-        }
+     
 
         public async Task<IDataResult<List<GetListBookResponse>>> GetListAsyncByCategory(List<Guid> categoryIds)
         {
