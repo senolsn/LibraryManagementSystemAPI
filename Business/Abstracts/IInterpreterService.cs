@@ -19,9 +19,9 @@ namespace Business.Abstracts
 
         Task<IResult> Delete(DeleteInterpreterRequest request);
 
-        Task<IDataResult<GetListInterpreterResponse>> GetAsync(Guid interpreterId);
+        Task<IDataResult<Interpreter>> GetAsync(Guid interpreterId);
 
-        Task<IDataResult<IPaginate<GetListInterpreterResponse>>> GetListAsync(PageRequest pageRequest);
+        Task<IDataResult<IPaginate<GetListInterpreterResponse>>> GetPaginatedListAsync(PageRequest pageRequest);
 
     }
 }

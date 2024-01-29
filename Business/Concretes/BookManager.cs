@@ -32,8 +32,9 @@ namespace Business.Concretes
         private readonly Lazy<ICategoryService> _categoryService;
         private readonly Lazy<ILanguageService> _languageService;
         private readonly Lazy<IPublisherService> _publisherService;
+        private readonly Lazy<IInterpreterService> _interpreterService;
 
-        public BookManager(IBookDal bookDal, IMapper mapper, Lazy<IAuthorService> authorService, Lazy<IPublisherService> publisherService, Lazy<ICategoryService> categoryService, Lazy<ILanguageService> languageService)
+        public BookManager(IBookDal bookDal, IMapper mapper, Lazy<IAuthorService> authorService, Lazy<IPublisherService> publisherService, Lazy<ICategoryService> categoryService, Lazy<ILanguageService> languageService, Lazy<IInterpreterService> interpreterService)
         {
             _bookDal = bookDal;
             _mapper = mapper;
@@ -41,6 +42,7 @@ namespace Business.Concretes
             _publisherService = publisherService;
             _categoryService = categoryService;
             _languageService = languageService;
+            _interpreterService = interpreterService;
         }
 
         //[SecuredOperation("admin,add")]
@@ -54,15 +56,16 @@ namespace Business.Concretes
             book.BookAuthors = new List<Author>();
             book.BookCategories = new List<Category>();
             book.BookLanguages = new List<Language>();
+            book.BookInterpreters = new List<Interpreter>();
 
-            foreach (var authorId in request.Authors)
+            foreach (var authorId in request.AuthorIds)
             {
                 var result = await _authorService.Value.GetAsync(authorId);
                 ArgumentNullException.ThrowIfNull(result.Data , "Author");
                 book.BookAuthors.Add(result.Data);
             }
 
-            foreach (var categoryId in request.Categories)
+            foreach (var categoryId in request.CategoryIds)
             {
                 var result = await _categoryService.Value.GetAsync(categoryId);
                 ArgumentNullException.ThrowIfNull(result.Data, "Category");
@@ -70,11 +73,18 @@ namespace Business.Concretes
 
             }
 
-            foreach(var languageId in request.Languages)
+            foreach(var languageId in request.LanguageIds)
             {
                 var result = await _languageService.Value.GetAsync(languageId);
                 ArgumentNullException.ThrowIfNull(result.Data, "Language");
                 book.BookLanguages.Add(result.Data);
+            }
+
+            foreach (var interpreterId in request.InterpreterIds)
+            {
+                var result = await _interpreterService.Value.GetAsync(interpreterId);
+                ArgumentNullException.ThrowIfNull(result.Data, "Interpreter");
+                book.BookInterpreters.Add(result.Data);
             }
 
             var publisherResult = await _publisherService.Value.GetAsync(request.PublisherId);

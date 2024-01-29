@@ -111,7 +111,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                var result = await _interpreterService.GetListAsync(pageRequest);
+                var result = await _interpreterService.GetPaginatedListAsync(pageRequest);
 
                 if (!result.IsSuccess)
                 {

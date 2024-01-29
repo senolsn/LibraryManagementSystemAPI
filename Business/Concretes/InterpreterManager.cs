@@ -67,22 +67,22 @@ namespace Business.Concretes
             return new ErrorResult(Messages.Error);
         }
 
-        public async Task<IDataResult<GetListInterpreterResponse>> GetAsync(Guid interpreterId)
+        public async Task<IDataResult<Interpreter>> GetAsync(Guid interpreterId)
         {
             var result = await _interpreterDal.GetAsync(i => i.InterpreterId == interpreterId);
 
             if (result is not null)
             {
-                var data = _mapper.Map<GetListInterpreterResponse>(result);
-                return new SuccessDataResult<GetListInterpreterResponse>(data, Messages.InterpreterListed);
+                var data = _mapper.Map<Interpreter>(result);
+                return new SuccessDataResult<Interpreter>(data, Messages.InterpreterListed);
 
             }
-            return new ErrorDataResult<GetListInterpreterResponse>(Messages.Error);
+            return new ErrorDataResult<Interpreter>(Messages.Error);
         }
 
-        public async Task<IDataResult<IPaginate<GetListInterpreterResponse>>> GetListAsync(PageRequest pageRequest)
+        public async Task<IDataResult<IPaginate<GetListInterpreterResponse>>> GetPaginatedListAsync(PageRequest pageRequest)
         {
-            var data = await _interpreterDal.GetListAsync(
+            var data = await _interpreterDal.GetPaginatedListAsync(
                 predicate: null,
                 index: pageRequest.PageIndex,
                 size: pageRequest.PageSize

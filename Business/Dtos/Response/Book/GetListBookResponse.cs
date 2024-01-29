@@ -1,5 +1,6 @@
 ﻿using Business.Dtos.Response.Author;
 using Business.Dtos.Response.Category;
+using Business.Dtos.Response.InterpreterResponses;
 using Business.Dtos.Response.Language;
 using Business.Dtos.Response.Publisher;
 using Entities.Concrete;
@@ -29,5 +30,6 @@ namespace Business.Dtos.Response.Book
         public List<GetListAuthorResponse> BookAuthors { get; set; }
         public List<GetListCategoryResponse> BookCategories { get; set; }
         public List<GetListLanguageResponse> BookLanguages { get; set; }
+        public List<GetListInterpreterResponse> BookInterpreters { get; set; }
     }
 }
