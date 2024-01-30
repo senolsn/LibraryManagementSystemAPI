@@ -13,7 +13,6 @@ namespace Business.Dtos.Response.InterpreterResponses
         public Guid InterpreterId { get; set; }
         public string InterpreterFirstName { get; set; }
         public string InterpreterLastName { get; set; }
-        [JsonIgnore]
-        public List<GetListBookResponse> InterpreterBooks { get; set; }
+    
     }
 }
