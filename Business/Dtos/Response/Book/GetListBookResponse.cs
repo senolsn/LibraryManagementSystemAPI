@@ -27,7 +27,6 @@ namespace Business.Dtos.Response.Book
         public List<GetListAuthorResponse> BookAuthors { get; set; }
         public List<GetListCategoryResponse> BookCategories { get; set; }
         public List<GetListLanguageResponse> BookLanguages { get; set; }
-        [JsonIgnore] //Chain'e giriyor kaldırma.
         public List<GetListInterpreterResponse> BookInterpreters { get; set; }
     }
 }
