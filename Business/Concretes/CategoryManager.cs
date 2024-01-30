@@ -187,12 +187,11 @@ namespace Business.Concretes
             return new ErrorDataResult<List<GetListCategoryResponse>>(Messages.Error);
         }
 
-
         #region Helper Methods
         private IResult CheckIfCategoryHasBooks(ICollection<Book> categoryBooks)
         {
 
-            if (categoryBooks is null && categoryBooks.Count < 0)
+            if (categoryBooks.Count < 1)
             {
                 return new SuccessResult();
 

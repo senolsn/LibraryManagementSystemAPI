@@ -44,6 +44,13 @@ namespace Business.Concretes
         }
         public async Task<IResult> Update(UpdateAuthorRequest request)
         {
+            var result = BusinessRules.Run(CapitalizeFirstLetter(request));
+
+            if(result is not null)
+            {
+                return result;
+            }
+
             var authorToUpdate = await _authorDal.GetAsync(a => a.AuthorId == request.AuthorId);
 
             if(authorToUpdate is null) 
@@ -182,7 +189,7 @@ namespace Business.Concretes
         private IResult CheckIfAuthorsHasBook(ICollection<Book> authorBooks)
         {
 
-            if (authorBooks is null && authorBooks.Count < 0)
+            if (authorBooks.Count < 1)
             {
                 return new SuccessResult();
 

@@ -49,7 +49,7 @@ namespace Business.Concretes
 
             Language language = _mapper.Map<Language>(request);
 
-            var createdLanguage = await _languageDal.AddAsync(language);
+             await _languageDal.AddAsync(language);
 
             var dbResult = await _languageDal.SaveChangesAsync();
 
@@ -95,7 +95,7 @@ namespace Business.Concretes
 
             if(languageToDelete is not null)
             {
-                var result = BusinessRules.Run(await CheckIfExistInBooks(request.LanguageId));
+                var result = BusinessRules.Run(await CheckIfExistInBooks(languageToDelete.LanguageBooks));
 
                if(result is not null)
                 {
@@ -186,10 +186,9 @@ namespace Business.Concretes
         }
 
         #region Helper Methods
-        private async Task<IResult> CheckIfExistInBooks(Guid languageId)
+        private async Task<IResult> CheckIfExistInBooks(ICollection<Book> languageBooks)
         {
-            var result = 1;//await _bookDal.GetAsyncByLanguageId(languageId); 
-            if(result is not 0)
+            if(languageBooks is null && languageBooks.Count < 0)
             {
                 return new SuccessResult();
             }
