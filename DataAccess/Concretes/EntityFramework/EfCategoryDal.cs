@@ -32,7 +32,7 @@ namespace DataAccess.Concretes.EntityFramework
                 queryable = queryable.AsNoTracking();
             if (withDeleted)
                 queryable = queryable.IgnoreQueryFilters();
-            return await queryable.FirstOrDefaultAsync(cancellationToken);
+            return await queryable.FirstOrDefaultAsync(predicate, cancellationToken);
         }
     }
 }
