@@ -135,5 +135,17 @@ namespace Business.Concretes
 
             return new ErrorDataResult<User>(Messages.Error);
         }
+
+        public async Task<IDataResult<User>> GetAsyncByDepartmentId(Guid departmentId)
+        {
+            var result = await _userDal.GetAsync(u => u.DepartmentId == departmentId);
+
+            if (result is not null)
+            {
+                return new SuccessDataResult<User>(result, Messages.UserListed);
+            }
+
+            return new ErrorDataResult<User>(Messages.Error);
+        }
     }
 }

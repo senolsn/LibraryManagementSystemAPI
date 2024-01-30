@@ -2,6 +2,7 @@
 using Business.Abstracts;
 using Business.BusinessAspects;
 using Business.Constants;
+using Business.Dtos.Request.Category;
 using Business.Dtos.Request.Faculty;
 using Business.Dtos.Response.Department;
 using Business.Dtos.Response.Faculty;
@@ -159,8 +160,6 @@ namespace Business.Concretes
             return new ErrorDataResult<List<GetListFacultyResponse>>(Messages.Error);
         }
 
-
-
         //[SecuredOperation("admin,get")]
         [CacheAspect]
         public async Task<IDataResult<IPaginate<GetListFacultyResponse>>> GetPaginatedListAsync(PageRequest pageRequest)
@@ -186,17 +185,27 @@ namespace Business.Concretes
         private async Task<IResult> CheckIfExistInUsers(Guid facultyId)
         {
             var result = await _userService.GetAsyncByFacultyId(facultyId);
-            if (result is not null)
+            if (result.IsSuccess)
             {
-                return new SuccessResult();
+                return new ErrorResult(Messages.FacultyExistInUsers);
             }
-            return new ErrorResult(Messages.FacultyExistInUsers);
+                return new SuccessResult();
         }
 
         private IDataResult<IFacultyRequest> CapitalizeFirstLetter(IFacultyRequest request)
         {
-            string capitalizedFacultyName = char.ToUpper(request.FacultyName[0]) + request.FacultyName.Substring(1).ToLower();
-            request.FacultyName = capitalizedFacultyName;
+            var stringToArray = request.FacultyName.Split(' ', ',', '.');
+            string[] arrayToString = new string[stringToArray.Length];
+            int count = 0;
+
+            foreach (var word in stringToArray)
+            {
+                var capitalizedCategoryName = char.ToUpper(word[0]) + word.Substring(1).ToLower();
+                arrayToString[count] = capitalizedCategoryName;
+                count++;
+            }
+            request.FacultyName = string.Join(" ", arrayToString);
+
             return new SuccessDataResult<IFacultyRequest>(request);
         }
 

@@ -20,5 +20,7 @@ namespace Business.Abstracts
         List<OperationClaim> GetClaims(User user);
         Task<User> GetByMail(string mail);
         Task<IResult> AddTransactionalTest(User user);
-	}
+        Task<IDataResult<User>> GetAsyncByDepartmentId(Guid departmentId);
+
+    }
 }

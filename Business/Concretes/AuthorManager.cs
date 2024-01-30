@@ -29,7 +29,12 @@ namespace Business.Concretes
         }
         public async Task<IResult> Add(CreateAuthorRequest request)
         {
-            BusinessRules.Run(CapitalizeFirstLetter(request));
+            var result = BusinessRules.Run(CapitalizeFirstLetter(request));
+
+            if(result is not null)
+            {
+                return result;
+            }
 
             Author author = _mapper.Map<Author>(request);
 

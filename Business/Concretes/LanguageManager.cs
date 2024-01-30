@@ -188,7 +188,7 @@ namespace Business.Concretes
         #region Helper Methods
         private async Task<IResult> CheckIfExistInBooks(ICollection<Book> languageBooks)
         {
-            if(languageBooks is null && languageBooks.Count < 0)
+            if(languageBooks.Count < 1)
             {
                 return new SuccessResult();
             }
@@ -200,7 +200,6 @@ namespace Business.Concretes
             request.LanguageName = capitalizedLanguageName;
             return new SuccessDataResult<ILanguageRequest>(request);
         }
-
         private async Task<IResult> IsLanguageNameUnique(string languageName)
         {
             var result = await _languageDal.GetAsync(l => l.LanguageName.ToUpper() == languageName.ToUpper());
@@ -211,9 +210,6 @@ namespace Business.Concretes
             }
             return new SuccessResult();
         }
-
-       
-
         #endregion
     }
 }

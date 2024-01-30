@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
 using Business.Abstracts;
 using Business.Constants;
+using Business.Dtos.Request.Author;
+using Business.Dtos.Request.Interpreter;
 using Business.Dtos.Request.InterpreterRequests;
 using Business.Dtos.Response.InterpreterResponses;
 using Core.DataAccess.Paging;
+using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
 using Entities.Concrete;
@@ -28,6 +31,13 @@ namespace Business.Concretes
 
         public async Task<IResult> Add(CreateInterpreterRequest request)
         {
+            var result = BusinessRules.Run(CapitalizeFirstLetter(request));
+
+            if(result is not null)
+            {
+                return result;
+            }
+
             Interpreter interpreter = _mapper.Map<Interpreter>(request);
 
             var createdInterpreter = await _interpreterDal.AddAsync(interpreter);
@@ -58,10 +68,17 @@ namespace Business.Concretes
         {
             var interpreterToDelete = await _interpreterDal.GetAsync(i => i.InterpreterId == request.InterpreterId);
 
-            if (interpreterToDelete is not null)
+            if(interpreterToDelete is not null)
             {
+                var result = BusinessRules.Run(CheckIfInterpretersHasBook(interpreterToDelete.InterpreterBooks));
+
+                if(result is not null)
+                {
+                    return result;
+                }
                 await _interpreterDal.DeleteAsync(interpreterToDelete);
                 return new SuccessResult(Messages.InterpreterDeleted);
+
             }
 
             return new ErrorResult(Messages.Error);
@@ -97,6 +114,52 @@ namespace Business.Concretes
 
             return new ErrorDataResult<IPaginate<GetListInterpreterResponse>>(Messages.Error);
         }
+
+        #region Helper Methods
+
+        private IDataResult<IInterpreterRequest> CapitalizeFirstLetter(IInterpreterRequest request)
+        {
+            var firstNameToArray = request.InterpreterFirstName.Split(' ', ',', '.');
+            var lastNameToArray = request.InterpreterLastName.Split(' ', ',', '.');
+
+            string[] arrayToFirstName = new string[firstNameToArray.Length];
+            string[] arrayToLastName = new string[lastNameToArray.Length];
+
+            int count = 0;
+
+            foreach (var word in firstNameToArray)
+            {
+                var capitalizedFirstName = char.ToUpper(word[0]) + word.Substring(1).ToLower();
+                arrayToFirstName[count] = capitalizedFirstName;
+                count++;
+            }
+
+            count = 0;
+
+            foreach (var word in lastNameToArray)
+            {
+                var capitalizedLastName = char.ToUpper(word[0]) + word.Substring(1).ToLower();
+                arrayToLastName[count] = capitalizedLastName;
+                count++;
+            }
+
+            request.InterpreterFirstName = string.Join(" ", arrayToFirstName);
+            request.InterpreterLastName = string.Join(" ", arrayToLastName);
+
+            return new SuccessDataResult<IInterpreterRequest>(request);
+        }
+        private IResult CheckIfInterpretersHasBook(ICollection<Book> interpreterBooks)
+        {
+
+            if (interpreterBooks.Count < 1)
+            {
+                return new SuccessResult();
+
+            }
+            return new ErrorResult(Messages.AuthorExistInBook);
+        }
+
+        #endregion
 
     }
 
