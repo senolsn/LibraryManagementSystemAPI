@@ -260,6 +260,7 @@ namespace Business.Concretes
                     var bookResponse = _mapper.Map<GetListBookResponse>(item);
                     responseBooks.Add(bookResponse);
 
+                
                 }
 
                 return new SuccessDataResult<List<GetListBookResponse>>(responseBooks, Messages.BooksListed);
