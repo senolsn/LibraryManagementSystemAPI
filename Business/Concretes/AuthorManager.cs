@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
 using Business.Abstracts;
 using Business.Constants;
+using Business.Dtos.Request.Author;
 using Business.Dtos.Request.AuthorRequests;
+using Business.Dtos.Request.Category;
 using Business.Dtos.Response.Author;
 using Core.DataAccess.Paging;
+using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
 using Entities.Concrete;
@@ -26,6 +29,8 @@ namespace Business.Concretes
         }
         public async Task<IResult> Add(CreateAuthorRequest request)
         {
+            BusinessRules.Run(CapitalizeFirstLetter(request));
+
             Author author = _mapper.Map<Author>(request);
 
             var createdAuthor = await _authorDal.AddAsync(author);    
@@ -56,12 +61,18 @@ namespace Business.Concretes
         {
             var authorToDelete = await _authorDal.GetAsync(a => a.AuthorId == request.AuthorId);
 
-           if( authorToDelete is not null)
+            if(authorToDelete is not null)
             {
+                var result = BusinessRules.Run(CheckIfAuthorsHasBook(authorToDelete.AuthorBooks));
+
+                if(result is not null)
+                {
+                    return result;
+                }
+
                 await _authorDal.DeleteAsync(authorToDelete);
                 return new SuccessResult(Messages.AuthorDeleted);
             }
-
             return new ErrorResult(Messages.Error);
         }
         public async Task<IDataResult<Author>> GetAsync(Guid authorId)
@@ -133,5 +144,53 @@ namespace Business.Concretes
 
             return new ErrorDataResult<List<GetListAuthorResponse>>(Messages.Error);
         }
+
+        #region Helper Methods
+
+        private IDataResult<IAuthorRequest> CapitalizeFirstLetter(IAuthorRequest request)
+        {
+            var firstNameToArray = request.AuthorFirstName.Split(' ', ',', '.');
+            var lastNameToArray = request.AuthorLastName.Split(' ', ',', '.');
+
+            string[] arrayToFirstName = new string[firstNameToArray.Length];
+            string[] arrayToLastName = new string[lastNameToArray.Length];
+
+            int count = 0;
+
+            foreach (var word in firstNameToArray)
+            {
+                var capitalizedFirstName = char.ToUpper(word[0]) + word.Substring(1).ToLower();
+                arrayToFirstName[count] = capitalizedFirstName;
+                count++;
+            }
+
+            count = 0;
+
+            foreach (var word in lastNameToArray)
+            {
+                var capitalizedLastName = char.ToUpper(word[0]) + word.Substring(1).ToLower();
+                arrayToLastName[count] = capitalizedLastName;
+                count++;
+            }
+
+            request.AuthorFirstName = string.Join(" ", arrayToFirstName);
+            request.AuthorLastName = string.Join(" ", arrayToLastName);
+
+            return new SuccessDataResult<IAuthorRequest>(request);
+        }
+
+        private IResult CheckIfAuthorsHasBook(ICollection<Book> authorBooks)
+        {
+
+            if (authorBooks is null && authorBooks.Count < 0)
+            {
+                return new SuccessResult();
+
+            }
+            return new ErrorResult(Messages.AuthorExistInBook);
+        }
+
+
+        #endregion
     }
 }

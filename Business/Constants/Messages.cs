@@ -70,6 +70,7 @@ namespace Business.Constants
         public static string BookOutOfStock = "The book you've wanted out of stock.";
 
         public static string CategoryExistInBooks = "The category you want to delete is exist in books!";
+        public static string AuthorExistInBook = "The author you want to delete is exist in books";
         public static string UserExistInDepositBooks = "The user you want to delete is exist in deposit books!";
         public static string FacultyExistInUsers = "The faculty you want to delete is exist in users!";
         public static string PublisherExistInBooks = "The publisher you want to delete is exist in books!";
