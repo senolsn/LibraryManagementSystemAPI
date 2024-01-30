@@ -2,7 +2,7 @@
 
 namespace Business.Dtos.Request.Location
 {
-    public class UpdateLocationRequest
+    public class UpdateLocationRequest:ILocationRequest
     {
         public Guid LocationId { get; set; }
         public string? Shelf { get; set; }

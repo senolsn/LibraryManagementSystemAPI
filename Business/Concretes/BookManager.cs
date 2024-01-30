@@ -354,5 +354,28 @@ namespace Business.Concretes
             return new ErrorDataResult<List<GetListBookResponse>>(Messages.Error);
 
         }
+
+        public async Task<IDataResult<Book>> GetAsyncByLocation(Guid locationId)
+        {
+            var data = await _bookDal.GetAsync(predicate: b => b.Location.LocationId == locationId);
+
+            if (data is not null)
+            {
+                return new SuccessDataResult<Book>(data,Messages.BooksListed);
+            }
+            return new ErrorDataResult<Book>(Messages.Error);
+
+        }
+        public async Task<IDataResult<Book>> GetAsyncByPublisher(Guid publisherId)
+        {
+            var data = await _bookDal.GetAsync(predicate: b => b.Publisher.PublisherId == publisherId);
+
+            if (data is not null)
+            {
+                return new SuccessDataResult<Book>(data, Messages.BooksListed);
+            }
+            return new ErrorDataResult<Book>(Messages.Error);
+        }
+
     }
 }

@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
 using Business.Abstracts;
 using Business.Constants;
+using Business.Dtos.Request.Faculty;
 using Business.Dtos.Request.Location;
 using Business.Dtos.Response.Location;
 using Core.DataAccess.Paging;
+using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
+using DataAccess.Concretes.EntityFramework;
 using Entities.Concrete;
 using System;
 using System.Collections.Generic;
@@ -17,18 +20,24 @@ namespace Business.Concretes
     public class LocationManager : ILocationService
     {
         protected readonly ILocationDal _locationDal;
-        protected readonly IBookDal _bookDal;
+        protected readonly IBookService _bookService;
         protected readonly IMapper _mapper;
 
-        public LocationManager(ILocationDal locationDal, IBookDal bookDal, IMapper mapper)
+        public LocationManager(ILocationDal locationDal, IBookService bookService, IMapper mapper)
         {
             _locationDal = locationDal;
-            _bookDal = bookDal;
+            _bookService = bookService;
             _mapper = mapper;
         }
 
         public async Task<IResult> Add(CreateLocationRequest request)
         {
+            var result = BusinessRules.Run(CapitalizeFirstLetter(request),await IsLocationNameUnique(request.Shelf));
+
+            if(result is not null)
+            {
+                return result;
+            }
             Location location = _mapper.Map<Location>(request);
 
             var createdLocation = await _locationDal.AddAsync(location);
@@ -45,7 +54,14 @@ namespace Business.Concretes
 
         public async Task<IResult> Update(UpdateLocationRequest request)
         {
-           var locationToUpdate = await _locationDal.GetAsync(l => l.LocationId == request.LocationId);
+            var result = BusinessRules.Run(CapitalizeFirstLetter(request), await IsLocationNameUnique(request.Shelf));
+
+            if (result is not null)
+            {
+                return result;
+            }
+
+            var locationToUpdate = await _locationDal.GetAsync(l => l.LocationId == request.LocationId);
 
             if(locationToUpdate is null)
             {
@@ -64,13 +80,17 @@ namespace Business.Concretes
 
             if(locationToDelete is not null)
             {
-                if (CheckIfExistInBooks(request.LocationId))
+                var result = BusinessRules.Run(await CheckIfExistInBooks(locationToDelete.LocationId));
+
+                if(result is not null)
                 {
-                    return new ErrorResult(Messages.LocationExistInBooks);
+                    return result;
                 }
+
                 await _locationDal.DeleteAsync(locationToDelete);
                 return new SuccessResult(Messages.LocationDeleted);
             }
+           
             return new ErrorResult(Messages.Error);
         }
 
@@ -115,7 +135,7 @@ namespace Business.Concretes
                 return new ErrorDataResult<IPaginate<GetListLocationResponse>>(Messages.Error);
             }
 
-            public async Task<IDataResult<List<GetListLocationResponse>>> GetListAsyncSortedByName()
+        public async Task<IDataResult<List<GetListLocationResponse>>> GetListAsyncSortedByName()
         {
             var data = await _locationDal.GetListAsyncOrderBy(
                 predicate: null,
@@ -146,14 +166,43 @@ namespace Business.Concretes
         }
 
 
-        #region Helpers Method
-        private bool CheckIfExistInBooks(Guid locationId)
+        #region Helper Methods
+        private async Task<IResult> CheckIfExistInBooks(Guid locationId)
         {
-            if(_bookDal.GetAsync(b => b.Location.LocationId == locationId) is null)
+            var result = await _bookService.GetAsyncByLocation(locationId);
+            if (result.IsSuccess)
             {
-                return false;
+                return new ErrorResult(Messages.LocationExistInBooks);
             }
-            return true;
+            return new SuccessResult();
+        }
+
+        private IDataResult<ILocationRequest> CapitalizeFirstLetter(ILocationRequest request)
+        {
+            var stringToArray = request.Shelf.Split(' ', ',', '.');
+            string[] arrayToString = new string[stringToArray.Length];
+            int count = 0;
+
+            foreach (var word in stringToArray)
+            {
+                var capitalizedCategoryName = char.ToUpper(word[0]) + word.Substring(1).ToLower();
+                arrayToString[count] = capitalizedCategoryName;
+                count++;
+            }
+            request.Shelf = string.Join(" ", arrayToString);
+
+            return new SuccessDataResult<ILocationRequest>(request);
+        }
+
+        private async Task<IResult> IsLocationNameUnique(string shelf)
+        {
+            var result = await _locationDal.GetAsync(f => f.Shelf.ToUpper() == shelf.ToUpper());
+
+            if (result is not null)
+            {
+                return new ErrorResult(Messages.LocationNameNotUnique);
+            }
+            return new SuccessResult();
         }
         #endregion
 

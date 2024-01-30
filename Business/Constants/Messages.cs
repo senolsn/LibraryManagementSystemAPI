@@ -94,7 +94,6 @@ namespace Business.Constants
         public static string LanguageNameNotUnique = "Language name must be unique.";
         public static string FacultyNameNotUnique = "Faculty name must be unique.";
 
-
-
+        public static string LocationNameNotUnique = "Location name must be unique";
     }
 }

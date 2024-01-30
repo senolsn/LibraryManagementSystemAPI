@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using Business.Abstracts;
 using Business.Constants;
+using Business.Dtos.Request.Location;
 using Business.Dtos.Request.Publisher;
 using Business.Dtos.Response.Language;
 using Business.Dtos.Response.Publisher;
 using Core.DataAccess.Paging;
+using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
 using DataAccess.Concretes.EntityFramework;
@@ -31,6 +33,13 @@ namespace Business.Concretes
 
         public async Task<IResult> Add(CreatePublisherRequest request)
         {
+            var result = BusinessRules.Run(CapitalizeFirstLetter(request),await IsPublisherNameUnique(request.PublisherName));
+           
+            if(result is not null)
+            {
+                return result;
+            }
+
             Publisher publisher = _mapper.Map<Publisher>(request);
 
             var createdPublisher = await _publisherDal.AddAsync(publisher);
@@ -49,8 +58,16 @@ namespace Business.Concretes
         {
             var publisherToDelete = await _publisherDal.GetAsync(p => p.PublisherId == request.PublisherId);
 
+
             if (publisherToDelete is not null)
             {
+                var result = BusinessRules.Run(await CheckIfExistInBooks(publisherToDelete.PublisherId));
+
+                if(result is not null)
+                {
+                    return result;
+                }
+
                 await _publisherDal.DeleteAsync(publisherToDelete);
                 return new SuccessResult(Messages.PublisherDeleted);
             }
@@ -132,6 +149,13 @@ namespace Business.Concretes
 
         public async Task<IResult> Update(UpdatePublisherRequest request)
         {
+            var result = BusinessRules.Run(CapitalizeFirstLetter(request), await IsPublisherNameUnique(request.PublisherName));
+
+            if (result is not null)
+            {
+                return result;
+            }
+
             var publisherToUpdate = await _publisherDal.GetAsync(p => p.PublisherId == request.PublisherId);
 
             if (publisherToUpdate is null)
@@ -146,5 +170,43 @@ namespace Business.Concretes
             return new SuccessResult(Messages.PublisherUpdated);
         }
 
+        #region Helper Methods
+        private async Task<IResult> CheckIfExistInBooks(Guid publisherId)
+        {
+            var result = await _bookService.GetAsyncByPublisher(publisherId);
+            if (result.IsSuccess)
+            {
+                return new ErrorResult(Messages.LocationExistInBooks);
+            }
+            return new SuccessResult();
+        }
+        private IDataResult<IPublisherRequest> CapitalizeFirstLetter(IPublisherRequest request)
+        {
+            var stringToArray = request.PublisherName.Split(' ', ',', '.');
+            string[] arrayToString = new string[stringToArray.Length];
+            int count = 0;
+
+            foreach (var word in stringToArray)
+            {
+                var capitalizedCategoryName = char.ToUpper(word[0]) + word.Substring(1).ToLower();
+                arrayToString[count] = capitalizedCategoryName;
+                count++;
+            }
+            request.PublisherName = string.Join(" ", arrayToString);
+
+            return new SuccessDataResult<IPublisherRequest>(request);
+        }
+
+        private async Task<IResult> IsPublisherNameUnique(string publisherName)
+        {
+            var result = await _publisherDal.GetAsync(f => f.PublisherName.ToUpper() == publisherName.ToUpper());
+
+            if (result is not null)
+            {
+                return new ErrorResult(Messages.LocationNameNotUnique);
+            }
+            return new SuccessResult();
+        }
+        #endregion
     }
 }

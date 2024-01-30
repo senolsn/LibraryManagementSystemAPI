@@ -26,5 +26,7 @@ namespace Business.Abstracts
         Task<IDataResult<List<GetListBookResponse>>> GetListAsyncSortedByName();
         Task<IDataResult<IPaginate<GetListBookResponse>>> GetPaginatedListAsyncSortedByCreatedDate(PageRequest pageRequest);
         Task<IDataResult<List<GetListBookResponse>>> GetListAsyncSortedByCreatedDate();
+        Task<IDataResult<Book>> GetAsyncByLocation(Guid locationId);
+        Task<IDataResult<Book>> GetAsyncByPublisher(Guid publisherId);
     }
 }
