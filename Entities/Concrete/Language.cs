@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Entities.Concrete
 {
@@ -9,6 +10,8 @@ namespace Entities.Concrete
     {
         public Guid LanguageId { get; set; }
         public string? LanguageName { get; set; }
+
+        [JsonIgnore]
         public ICollection<Book> LanguageBooks { get; set; }
 
     }

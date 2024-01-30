@@ -13,7 +13,8 @@ namespace Entities.Concrete
         public Guid InterpreterId { get; set; }
         public string InterpreterFirstName { get; set; }
         public string InterpreterLastName { get; set; }
-        //[JsonIgnore]
+        
+        [JsonIgnore]
         public ICollection<Book>? InterpreterBooks { get; set; }
     }
 }
