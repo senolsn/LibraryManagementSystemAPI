@@ -2,12 +2,15 @@
 using Business.Abstracts;
 using Business.BusinessAspects;
 using Business.Constants;
+using Business.Dtos.Request.Book;
 using Business.Dtos.Request.BookRequests;
+using Business.Dtos.Request.Category;
 using Business.Dtos.Response.Book;
-using Business.ValidationRules.FluentValidation;
+using Business.ValidationRules.FluentValidation.Book;
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Validation;
 using Core.DataAccess.Paging;
+using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
 using Entities.Concrete;
@@ -43,10 +46,16 @@ namespace Business.Concretes
         }
 
         //[SecuredOperation("admin,add")]
-        [ValidationAspect(typeof (BookValidator))]
+        [ValidationAspect(typeof (CreateBookValidator))]
         [CacheRemoveAspect("IBookService.Get")]
         public async Task<IResult> Add(CreateBookRequest request)
         {
+            var businessResults = BusinessRules.Run(CapitalizeFirstLetter(request));
+
+            if(businessResults is not null)
+            {
+                return businessResults;
+            }
 
             Book book = _mapper.Map<Book>(request);
 
@@ -102,10 +111,17 @@ namespace Business.Concretes
         }
 
         [SecuredOperation("admin,update")]
-        [ValidationAspect(typeof (BookValidator))]
+        [ValidationAspect(typeof (CreateBookValidator))]
         [CacheRemoveAspect("IBookService.Get")]
         public async Task<IResult> Update(UpdateBookRequest request)
         {
+            var result = BusinessRules.Run(CapitalizeFirstLetter(request));
+
+            if (result is not null)
+            {
+                return result;
+            }
+
             var bookToUpdate = await _bookDal.GetAsync(b => b.BookId == request.BookId);
 
             if (bookToUpdate is null)
@@ -121,7 +137,7 @@ namespace Business.Concretes
         }
 
         [SecuredOperation("admin,delete")]
-        [ValidationAspect(typeof (BookValidator))]
+        [ValidationAspect(typeof (CreateBookValidator))]
         [CacheRemoveAspect("IBookService.Get")]
         public async Task<IResult> Delete(DeleteBookRequest request)
         {
@@ -376,6 +392,25 @@ namespace Business.Concretes
             }
             return new ErrorDataResult<Book>(Messages.Error);
         }
+
+        #region Helper Methods
+        private IDataResult<IBookRequest> CapitalizeFirstLetter(IBookRequest request)
+        {
+            var stringToArray = request.BookName.Split(' ', ',', '.');
+            string[] arrayToString = new string[stringToArray.Length];
+            int count = 0;
+
+            foreach (var word in stringToArray)
+            {
+                var capitalizedCategoryName = char.ToUpper(word[0]) + word.Substring(1).ToLower();
+                arrayToString[count] = capitalizedCategoryName;
+                count++;
+            }
+            request.BookName = string.Join(" ", arrayToString);
+
+            return new SuccessDataResult<IBookRequest>(request);
+        }
+        #endregion
 
     }
 }

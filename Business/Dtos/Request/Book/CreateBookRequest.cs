@@ -3,10 +3,11 @@ using Entities.Concrete;
 using System;
 using System.Collections.Generic;
 using Entities.Concrete.enums;
+using Business.Dtos.Request.Book;
 
 namespace Business.Dtos.Request.BookRequests
 {
-    public class CreateBookRequest
+    public class CreateBookRequest:IBookRequest
     {
         public List<Guid> AuthorIds { get; set; }
         public List<Guid> CategoryIds { get; set; }
