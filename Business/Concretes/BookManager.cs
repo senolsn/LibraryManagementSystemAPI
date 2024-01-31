@@ -6,7 +6,7 @@ using Business.Dtos.Request.Book;
 using Business.Dtos.Request.BookRequests;
 using Business.Dtos.Request.Category;
 using Business.Dtos.Response.Book;
-using Business.ValidationRules.FluentValidation.Book;
+using Business.ValidationRules.FluentValidation.BookValidator;
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Validation;
 using Core.DataAccess.Paging;
@@ -50,7 +50,7 @@ namespace Business.Concretes
         [CacheRemoveAspect("IBookService.Get")]
         public async Task<IResult> Add(CreateBookRequest request)
         {
-            var businessResults = BusinessRules.Run(CapitalizeFirstLetter(request));
+            var businessResults = BusinessRules.Run(CapitalizeFirstLetter(request), await CheckIsFixtureNumberUnique(request.FixtureNumber));
 
             if(businessResults is not null)
             {
@@ -111,11 +111,11 @@ namespace Business.Concretes
         }
 
         [SecuredOperation("admin,update")]
-        [ValidationAspect(typeof (CreateBookValidator))]
+        [ValidationAspect(typeof (UpdateBookValidator))]
         [CacheRemoveAspect("IBookService.Get")]
         public async Task<IResult> Update(UpdateBookRequest request)
         {
-            var result = BusinessRules.Run(CapitalizeFirstLetter(request));
+            var result = BusinessRules.Run(CapitalizeFirstLetter(request), await CheckIsFixtureNumberUnique(request.FixtureNumber));
 
             if (result is not null)
             {
@@ -409,6 +409,19 @@ namespace Business.Concretes
             request.BookName = string.Join(" ", arrayToString);
 
             return new SuccessDataResult<IBookRequest>(request);
+        }
+
+        private async Task<IResult> CheckIsFixtureNumberUnique(string fixtureNumber)
+        {
+            var result = await _bookDal.GetAsync(b => b.FixtureNumber == fixtureNumber);
+
+            if(result is not null)
+            {
+                return new ErrorResult();
+            }
+
+            return new SuccessResult();
+
         }
         #endregion
 
