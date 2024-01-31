@@ -5,7 +5,7 @@ using Business.Constants;
 using Business.Dtos.Request.Category;
 using Business.Dtos.Response.Book;
 using Business.Dtos.Response.Category;
-using Business.ValidationRules.FluentValidation;
+using Business.ValidationRules.FluentValidation.CategoryValidator;
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Validation;
 using Core.DataAccess.Paging;
@@ -33,7 +33,7 @@ namespace Business.Concretes
         }
 
         //[SecuredOperation("admin,add")]
-        [ValidationAspect(typeof (CategoryValidator))]
+        [ValidationAspect(typeof (CreateCategoryValidator))]
         [CacheRemoveAspect("ICategoryService.Get")]
         public async Task<IResult> Add(CreateCategoryRequest request)
         {
@@ -79,7 +79,7 @@ namespace Business.Concretes
         }
 
         //[SecuredOperation("admin,update")]
-        [ValidationAspect(typeof (CategoryValidator))]
+        [ValidationAspect(typeof (UpdateCategoryValidator))]
         [CacheRemoveAspect("ICategoryService.Get")]
         public async Task<IResult> Update(UpdateCategoryRequest request)
         {

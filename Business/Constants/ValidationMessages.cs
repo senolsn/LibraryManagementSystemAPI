@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Business.Dtos.Request.BookRequests;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -37,6 +38,11 @@ namespace Business.Constants
         public const string ISBNNumberInvalid = "Lütfen sadece rakamlardan oluşan ve geçerli bir ISBN numarası giriniz!";
         public const string FixtureNumberInvalid = "Lütfen sadece rakamlardan oluşan bir demirbaş numarası giriniz!";
 
-        
+        public static string NumberNegative = "Lütfen 0'a eşit veya büyük bir değer giriniz!";
+        public static string PublishDate = "Yayımlanma tarihi gelecekte olamaz.";
+
+        public static string AuthorMinLength = "Author must be at least 3 characters long.";
+        public static string AuthorFirstNameNotEmpty = "Author first name cannot be empty.";
+        public static string AuthorLastNameNotEmpty = "Author last name cannot be empty.";
     }
 }
