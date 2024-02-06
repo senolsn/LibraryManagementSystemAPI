@@ -16,8 +16,8 @@ namespace DataAccess.Contexts
         }
 
         //string connectionString = "Server=94.73.147.32;User=u0756268_user16;Password=ASD123_Asd123_asd123;database=u0756268_dblms";    //DbConfiguration.ConnectionString;
-        string connectionString = "Server=94.73.147.32;User=u0756268_testdbl;Password=Xb1_4R9UraH.3x::;database=u0756268_testdbl";    //DbConfiguration.ConnectionString;
-        //string connectionString = "Server=94.73.147.32;User=u0756268_test13;Password=-qm3LN.85.0eW@Pf;database=u0756268_test13";    //DbConfiguration.ConnectionString;
+        //string connectionString = "Server=94.73.147.32;User=u0756268_testdbl;Password=Xb1_4R9UraH.3x::;database=u0756268_testdbl";    //DbConfiguration.ConnectionString;
+        string connectionString = "Server=94.73.147.32;User=u0756268_test13;Password=-qm3LN.85.0eW@Pf;database=u0756268_test13";    //DbConfiguration.ConnectionString;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -37,6 +37,8 @@ namespace DataAccess.Contexts
         public DbSet<DepositBook> DepositBooks { get; set; }
         public DbSet<OperationClaim> OperationClaims { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Student> Students { get; set; }
+        public DbSet<Staff> Staffs { get; set; } 
         public DbSet<UserOperationClaim> UserOperationClaims { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -273,7 +275,6 @@ namespace DataAccess.Contexts
                 LocationId = location5Guid,
                 Shelf = "C1"
             });
-
 
         }
     }

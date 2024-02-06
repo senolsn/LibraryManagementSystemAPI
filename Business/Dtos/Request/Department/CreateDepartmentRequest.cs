@@ -1,4 +1,4 @@
-﻿namespace Business.Dtos.Request.Department
+﻿namespace Business.Dtos.Request.DepartmentRequests
 {
     public class CreateDepartmentRequest:IDepartmentRequest
     {

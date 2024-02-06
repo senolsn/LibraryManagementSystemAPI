@@ -2,6 +2,7 @@
 using Business.Dtos.Request.User;
 using Core.DataAccess.Paging;
 using Core.Entities.Concrete;
+using Entities.Concrete;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -84,8 +85,8 @@ namespace WebAPI.Controllers
                 return StatusCode(500, $"An error occurred: {ex.Message}");
             }
         }
+
         [HttpGet("GetById")]
-        
         public async Task<IActionResult> GetAsync(Guid userId)
         {
             try
@@ -106,8 +107,8 @@ namespace WebAPI.Controllers
                 return StatusCode(500, $"Error : {ex.Message}");
             }
         }
-        [HttpGet("GetPagedListAsync")]
-        
+
+        [HttpGet("GetPagedListAsync")]  
         public async Task<IActionResult> GetPagedListAsync([FromQuery] PageRequest pageRequest)
         {
             try

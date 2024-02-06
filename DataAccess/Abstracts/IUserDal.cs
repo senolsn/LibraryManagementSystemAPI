@@ -1,5 +1,6 @@
 ﻿using Core.DataAccess.Repositories;
 using Core.Entities.Concrete;
+using Entities.Concrete;
 using System.Collections.Generic;
 
 namespace DataAccess.Abstracts
