@@ -2,18 +2,16 @@
 using Business.Abstracts;
 using Business.Constants;
 using Business.Dtos.Request.DepositBook;
-using Business.Dtos.Response.Book;
 using Business.Dtos.Response.DepositBook;
 using Core.DataAccess.Paging;
-using Core.Entities.Concrete;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
 using Entities.Concrete;
 using Entities.Concrete.enums;
+using Entities.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 
 namespace Business.Concretes
@@ -38,11 +36,6 @@ namespace Business.Concretes
             DepositBook depositBook = _mapper.Map<DepositBook>(request);
 
             var book = await _bookDal.GetAsync(b => b.BookId == request.BookId);
-
-            if (!CheckIfBookInStock(book))
-            {
-                return new ErrorResult(Messages.BookOutOfStock);
-            }
 
             var createdDepositBook = await _depositBookDal.AddAsync(depositBook);
             if (createdDepositBook is null)
@@ -398,18 +391,50 @@ namespace Business.Concretes
             return new ErrorDataResult<DepositBook>(Messages.Error);
         }
 
-        private bool CheckIfBookInStock(Book book)
+        public async Task<IDataResult<ICollection<GetAllDepositBooksResponse>>> GetAllAsync()
         {
-            if (book is null)
+            var result = await _depositBookDal.GetAllAsync(null);
+            if(result is not null)
             {
-                throw new Exception(Messages.Error);
+                return new SuccessDataResult<ICollection<GetAllDepositBooksResponse>>(result, Messages.DepositBookListed);
             }
-            else
-            {
-                return book.Stock < 1 ? false : true;
-            }
+            return new ErrorDataResult<ICollection<GetAllDepositBooksResponse>>(Messages.Error);
         }
 
-       
+        #region Helper Methods
+        private IResult CheckIfBookInStock(Book book)
+        {
+            if (book is not null)
+            {
+                return book.Stock < 1 ? new ErrorResult(Messages.BookOutOfStock) : new SuccessResult();
+
+            }
+            return new ErrorResult(Messages.Error);
+        }
+
+        private async Task<IResult> CheckIfUserHasOverdueBooks(Guid userId)
+        {
+            /*
+               1- User'a ait olan tüm deposit book'ları çek.
+               2- DepositDate değerlerine bak.
+               3- (Date.Now - DepositDate) hesaplaması yapıp GÜN tipinde sonuç al.
+               4- Eğer elde ettiğimiz GÜN değeri ayarlarda belirtilen gecikme değerine eşit veya büyükse kitap almasına izin verme!
+            */
+            var result = _depositBookDal.GetListAsync(d => d.UserId == userId);
+            if (result.Result is not null)
+            {
+                foreach (var item in result.Result)
+                {
+                    Console.WriteLine(item.DepositDate);
+                }
+            }
+            return new SuccessResult();
+        }
+
+        
+
+        #endregion
+
+
     }
 }

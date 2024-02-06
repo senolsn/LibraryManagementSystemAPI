@@ -23,5 +23,6 @@ namespace Business.Dtos.Request.BookRequests
         public int Stock { get; set; }
         public BookStatus Status { get; set; }
         public string FixtureNumber { get; set; }
+        public string ImageUrl { get; set; }
     }
 }

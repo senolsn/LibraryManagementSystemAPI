@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using Business.Abstracts;
-using Business.BusinessAspects;
 using Business.Constants;
 using Business.Dtos.Request.Category;
-using Business.Dtos.Response.Book;
 using Business.Dtos.Response.Category;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Caching;

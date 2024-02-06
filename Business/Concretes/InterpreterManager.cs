@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Business.Abstracts;
 using Business.Constants;
-using Business.Dtos.Request.Author;
 using Business.Dtos.Request.Interpreter;
 using Business.Dtos.Request.InterpreterRequests;
 using Business.Dtos.Response.InterpreterResponses;
@@ -12,8 +11,6 @@ using DataAccess.Abstracts;
 using Entities.Concrete;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Business.Concretes

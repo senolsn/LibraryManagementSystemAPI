@@ -3,7 +3,6 @@ using Business.Abstracts;
 using Business.Constants;
 using Business.Dtos.Request.Author;
 using Business.Dtos.Request.AuthorRequests;
-using Business.Dtos.Request.Category;
 using Business.Dtos.Response.Author;
 using Core.DataAccess.Paging;
 using Core.Utilities.Business;

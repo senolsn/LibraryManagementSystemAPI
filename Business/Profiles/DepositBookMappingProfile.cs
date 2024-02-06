@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
 using Business.Dtos.Request.DepositBook;
-using Business.Dtos.Request.Faculty;
+using Business.Dtos.Request.FacultyResponses;
 using Business.Dtos.Response.DepositBook;
-using Business.Dtos.Response.Faculty;
 using Core.DataAccess.Paging;
 using Entities.Concrete;
 

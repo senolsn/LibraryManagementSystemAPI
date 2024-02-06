@@ -4,7 +4,6 @@ using Business.Constants;
 using Business.Dtos.Request.Language;
 using Business.Dtos.Response.Language;
 using Business.ValidationRules.FluentValidation;
-using Business.BusinessAspects;
 using Core.Aspects.Autofac.Validation;
 using Core.Aspects.Autofac.Caching;
 using Core.DataAccess.Paging;
@@ -15,8 +14,6 @@ using Entities.Concrete;
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using Business.Dtos.Response.Department;
-using DataAccess.Concretes.EntityFramework;
 using System.Linq;
 
 namespace Business.Concretes

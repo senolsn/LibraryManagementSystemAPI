@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Business.Dtos.Request.Department
+namespace Business.Dtos.Request.DepartmentRequests
 {
     public interface IDepartmentRequest
     {

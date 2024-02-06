@@ -266,7 +266,7 @@ namespace Business.Concretes
 
         public async Task<IDataResult<List<GetListBookResponse>>> GetListAsync()
         {
-            var data = await _bookDal.GetListAsync(null);
+            var data = await _bookDal.GetListAsync();
 
             List<GetListBookResponse> responseBooks = new List<GetListBookResponse>();
             if (data is not null)
@@ -275,8 +275,6 @@ namespace Business.Concretes
                 {
                     var bookResponse = _mapper.Map<GetListBookResponse>(item);
                     responseBooks.Add(bookResponse);
-
-                
                 }
 
                 return new SuccessDataResult<List<GetListBookResponse>>(responseBooks, Messages.BooksListed);

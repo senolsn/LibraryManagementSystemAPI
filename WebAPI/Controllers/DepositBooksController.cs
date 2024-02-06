@@ -1,7 +1,5 @@
 ﻿using Business.Abstracts;
-using Business.Dtos.Request.Faculty;
 using Core.DataAccess.Paging;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using System;
@@ -150,6 +148,25 @@ namespace WebAPI.Controllers
             try
             {
                 var result = await _depositBookService.GetListAsync();
+
+                if (!result.IsSuccess)
+                {
+                    return NotFound(result);
+                }
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error : {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetAllAsync")]
+        public async Task<IActionResult> GetAllAsync()
+        {
+            try
+            {
+                var result = await _depositBookService.GetAllAsync();
 
                 if (!result.IsSuccess)
                 {

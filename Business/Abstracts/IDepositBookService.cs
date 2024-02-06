@@ -3,6 +3,7 @@ using Business.Dtos.Response.DepositBook;
 using Core.DataAccess.Paging;
 using Core.Utilities.Results;
 using Entities.Concrete;
+using Entities.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -19,6 +20,7 @@ namespace Business.Abstracts
         Task<IDataResult<DepositBook>> GetAsyncByUserId(Guid userId);
         Task<IDataResult<DepositBook>> GetAsyncByBookAndUserId(Guid bookId, Guid userId);
         Task<IDataResult<List<GetListDepositBookResponse>>> GetListAsync();
+        Task<IDataResult<ICollection<GetAllDepositBooksResponse>>> GetAllAsync();
         Task<IDataResult<List<GetListDepositBookResponse>>> GetListAsyncSortedByCreatedDate();
         Task<IDataResult<List<GetListDepositBookResponse>>> GetListAsyncUndeposited();
         Task<IDataResult<List<GetListDepositBookResponse>>> GetListAsyncDeposited();

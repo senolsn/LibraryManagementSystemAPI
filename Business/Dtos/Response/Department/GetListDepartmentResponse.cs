@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Business.Dtos.Response.Department
+namespace Business.Dtos.Response.DepartmentResponses
 {
     public class GetListDepartmentResponse
     {

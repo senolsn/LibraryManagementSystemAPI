@@ -1,14 +1,12 @@
 ﻿using AutoMapper;
 using Business.Abstracts;
 using Business.Constants;
-using Business.Dtos.Request.Faculty;
 using Business.Dtos.Request.Location;
 using Business.Dtos.Response.Location;
 using Core.DataAccess.Paging;
 using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
-using DataAccess.Concretes.EntityFramework;
 using Entities.Concrete;
 using System;
 using System.Collections.Generic;
