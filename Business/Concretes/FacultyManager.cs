@@ -55,8 +55,8 @@ namespace Business.Concretes
         }
 
         //[SecuredOperation("admin,update")]
-        [ValidationAspect(typeof(CreateFacultyValidator))]
-        [CacheRemoveAspect("IFacultyService.Get")]
+        //[ValidationAspect(typeof(CreateFacultyValidator))]
+        //[CacheRemoveAspect("IFacultyService.Get")]
         public async Task<IResult> Update(UpdateFacultyRequest request)
         {
             var result = BusinessRules.Run(CapitalizeFirstLetter(request), await IsFacultyNameUnique(request.FacultyName));
