@@ -7,7 +7,6 @@ using Business.Dtos.Response.Publisher;
 using Entities.Concrete.enums;
 using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace Business.Dtos.Response.Book
 {

@@ -62,6 +62,12 @@ namespace Business.Concretes
                 HashingHelper.CreatePasswordHash(request.Password, out passwordHash, out passwordSalt);
                 var user = new User { PasswordHash = passwordHash, PasswordSalt = passwordSalt };
 
+                if(request.RoleType == 0)
+                {
+                    request.DepartmentId = Guid.Parse("08dc2624-15d3-4791-844b-de01438c6c87"); //Department : Staff 
+                    request.SchoolNumber = "0";
+                }
+
                 
                 
                 var mappedUser = _mapper.Map(request, user);

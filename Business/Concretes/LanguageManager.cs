@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Business.Abstracts;
 using Business.Constants;
-using Business.Dtos.Request.Language;
-using Business.Dtos.Response.Language;
+using Business.Dtos.Response.LanguageResponses;
+using Business.BusinessAspects;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
 using Core.Aspects.Autofac.Caching;
@@ -15,7 +15,8 @@ using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
-using Business.ValidationRules.FluentValidation.LanguageValidator;
+using Business.Dtos.Request.LanguageRequests;
+using Business.ValidationRules.FluentValidation.LanguageValidator.LanguageValidator;
 
 namespace Business.Concretes
 {
@@ -34,7 +35,7 @@ namespace Business.Concretes
         }
 
         //[SecuredOperation("admin,add")]
-        [ValidationAspect(typeof (CreateLanguageValidator))]
+        [ValidationAspect(typeof (UpdateLanguageValidator))]
         [CacheRemoveAspect("ILanguageService.Get")]
         public async Task<IResult> Add(CreateLanguageRequest request)
         {
@@ -60,7 +61,7 @@ namespace Business.Concretes
         }
 
         //[SecuredOperation("admin,update")]
-        [ValidationAspect(typeof(CreateLanguageValidator))]
+        [ValidationAspect(typeof(UpdateLanguageValidator))]
         [CacheRemoveAspect("ILanguageService.Get")]
         public async Task<IResult> Update(UpdateLanguageRequest request)
         {

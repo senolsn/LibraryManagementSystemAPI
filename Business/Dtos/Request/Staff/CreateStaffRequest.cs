@@ -18,6 +18,7 @@ namespace Business.Dtos.Request.StaffRequests
         public Guid FacultyId { get; set; }
         public byte[] PasswordSalt { get; set; }
         public byte[] PasswordHash { get; set; }
+        public RoleType RoleType { get; set; }
 
     }
 }

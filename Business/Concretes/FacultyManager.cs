@@ -5,6 +5,7 @@ using Business.Constants;
 using Business.Dtos.Request.FacultyResponses;
 using Business.Dtos.Response.FacultyResponses;
 using Business.ValidationRules.FluentValidation;
+using Business.ValidationRules.FluentValidation.FacultyValidator;
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Validation;
 using Core.DataAccess.Paging;
