@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Business.Dtos.Request.Auth;
 using Core.Entities.Concrete;
+using Entities.Concrete;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -2,10 +2,9 @@
 using Business.Abstracts;
 using Business.BusinessAspects;
 using Business.Constants;
-using Business.Dtos.Request.Category;
-using Business.Dtos.Request.Faculty;
-using Business.Dtos.Response.Department;
-using Business.Dtos.Response.Faculty;
+using Business.Dtos.Request.FacultyResponses;
+using Business.Dtos.Response.FacultyResponses;
+using Business.ValidationRules.FluentValidation;
 using Business.ValidationRules.FluentValidation.FacultyValidator;
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Validation;
@@ -13,7 +12,6 @@ using Core.DataAccess.Paging;
 using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
-using DataAccess.Concretes.EntityFramework;
 using Entities.Concrete;
 using System;
 using System.Collections.Generic;
@@ -57,8 +55,8 @@ namespace Business.Concretes
         }
 
         //[SecuredOperation("admin,update")]
-        [ValidationAspect(typeof(CreateFacultyValidator))]
-        [CacheRemoveAspect("IFacultyService.Get")]
+        //[ValidationAspect(typeof(CreateFacultyValidator))]
+        //[CacheRemoveAspect("IFacultyService.Get")]
         public async Task<IResult> Update(UpdateFacultyRequest request)
         {
             var result = BusinessRules.Run(CapitalizeFirstLetter(request), await IsFacultyNameUnique(request.FacultyName));
@@ -184,12 +182,13 @@ namespace Business.Concretes
         #region Helper Methods
         private async Task<IResult> CheckIfExistInUsers(Guid facultyId)
         {
-            var result = await _userService.GetAsyncByFacultyId(facultyId);
-            if (result.IsSuccess)
-            {
-                return new ErrorResult(Messages.FacultyExistInUsers);
-            }
-                return new SuccessResult();
+            //var result = await _userService.GetAsyncByFacultyId(facultyId);
+            //if (result.IsSuccess)
+            //{
+            //    return new ErrorResult(Messages.FacultyExistInUsers);
+            //}
+            //    return new SuccessResult();
+            return new SuccessResult();
         }
 
         private IDataResult<IFacultyRequest> CapitalizeFirstLetter(IFacultyRequest request)

@@ -9,6 +9,7 @@ using Core.Entities.Concrete;
 using Core.Utilities.Results;
 using Core.Utilities.Security.Hashing;
 using DataAccess.Abstracts;
+using Entities.Concrete;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -39,6 +40,7 @@ namespace Business.Concretes
 
             return new SuccessResult(Messages.UserAdded);
         }
+
         public async Task<IResult> Update(UpdateUserRequest request)
         {
             HashingHelper.CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
@@ -124,28 +126,28 @@ namespace Business.Concretes
 			throw new NotImplementedException();
 		}
 
-        public async Task<IDataResult<User>> GetAsyncByFacultyId(Guid facultyId)
-        {
-            var result = await _userDal.GetAsync(u => u.FacultyId == facultyId);
+        //public async Task<IDataResult<User>> GetAsyncByFacultyId(Guid facultyId)
+        //{
+        //    var result = await _userDal.GetAsync(u => u.FacultyId == facultyId);
 
-            if (result is not null)
-            {
-                return new SuccessDataResult<User>(result, Messages.UserListed);
-            }
+        //    if (result is not null)
+        //    {
+        //        return new SuccessDataResult<User>(result, Messages.UserListed);
+        //    }
 
-            return new ErrorDataResult<User>(Messages.Error);
-        }
+        //    return new ErrorDataResult<User>(Messages.Error);
+        //}
 
-        public async Task<IDataResult<User>> GetAsyncByDepartmentId(Guid departmentId)
-        {
-            var result = await _userDal.GetAsync(u => u.DepartmentId == departmentId);
+        //public async Task<IDataResult<User>> GetAsyncByDepartmentId(Guid departmentId)
+        //{
+        //    var result = await _userDal.GetAsync(u => u.DepartmentId == departmentId);
 
-            if (result is not null)
-            {
-                return new SuccessDataResult<User>(result, Messages.UserListed);
-            }
+        //    if (result is not null)
+        //    {
+        //        return new SuccessDataResult<User>(result, Messages.UserListed);
+        //    }
 
-            return new ErrorDataResult<User>(Messages.Error);
-        }
+        //    return new ErrorDataResult<User>(Messages.Error);
+        //}
     }
 }

@@ -30,6 +30,9 @@ namespace DataAccess
             services.AddScoped<ILocationDal, EfLocationDal>();
             services.AddScoped<IInterpreterDal, EfInterpreterDal>();
             services.AddScoped<IBookDal, EfBookDal>();
+            services.AddScoped<IStudentDal, EfStudentDal>();
+            services.AddScoped<IStaffDal, EfStaffDal>();
+            services.AddScoped<IBookDal, EfBookDal>();
             services.AddScoped<IDepositBookDal, EfDepositBookDal>();
             services.AddScoped<IUserDal, EfUserDal>();
 

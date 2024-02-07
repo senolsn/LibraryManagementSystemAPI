@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using Business.Dtos.Request.Department;
-using Business.Dtos.Response.Department;
+using Business.Dtos.Request.DepartmentRequests;
+using Business.Dtos.Response.DepartmentResponses;
 using Core.DataAccess.Paging;
 using Entities.Concrete;
 

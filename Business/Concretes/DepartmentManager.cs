@@ -1,14 +1,12 @@
 ﻿using AutoMapper;
 using Business.Abstracts;
 using Business.Constants;
-using Business.Dtos.Request.Department;
-using Business.Dtos.Request.Faculty;
-using Business.Dtos.Response.Department;
+using Business.Dtos.Request.DepartmentRequests;
+using Business.Dtos.Response.DepartmentResponses;
 using Core.DataAccess.Paging;
 using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
-using DataAccess.Concretes.EntityFramework;
 using Entities.Concrete;
 using System;
 using System.Collections.Generic;
@@ -100,7 +98,7 @@ namespace Business.Concretes
 
         public async Task<IDataResult<List<GetListDepartmentResponse>>> GetListAsync()
         {
-            var data = await _departmentDal.GetListAsync(null);
+            var data = await _departmentDal.GetListAsync();
 
             if (data is not null)
             {
@@ -161,11 +159,11 @@ namespace Business.Concretes
         #region Helper Methods
         private async Task<IResult> CheckIfExistInUsers(Guid departmentId)
         {
-            var result = await _userService.GetAsyncByDepartmentId(departmentId);
-            if (result.IsSuccess)
-            {
-                return new ErrorResult(Messages.DepartmentExistInUsers);
-            }
+            //var result = await _userService.GetAsyncByDepartmentId(departmentId);
+            //if (result.IsSuccess)
+            //{
+            //    return new ErrorResult(Messages.DepartmentExistInUsers);
+            //}
             return new SuccessResult();
 
         }

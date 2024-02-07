@@ -1,5 +1,5 @@
 ﻿using Business.Constants;
-using Business.Dtos.Request.Faculty;
+using Business.Dtos.Request.FacultyResponses;
 using FluentValidation;
 using System;
 using System.Collections.Generic;

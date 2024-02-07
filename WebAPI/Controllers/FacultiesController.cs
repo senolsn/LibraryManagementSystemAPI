@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using System;
-using Business.Dtos.Request.Faculty;
 using Core.DataAccess.Paging;
+using Business.Dtos.Request.FacultyResponses;
 
 namespace WebAPI.Controllers
 {

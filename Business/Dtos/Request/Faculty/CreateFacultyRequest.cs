@@ -1,4 +1,4 @@
-﻿namespace Business.Dtos.Request.Faculty
+﻿namespace Business.Dtos.Request.FacultyResponses
 {
     public class CreateFacultyRequest : IFacultyRequest
     {
