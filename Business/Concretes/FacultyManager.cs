@@ -2,17 +2,10 @@
 using Business.Abstracts;
 using Business.BusinessAspects;
 using Business.Constants;
-<<<<<<< HEAD
-using Business.Dtos.Request.Category;
-using Business.Dtos.Request.FacultyResponses;
-using Business.Dtos.Response.Department;
-using Business.Dtos.Response.FacultyResponses;
-using Business.ValidationRules.FluentValidation.FacultyValidator;
-=======
 using Business.Dtos.Request.FacultyResponses;
 using Business.Dtos.Response.FacultyResponses;
 using Business.ValidationRules.FluentValidation;
->>>>>>> 5c43c7567816add2417b815efb5faed65d391e24
+using Business.ValidationRules.FluentValidation.FacultyValidator;
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Validation;
 using Core.DataAccess.Paging;
@@ -40,7 +33,7 @@ namespace Business.Concretes
         }
 
         //[SecuredOperation("admin,add")]
-        [ValidationAspect(typeof(FacultyValidator))]
+        [ValidationAspect(typeof(CreateFacultyValidator))]
         [CacheRemoveAspect("IFacultyService.Get")]
         public async Task<IResult> Add(CreateFacultyRequest request)
         {
@@ -62,7 +55,7 @@ namespace Business.Concretes
         }
 
         //[SecuredOperation("admin,update")]
-        [ValidationAspect(typeof(FacultyValidator))]
+        [ValidationAspect(typeof(CreateFacultyValidator))]
         [CacheRemoveAspect("IFacultyService.Get")]
         public async Task<IResult> Update(UpdateFacultyRequest request)
         {

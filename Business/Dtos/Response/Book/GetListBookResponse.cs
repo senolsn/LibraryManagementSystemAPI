@@ -1,20 +1,12 @@
 ﻿using Business.Dtos.Response.Author;
 using Business.Dtos.Response.Category;
 using Business.Dtos.Response.InterpreterResponses;
-<<<<<<< HEAD
 using Business.Dtos.Response.LanguageResponses;
-=======
-using Business.Dtos.Response.Language;
->>>>>>> 5c43c7567816add2417b815efb5faed65d391e24
 using Business.Dtos.Response.Location;
 using Business.Dtos.Response.Publisher;
 using Entities.Concrete.enums;
 using System;
-<<<<<<< HEAD
-=======
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
->>>>>>> 5c43c7567816add2417b815efb5faed65d391e24
 
 namespace Business.Dtos.Response.Book
 {

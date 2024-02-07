@@ -1,14 +1,9 @@
 ﻿using AutoMapper;
 using Business.Abstracts;
 using Business.Constants;
-<<<<<<< HEAD
 using Business.Dtos.Response.LanguageResponses;
 using Business.BusinessAspects;
-=======
-using Business.Dtos.Request.Language;
-using Business.Dtos.Response.Language;
 using Business.ValidationRules.FluentValidation;
->>>>>>> 5c43c7567816add2417b815efb5faed65d391e24
 using Core.Aspects.Autofac.Validation;
 using Core.Aspects.Autofac.Caching;
 using Core.DataAccess.Paging;
@@ -19,14 +14,9 @@ using Entities.Concrete;
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-<<<<<<< HEAD
-using Business.Dtos.Response.Department;
-using DataAccess.Concretes.EntityFramework;
 using System.Linq;
-using Business.ValidationRules.FluentValidation.LanguageValidator;
-=======
-using System.Linq;
->>>>>>> 5c43c7567816add2417b815efb5faed65d391e24
+using Business.Dtos.Request.LanguageRequests;
+using Business.ValidationRules.FluentValidation.LanguageValidator.LanguageValidator;
 
 namespace Business.Concretes
 {
@@ -45,7 +35,7 @@ namespace Business.Concretes
         }
 
         //[SecuredOperation("admin,add")]
-        [ValidationAspect(typeof (LanguageValidator))]
+        [ValidationAspect(typeof (UpdateLanguageValidator))]
         [CacheRemoveAspect("ILanguageService.Get")]
         public async Task<IResult> Add(CreateLanguageRequest request)
         {
@@ -71,7 +61,7 @@ namespace Business.Concretes
         }
 
         //[SecuredOperation("admin,update")]
-        [ValidationAspect(typeof(LanguageValidator))]
+        [ValidationAspect(typeof(UpdateLanguageValidator))]
         [CacheRemoveAspect("ILanguageService.Get")]
         public async Task<IResult> Update(UpdateLanguageRequest request)
         {
