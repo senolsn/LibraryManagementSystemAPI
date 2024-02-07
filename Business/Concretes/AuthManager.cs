@@ -2,10 +2,12 @@
 using Business.Abstracts;
 using Business.Constants;
 using Business.Dtos.Request.Auth;
-using Core.Entities.Concrete;
 using Core.Utilities.Results;
 using Core.Utilities.Security.Hashing;
 using Core.Utilities.Security.JWT;
+using DataAccess.Abstracts;
+using Entities.Concrete;
+using Entities.Concrete.enums;
 using System;
 using System.Threading.Tasks;
 
@@ -14,14 +16,16 @@ namespace Business.Concretes
     public class AuthManager : IAuthService
     {
         private readonly IUserService _userService;
+        private readonly IStaffDal _staffDal;
         private readonly IMapper _mapper;
         private readonly ITokenHelper _tokenHelper;
 
-        public AuthManager(IUserService userService, IMapper mapper, ITokenHelper tokenHelper)
+        public AuthManager(IUserService userService, IMapper mapper, ITokenHelper tokenHelper, IStaffDal staffDal)
         {
             _userService = userService;
             _mapper = mapper;
             _tokenHelper = tokenHelper;
+            _staffDal = staffDal;
         }
 
         public IDataResult<AccessToken> CreateAccessToken(User user)
@@ -58,15 +62,50 @@ namespace Business.Concretes
                 HashingHelper.CreatePasswordHash(request.Password, out passwordHash, out passwordSalt);
                 var user = new User { PasswordHash = passwordHash, PasswordSalt = passwordSalt };
 
+<<<<<<< HEAD
                 if(request.RoleType == 0)
                 {
                     request.DepartmentId = Guid.Parse("08dc2624-15d3-4791-844b-de01438c6c87"); //Department : Staff 
                     request.SchoolNumber = "0";
                 }
 
+=======
+                
+                
+>>>>>>> 5c43c7567816add2417b815efb5faed65d391e24
                 var mappedUser = _mapper.Map(request, user);
-
                 await _userService.Add(mappedUser);
+
+
+                /*
+                 1- Register page'de staff ya da student farketmeksizin
+                 veriler dolduruldu. User tablosuna eklendi.
+                 
+                 2- Staff ise staffManager, student ise studentManager'ı
+                 çağırarak aşağıdaki map'leme işlemini front'ta yapıp 
+                 ilgili manager'ın add metoduna vereceğiz.
+                 
+                 *** If yapısı hoşuma gitmedi. Interface'lerle soyutla.
+                 */
+
+                if(request.UserType == UserType.STAFF)
+                {
+                    Staff staff = new Staff();
+                    staff.FirstName = user.FirstName;
+                    staff.LastName = user.LastName;
+                    staff.Email = user.Email;
+                    staff.FacultyId = Guid.Parse("08dc275e-f321-4c4d-86b8-da3e578c6858");
+                    staff.PasswordHash = passwordHash;
+                    staff.PasswordSalt = passwordSalt;
+                    staff.UserId = user.UserId;
+                    staff.PhoneNumber = user.PhoneNumber;
+                    staff.User = user;
+                    await _staffDal.AddAsync(staff);
+                }
+                else if(request.UserType == UserType.STUDENT)
+                {
+
+                }           
 
                 return new SuccessDataResult<User>(user);
             }

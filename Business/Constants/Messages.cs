@@ -55,15 +55,34 @@ namespace Business.Constants
         public static string PublisherListed = "The publisher has successfully listed.";
         public static string PublishersListed = "The publishers were successfully listed.";
 
+        public static string InterpreterAdded = "The interpreter has successfully added.";
+        public static string InterpreterUpdated = "The interpreter has been successfully updated.";
+        public static string InterpreterDeleted = "The interpreter was successfully deleted.";
+        public static string InterpreterListed = "The interpreter has successfully listed.";
+        public static string InterpretersListed = "The interpreters were successfully listed.";
+
         public static string UserAdded = "The user has been successfully added.";
         public static string UserUpdated = "The user has been successfully updated.";
         public static string UserDeleted = "The user was successfully deleted.";
         public static string UserListed = "The user has been successfully listed.";
         public static string UsersListed = "The users were successfully listed.";
 
+        public static string StaffAdded = "The staff has successfully added.";
+        public static string StaffUpdated = "The staff has been successfully updated.";
+        public static string StaffDeleted = "The staff was successfully deleted.";
+        public static string StaffListed = "The staff has successfully listed.";
+        public static string StaffsListed = "The staffs were successfully listed.";
+
+        public static string StudentAdded = "The student has successfully added.";
+        public static string StudentUpdated = "The student has been successfully updated.";
+        public static string StudentDeleted = "The student was successfully deleted.";
+        public static string StudentListed = "The student has successfully listed.";
+        public static string StudentsListed = "The students were successfully listed.";
+
         public static string BookOutOfStock = "The book you've wanted out of stock.";
 
         public static string CategoryExistInBooks = "The category you want to delete is exist in books!";
+        public static string AuthorExistInBook = "The author you want to delete is exist in books";
         public static string UserExistInDepositBooks = "The user you want to delete is exist in deposit books!";
         public static string FacultyExistInUsers = "The faculty you want to delete is exist in users!";
         public static string PublisherExistInBooks = "The publisher you want to delete is exist in books!";
@@ -86,6 +105,8 @@ namespace Business.Constants
         public static string CategoryNameNotUnique = "Category name must be unique.";
         public static string LanguageNameNotUnique = "Language name must be unique.";
         public static string FacultyNameNotUnique = "Faculty name must be unique.";
+
+        public static string LocationNameNotUnique = "Location name must be unique";
 
     }
 }

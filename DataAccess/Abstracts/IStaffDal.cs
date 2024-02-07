@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Abstracts
 {
-    public interface IBookAuthorDal : IAsyncRepository<BookAuthor>
+    public interface IStaffDal : IAsyncRepository<Staff>
     {
     }
 }

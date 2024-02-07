@@ -2,20 +2,27 @@
 using Business.Abstracts;
 using Business.BusinessAspects;
 using Business.Constants;
+<<<<<<< HEAD
 using Business.Dtos.Request.Category;
 using Business.Dtos.Request.FacultyResponses;
 using Business.Dtos.Response.Department;
 using Business.Dtos.Response.FacultyResponses;
 using Business.ValidationRules.FluentValidation.FacultyValidator;
+=======
+using Business.Dtos.Request.FacultyResponses;
+using Business.Dtos.Response.FacultyResponses;
+using Business.ValidationRules.FluentValidation;
+>>>>>>> 5c43c7567816add2417b815efb5faed65d391e24
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Validation;
 using Core.DataAccess.Paging;
 using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
-using DataAccess.Concretes.EntityFramework;
 using Entities.Concrete;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Business.Concretes
@@ -116,11 +123,53 @@ namespace Business.Concretes
             return new ErrorDataResult<Faculty>(Messages.Error);
         }
 
+        public async Task<IDataResult<List<GetListFacultyResponse>>> GetListAsync()
+        {
+            var data = await _facultyDal.GetListAsync(null);
+
+            if (data is not null)
+            {
+                var facultiesResponse = _mapper.Map<List<GetListFacultyResponse>>(data);
+
+                return new SuccessDataResult<List<GetListFacultyResponse>>(facultiesResponse, Messages.FacultiesListed);
+            }
+
+            return new ErrorDataResult<List<GetListFacultyResponse>>(Messages.Error);
+        }
+
+        public async Task<IDataResult<List<GetListFacultyResponse>>> GetListAsyncSortedByName()
+        {
+            var data = await _facultyDal.GetListAsyncOrderBy(null, orderBy: q => q.OrderBy(f => f.FacultyName));
+
+            if (data is not null)
+            {
+                var facultiesResponse = _mapper.Map<List<GetListFacultyResponse>>(data);
+
+                return new SuccessDataResult<List<GetListFacultyResponse>>(facultiesResponse, Messages.FacultiesListed);
+            }
+
+            return new ErrorDataResult<List<GetListFacultyResponse>>(Messages.Error);
+        }
+
+        public async Task<IDataResult<List<GetListFacultyResponse>>> GetListAsyncSortedByCreatedDate()
+        {
+            var data = await _facultyDal.GetListAsyncOrderBy(null, orderBy: q => q.OrderByDescending(f => f.CreatedDate));
+
+            if (data is not null)
+            {
+                var departmentsResponse = _mapper.Map<List<GetListFacultyResponse>>(data);
+
+                return new SuccessDataResult<List<GetListFacultyResponse>>(departmentsResponse, Messages.FacultiesListed);
+            }
+
+            return new ErrorDataResult<List<GetListFacultyResponse>>(Messages.Error);
+        }
+
         //[SecuredOperation("admin,get")]
         [CacheAspect]
-        public async Task<IDataResult<IPaginate<GetListFacultyResponse>>> GetListAsync(PageRequest pageRequest)
+        public async Task<IDataResult<IPaginate<GetListFacultyResponse>>> GetPaginatedListAsync(PageRequest pageRequest)
         {
-            var data = await _facultyDal.GetListAsync(
+            var data = await _facultyDal.GetPaginatedListAsync(
                null,
                index: pageRequest.PageIndex,
                size: pageRequest.PageSize,
@@ -140,18 +189,29 @@ namespace Business.Concretes
         #region Helper Methods
         private async Task<IResult> CheckIfExistInUsers(Guid facultyId)
         {
-            var result = await _userService.GetAsyncByFacultyId(facultyId);
-            if (result is not null)
-            {
-                return new SuccessResult();
-            }
-            return new ErrorResult(Messages.FacultyExistInUsers);
+            //var result = await _userService.GetAsyncByFacultyId(facultyId);
+            //if (result.IsSuccess)
+            //{
+            //    return new ErrorResult(Messages.FacultyExistInUsers);
+            //}
+            //    return new SuccessResult();
+            return new SuccessResult();
         }
 
         private IDataResult<IFacultyRequest> CapitalizeFirstLetter(IFacultyRequest request)
         {
-            string capitalizedFacultyName = char.ToUpper(request.FacultyName[0]) + request.FacultyName.Substring(1).ToLower();
-            request.FacultyName = capitalizedFacultyName;
+            var stringToArray = request.FacultyName.Split(' ', ',', '.');
+            string[] arrayToString = new string[stringToArray.Length];
+            int count = 0;
+
+            foreach (var word in stringToArray)
+            {
+                var capitalizedCategoryName = char.ToUpper(word[0]) + word.Substring(1).ToLower();
+                arrayToString[count] = capitalizedCategoryName;
+                count++;
+            }
+            request.FacultyName = string.Join(" ", arrayToString);
+
             return new SuccessDataResult<IFacultyRequest>(request);
         }
 
@@ -165,8 +225,6 @@ namespace Business.Concretes
             }
             return new SuccessResult();
         }
-
-
         #endregion
     }
 }

@@ -103,6 +103,7 @@ namespace DataAccess.Migrations
                     b.ToTable("OperationClaims");
                 });
 
+<<<<<<< HEAD
             modelBuilder.Entity("Core.Entities.Concrete.User", b =>
                 {
                     b.Property<Guid>("UserId")
@@ -160,6 +161,8 @@ namespace DataAccess.Migrations
                     b.ToTable("Users");
                 });
 
+=======
+>>>>>>> 5c43c7567816add2417b815efb5faed65d391e24
             modelBuilder.Entity("Core.Entities.Concrete.UserOperationClaim", b =>
                 {
                     b.Property<Guid>("UserOperationClaimId")
@@ -267,6 +270,13 @@ namespace DataAccess.Migrations
                     b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("datetime(6)");
 
+<<<<<<< HEAD
+=======
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+>>>>>>> 5c43c7567816add2417b815efb5faed65d391e24
                     b.Property<string>("FixtureNumber")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -275,6 +285,13 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+<<<<<<< HEAD
+=======
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+>>>>>>> 5c43c7567816add2417b815efb5faed65d391e24
                     b.Property<Guid>("LocationId")
                         .HasColumnType("char(36)");
 
@@ -422,6 +439,11 @@ namespace DataAccess.Migrations
 
                     b.HasKey("DepositBookId");
 
+<<<<<<< HEAD
+=======
+                    b.HasIndex("UserId");
+
+>>>>>>> 5c43c7567816add2417b815efb5faed65d391e24
                     b.ToTable("DepositBooks");
                 });
 
@@ -680,6 +702,164 @@ namespace DataAccess.Migrations
                         });
                 });
 
+<<<<<<< HEAD
+=======
+            modelBuilder.Entity("Entities.Concrete.Staff", b =>
+                {
+                    b.Property<Guid>("StaffId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<Guid>("FacultyId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<byte[]>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("longblob");
+
+                    b.Property<byte[]>("PasswordSalt")
+                        .IsRequired()
+                        .HasColumnType("longblob");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("StaffId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Staffs");
+                });
+
+            modelBuilder.Entity("Entities.Concrete.Student", b =>
+                {
+                    b.Property<Guid>("StudentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid>("DepartmentId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<Guid>("FacultyId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<byte[]>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("longblob");
+
+                    b.Property<byte[]>("PasswordSalt")
+                        .IsRequired()
+                        .HasColumnType("longblob");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("SchoolNumber")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("StudentId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Students");
+                });
+
+            modelBuilder.Entity("Entities.Concrete.User", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<byte[]>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("longblob");
+
+                    b.Property<byte[]>("PasswordSalt")
+                        .IsRequired()
+                        .HasColumnType("longblob");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("UserId");
+
+                    b.ToTable("Users");
+                });
+
+>>>>>>> 5c43c7567816add2417b815efb5faed65d391e24
             modelBuilder.Entity("AuthorBook", b =>
                 {
                     b.HasOne("Entities.Concrete.Book", null)
@@ -749,7 +929,11 @@ namespace DataAccess.Migrations
                         .IsRequired();
 
                     b.HasOne("Entities.Concrete.Publisher", "Publisher")
+<<<<<<< HEAD
                         .WithMany("Books")
+=======
+                        .WithMany("PublisherBooks")
+>>>>>>> 5c43c7567816add2417b815efb5faed65d391e24
                         .HasForeignKey("PublisherId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -759,6 +943,42 @@ namespace DataAccess.Migrations
                     b.Navigation("Publisher");
                 });
 
+<<<<<<< HEAD
+=======
+            modelBuilder.Entity("Entities.Concrete.DepositBook", b =>
+                {
+                    b.HasOne("Entities.Concrete.User", "User")
+                        .WithMany("UserDepositBooks")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Entities.Concrete.Staff", b =>
+                {
+                    b.HasOne("Entities.Concrete.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Entities.Concrete.Student", b =>
+                {
+                    b.HasOne("Entities.Concrete.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+>>>>>>> 5c43c7567816add2417b815efb5faed65d391e24
             modelBuilder.Entity("Entities.Concrete.Location", b =>
                 {
                     b.Navigation("LocationBooks");
@@ -766,7 +986,16 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Entities.Concrete.Publisher", b =>
                 {
+<<<<<<< HEAD
                     b.Navigation("Books");
+=======
+                    b.Navigation("PublisherBooks");
+                });
+
+            modelBuilder.Entity("Entities.Concrete.User", b =>
+                {
+                    b.Navigation("UserDepositBooks");
+>>>>>>> 5c43c7567816add2417b815efb5faed65d391e24
                 });
 #pragma warning restore 612, 618
         }

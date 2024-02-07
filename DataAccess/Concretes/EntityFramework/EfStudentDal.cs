@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Concretes.EntityFramework
 {
-    public class EfBookCategoryDal : EfRepositoryBase<BookCategory, LibraryAPIDbContext>, IBookCategoryDal
+    public class EfStudentDal : EfRepositoryBase<Student, LibraryAPIDbContext>, IStudentDal
     {
-        public EfBookCategoryDal(LibraryAPIDbContext context) : base(context)
+        public EfStudentDal(LibraryAPIDbContext context) : base(context)
         {
         }
     }

@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using System;
-using Business.Dtos.Request.Faculty;
 using Core.DataAccess.Paging;
+using Business.Dtos.Request.FacultyResponses;
 
 namespace WebAPI.Controllers
 {
@@ -101,12 +101,69 @@ namespace WebAPI.Controllers
             }
         }
 
+        [HttpGet("GetListAsync")]
+        public async Task<IActionResult> GetListAsync()
+        {
+            try
+            {
+                var result = await _facultyService.GetListAsync();
+
+                if (!result.IsSuccess)
+                {
+                    return NotFound(result);
+                }
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error : {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetListAsyncSortedByName")]
+        public async Task<IActionResult> GetListAsyncSortedByName()
+        {
+            try
+            {
+                var result = await _facultyService.GetListAsyncSortedByName();
+
+                if (!result.IsSuccess)
+                {
+                    return NotFound(result);
+                }
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error : {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetListAsyncSortedByCreatedDate")]
+        public async Task<IActionResult> GetListAsyncSortedByCreatedDate()
+        {
+            try
+            {
+                var result = await _facultyService.GetListAsyncSortedByCreatedDate();
+
+                if (!result.IsSuccess)
+                {
+                    return NotFound(result);
+                }
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error : {ex.Message}");
+            }
+        }
+
         [HttpGet("GetPagedListAsync")]
         public async Task<IActionResult> GetPagedListAsync([FromQuery] PageRequest pageRequest)
         {
             try
             {
-                var result = await _facultyService.GetListAsync(pageRequest);
+                var result = await _facultyService.GetPaginatedListAsync(pageRequest);
 
                 if (!result.IsSuccess)
                 {

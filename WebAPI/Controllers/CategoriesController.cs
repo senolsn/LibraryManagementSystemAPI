@@ -105,7 +105,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                var result = await _categoryService.GetListAsync(pageRequest);
+                var result = await _categoryService.GetPaginatedListAsync(pageRequest);
 
                 if (!result.IsSuccess)
                 {
@@ -117,6 +117,44 @@ namespace WebAPI.Controllers
             {
                 return StatusCode(500, $"Error : {ex.Message}");
             }
+        }
+
+        [HttpGet("GetListAsync")]
+        public async Task<IActionResult> GetListAsync()
+        {
+            var result = await _categoryService.GetListAsync();
+
+            if (result.IsSuccess)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        [HttpGet("GetListAsyncSortedByName")]
+        public async Task<IActionResult> GetListAsyncSortedByName()
+        {
+            var result = await _categoryService.GetListAsyncSortedByName();
+
+            if (result.IsSuccess)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+
+
+        [HttpGet("GetListAsyncSortedByCreatedDate")]
+        public async Task<IActionResult> GetListAsyncSortedByCreatedDate()
+        {
+            var result = await _categoryService.GetListAsyncSortedByCreatedDate();
+
+            if (result.IsSuccess)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
         }
     }
 }

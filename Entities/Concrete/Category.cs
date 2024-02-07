@@ -1,6 +1,8 @@
 ﻿using Core.Entities.Concrete;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Entities.Concrete
 {
@@ -8,6 +10,9 @@ namespace Entities.Concrete
     {
         public Guid CategoryId { get; set; }
         public string CategoryName { get; set; }
-        public List<BookCategory> BookCategories { get; set; }
+
+        [JsonIgnore]
+        public virtual ICollection<Book>? CategoryBooks { get; set; }
     }
 }
+

@@ -1,5 +1,9 @@
-﻿using Core.Entities.Concrete;
+using Core.Entities.Concrete;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Entities.Concrete
 {
@@ -7,6 +11,9 @@ namespace Entities.Concrete
     {
         public Guid LocationId { get; set; }
         public string? Shelf { get; set; }
-        public Guid CategoryId { get; set; }
+
+        [JsonIgnore]
+        public ICollection<Book> LocationBooks { get; set; }
+
     }
 }

@@ -1,8 +1,14 @@
 ﻿using AutoMapper;
 using Business.Abstracts;
 using Business.Constants;
+<<<<<<< HEAD
 using Business.Dtos.Response.LanguageResponses;
 using Business.BusinessAspects;
+=======
+using Business.Dtos.Request.Language;
+using Business.Dtos.Response.Language;
+using Business.ValidationRules.FluentValidation;
+>>>>>>> 5c43c7567816add2417b815efb5faed65d391e24
 using Core.Aspects.Autofac.Validation;
 using Core.Aspects.Autofac.Caching;
 using Core.DataAccess.Paging;
@@ -13,10 +19,14 @@ using Entities.Concrete;
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+<<<<<<< HEAD
 using Business.Dtos.Response.Department;
 using DataAccess.Concretes.EntityFramework;
 using System.Linq;
 using Business.ValidationRules.FluentValidation.LanguageValidator;
+=======
+using System.Linq;
+>>>>>>> 5c43c7567816add2417b815efb5faed65d391e24
 
 namespace Business.Concretes
 {
@@ -24,17 +34,17 @@ namespace Business.Concretes
     {
 
         protected readonly ILanguageDal _languageDal;
-        protected readonly IBookService _bookService;
+        protected readonly IBookService _bookDal;
         protected readonly IMapper _mapper;
 
-        public LanguageManager(ILanguageDal languageDal, IBookService bookService, IMapper mapper)
+        public LanguageManager(ILanguageDal languageDal, IBookService bookDal, IMapper mapper)
         {
             _languageDal = languageDal;
-            _bookService = bookService;
+            _bookDal = bookDal;
             _mapper = mapper;
         }
 
-        [SecuredOperation("admin,add")]
+        //[SecuredOperation("admin,add")]
         [ValidationAspect(typeof (LanguageValidator))]
         [CacheRemoveAspect("ILanguageService.Get")]
         public async Task<IResult> Add(CreateLanguageRequest request)
@@ -48,9 +58,11 @@ namespace Business.Concretes
 
             Language language = _mapper.Map<Language>(request);
 
-            var createdLanguage = await _languageDal.AddAsync(language);
+             await _languageDal.AddAsync(language);
 
-            if (createdLanguage is null)
+            var dbResult = await _languageDal.SaveChangesAsync();
+
+            if (!dbResult)
             {
                 return new ErrorResult(Messages.Error);
             }
@@ -58,7 +70,7 @@ namespace Business.Concretes
             return new SuccessResult(Messages.LanguageAdded);
         }
 
-        [SecuredOperation("admin,update")]
+        //[SecuredOperation("admin,update")]
         [ValidationAspect(typeof(LanguageValidator))]
         [CacheRemoveAspect("ILanguageService.Get")]
         public async Task<IResult> Update(UpdateLanguageRequest request)
@@ -84,7 +96,7 @@ namespace Business.Concretes
             return new SuccessResult(Messages.LanguageUpdated);
         }
 
-        [SecuredOperation("admin,delete")]
+        //[SecuredOperation("admin,delete")]
         [CacheRemoveAspect("ILanguageService.Get")]
         public async Task<IResult> Delete(DeleteLanguageRequest request)
         {
@@ -92,7 +104,7 @@ namespace Business.Concretes
 
             if(languageToDelete is not null)
             {
-                var result = BusinessRules.Run(await CheckIfExistInBooks(request.LanguageId));
+                var result = BusinessRules.Run(await CheckIfExistInBooks(languageToDelete.LanguageBooks));
 
                if(result is not null)
                 {
@@ -106,7 +118,7 @@ namespace Business.Concretes
             return new ErrorResult(Messages.Error);
         }
 
-        [SecuredOperation("admin,get")]
+        //[SecuredOperation("admin,get")]
         [CacheAspect]
         public async Task<IDataResult<Language>> GetAsync(Guid languageId)
         {
@@ -120,11 +132,53 @@ namespace Business.Concretes
             return new ErrorDataResult<Language>(Messages.Error);
         }
 
-        [SecuredOperation("admin,get")]
-        [CacheAspect]
-        public async Task<IDataResult<IPaginate<GetListLanguageResponse>>> GetListAsync(PageRequest pageRequest)
+        public async Task<IDataResult<List<GetListLanguageResponse>>> GetListAsync()
         {
-            var data = await _languageDal.GetListAsync(
+            var data = await _languageDal.GetListAsync(null);
+
+            if (data is not null)
+            {
+                var languagesResponse = _mapper.Map<List<GetListLanguageResponse>>(data);
+
+                return new SuccessDataResult<List<GetListLanguageResponse>>(languagesResponse, Messages.BooksListed);
+            }
+
+            return new ErrorDataResult<List<GetListLanguageResponse>>(Messages.Error);
+        }
+
+        public async Task<IDataResult<List<GetListLanguageResponse>>> GetListAsyncSortedByName()
+        {
+            var data = await _languageDal.GetListAsyncOrderBy(null, orderBy: q => q.OrderBy(l => l.LanguageName));
+
+            if (data is not null)
+            {
+                var languagesResponse = _mapper.Map<List<GetListLanguageResponse>>(data);
+
+                return new SuccessDataResult<List<GetListLanguageResponse>>(languagesResponse, Messages.BooksListed);
+            }
+
+            return new ErrorDataResult<List<GetListLanguageResponse>>(Messages.Error);
+        }
+
+        public async Task<IDataResult<List<GetListLanguageResponse>>> GetListAsyncSortedByCreatedDate()
+        {
+            var data = await _languageDal.GetListAsyncOrderBy(null, orderBy: q => q.OrderByDescending(l => l.CreatedDate));
+
+            if (data is not null)
+            {
+                var languagesResponse = _mapper.Map<List<GetListLanguageResponse>>(data);
+
+                return new SuccessDataResult<List<GetListLanguageResponse>>(languagesResponse, Messages.BooksListed);
+            }
+
+            return new ErrorDataResult<List<GetListLanguageResponse>>(Messages.Error);
+        }
+
+        //[SecuredOperation("admin,get")]
+        [CacheAspect]
+        public async Task<IDataResult<IPaginate<GetListLanguageResponse>>> GetPaginatedListAsync(PageRequest pageRequest)
+        {
+            var data = await _languageDal.GetPaginatedListAsync(
                 null, 
                 index : pageRequest.PageIndex,
                 size : pageRequest.PageSize,
@@ -141,10 +195,9 @@ namespace Business.Concretes
         }
 
         #region Helper Methods
-        private async Task<IResult> CheckIfExistInBooks(Guid languageId)
+        private async Task<IResult> CheckIfExistInBooks(ICollection<Book> languageBooks)
         {
-            var result = await _bookService.GetAsyncByLanguageId(languageId);
-            if(result is not null)
+            if(languageBooks.Count < 1)
             {
                 return new SuccessResult();
             }
@@ -156,7 +209,6 @@ namespace Business.Concretes
             request.LanguageName = capitalizedLanguageName;
             return new SuccessDataResult<ILanguageRequest>(request);
         }
-
         private async Task<IResult> IsLanguageNameUnique(string languageName)
         {
             var result = await _languageDal.GetAsync(l => l.LanguageName.ToUpper() == languageName.ToUpper());
@@ -167,7 +219,6 @@ namespace Business.Concretes
             }
             return new SuccessResult();
         }
-
         #endregion
     }
 }

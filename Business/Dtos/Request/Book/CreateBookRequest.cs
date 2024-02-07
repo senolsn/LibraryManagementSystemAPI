@@ -1,12 +1,18 @@
-﻿using System;
+using Business.Dtos.Request.AuthorRequests;
+using Entities.Concrete;
+using System;
+using System.Collections.Generic;
+using Entities.Concrete.enums;
+using Business.Dtos.Request.Book;
 
-namespace Business.Dtos.Request.Book
+namespace Business.Dtos.Request.BookRequests
 {
-    public class CreateBookRequest
+    public class CreateBookRequest:IBookRequest
     {
-        public Guid AuthorId { get; set; }
-        public Guid LanguageId { get; set; }
-        public Guid CategoryId { get; set; }
+        public List<Guid> AuthorIds { get; set; }
+        public List<Guid> CategoryIds { get; set; }
+        public List<Guid> LanguageIds { get; set; }
+        public List<Guid> InterpreterIds { get; set; }
         public Guid PublisherId { get; set; }
         public Guid LocationId { get; set; }
         public string BookName { get; set; }
@@ -15,8 +21,8 @@ namespace Business.Dtos.Request.Book
         public DateTime PublishedDate { get; set; }
         public int PublishCount { get; set; }
         public int Stock { get; set; }
-        public bool Status { get; set; }
-        public string Interpreter { get; set; }
+        public BookStatus Status { get; set; }
         public string FixtureNumber { get; set; }
+        public string ImageUrl { get; set; }
     }
 }

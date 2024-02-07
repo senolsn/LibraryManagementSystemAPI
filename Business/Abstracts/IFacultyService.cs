@@ -4,6 +4,7 @@ using Core.DataAccess.Paging;
 using Core.Utilities.Results;
 using Entities.Concrete;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Business.Abstracts
@@ -18,6 +19,10 @@ namespace Business.Abstracts
 
         Task<IDataResult<Faculty>> GetAsync(Guid facultyId);
 
-        Task<IDataResult<IPaginate<GetListFacultyResponse>>> GetListAsync(PageRequest pageRequest);
+        Task<IDataResult<List<GetListFacultyResponse>>> GetListAsync();
+        Task<IDataResult<List<GetListFacultyResponse>>> GetListAsyncSortedByName();
+        Task<IDataResult<List<GetListFacultyResponse>>> GetListAsyncSortedByCreatedDate();
+
+        Task<IDataResult<IPaginate<GetListFacultyResponse>>> GetPaginatedListAsync(PageRequest pageRequest);
     }
 }

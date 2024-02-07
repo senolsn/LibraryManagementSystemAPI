@@ -13,6 +13,7 @@ namespace Entities.Concrete
         public DepositBookStatus Status { get; set; } = DepositBookStatus.NOT_RECEIVED;
         public DateTime EscrowDate { get; set; }
         public DateTime DateShouldBeEscrow { get; set; }
-        
+        public User User { get; set; }
+
     }
 }

@@ -3,9 +3,11 @@ using Core.Entities.Abstract;
 using Core.Entities.Concrete;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -25,13 +27,19 @@ namespace Core.DataAccess.Repositories
 
         public IQueryable<TEntity> Query() => Context.Set<TEntity>();
 
-        public async Task<TEntity> AddAsync(TEntity entity)
+        public async virtual Task<TEntity> AddAsync(TEntity entity)
         {
             entity.CreatedDate = DateTime.Now;
             await Context.AddAsync(entity);
             await Context.SaveChangesAsync();
             return entity;
         }
+        public async Task<bool> SaveChangesAsync()
+        {
+           return await Context.SaveChangesAsync() > 0;
+        }
+        //SaveChangesAsync'lerin hepsini sil.
+        //Dışarda metodu çağırdıktan sonra savechangesasync çağır. Bir metodda birden fazla ekleme yapabiliriz. sonra savechanges yapmak daha performanslı.
 
         public async Task<TEntity> DeleteAsync(TEntity entity, bool permanent)
         {
@@ -48,7 +56,7 @@ namespace Core.DataAccess.Repositories
             return entity;
         }
 
-        public async Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> predicate, bool withDeleted = false, bool enableTracking = true, CancellationToken cancellationToken = default)
+        public virtual async Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> predicate, bool withDeleted = false, bool enableTracking = true, CancellationToken cancellationToken = default)
         {
             IQueryable<TEntity> queryable = Query();
             if (!enableTracking)
@@ -58,7 +66,22 @@ namespace Core.DataAccess.Repositories
             return await queryable.FirstOrDefaultAsync(predicate, cancellationToken);
         }
 
-        public async Task<IPaginate<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> predicate, int index = 0, int size = 10, bool withDeleted = false, bool enableTracking = true, CancellationToken cancellationToken = default)
+        /*Non-paginated list metodu*/
+        public virtual async Task<ICollection<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> predicate, bool withDeleted = false, bool enableTracking = true, CancellationToken cancellationToken = default)
+        {
+            IQueryable<TEntity> queryable = Query();
+
+            if (!enableTracking)
+                queryable = queryable.AsNoTracking();
+            if (withDeleted)
+                queryable = queryable.IgnoreQueryFilters().Where(field => field.DeletedDate == null); //Girdiğim filter koşulunu sağlayan verileri topla.
+            if (predicate != null)
+                queryable = queryable.Where(predicate);
+            return await queryable.ToListAsync(cancellationToken);
+        }
+
+        /*Paginated list metodu*/
+        public virtual async Task<IPaginate<TEntity>> GetPaginatedListAsync(Expression<Func<TEntity, bool>> predicate, int index = 0, int size = 10, bool withDeleted = false, bool enableTracking = true, CancellationToken cancellationToken = default)
         {
             IQueryable<TEntity> queryable = Query();
 
@@ -71,7 +94,28 @@ namespace Core.DataAccess.Repositories
             return await queryable.ToPaginateAsync(index, size, from: 0, cancellationToken);
         }
 
-        public async Task<IPaginate<TEntity>> GetListAsyncOrderBy(
+        /*Non-paginated list metodu*/
+        public virtual async Task<ICollection<TEntity>> GetListAsyncOrderBy(
+            Expression<Func<TEntity, bool>>? predicate = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
+            bool withDeleted = false, bool enableTracking = true,
+            CancellationToken cancellationToken = default
+        )
+        {
+            IQueryable<TEntity> queryable = Query();
+
+            if (!enableTracking)
+                queryable = queryable.AsNoTracking();
+            if (withDeleted)
+                queryable = queryable.IgnoreQueryFilters().Where(field => field.DeletedDate == null);
+            if (predicate != null)
+                queryable = queryable.Where(predicate);
+
+            return await orderBy(queryable).ToListAsync(cancellationToken);
+        }
+
+        /*Paginated list metodu*/
+        public async Task<IPaginate<TEntity>> GetListPaginatedAsyncOrderBy(
         Expression<Func<TEntity, bool>>? predicate = null, 
         Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
         int index = 0,
@@ -93,8 +137,6 @@ namespace Core.DataAccess.Repositories
                 return await orderBy(queryable).ToPaginateAsync(index, size, from: 0, cancellationToken);
             return await queryable.ToPaginateAsync(index, size, from: 0, cancellationToken);
         }
-
-
 
         #region Helper Methods
 

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Business.Dtos.Request.Book
+namespace Business.Dtos.Request.BookRequests
 {
     public class DeleteBookRequest
     {

@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Business.Abstracts;
-using Business.BusinessAspects;
 using Business.Constants;
 using Business.Dtos.Request.Category;
 using Business.Dtos.Response.Category;
@@ -13,6 +12,8 @@ using Core.Utilities.Results;
 using DataAccess.Abstracts;
 using Entities.Concrete;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Business.Concretes
@@ -29,7 +30,7 @@ namespace Business.Concretes
             _bookService = bookService;
         }
 
-        [SecuredOperation("admin,add")]
+        //[SecuredOperation("admin,add")]
         [ValidationAspect(typeof (CategoryValidator))]
         [CacheRemoveAspect("ICategoryService.Get")]
         public async Task<IResult> Add(CreateCategoryRequest request)
@@ -53,7 +54,7 @@ namespace Business.Concretes
             return new SuccessResult(Messages.CategoryAdded);
         }
 
-        [SecuredOperation("admin,delete")]
+        //[SecuredOperation("admin,delete")]
         [CacheRemoveAspect("ICategoryService.Get")]
         public async Task<IResult> Delete(DeleteCategoryRequest request)
         {
@@ -61,7 +62,8 @@ namespace Business.Concretes
 
             if (categoryToDelete is not null)
             {
-                var result = BusinessRules.Run(await CheckIfCategoryHasBooks(request.CategoryId));
+                var result = BusinessRules.Run(CheckIfCategoryHasBooks(categoryToDelete.CategoryBooks));
+
                 if (result is not null)
                 {
                     return result;
@@ -74,7 +76,7 @@ namespace Business.Concretes
             return new ErrorResult(Messages.Error);
         }
 
-        [SecuredOperation("admin,update")]
+        //[SecuredOperation("admin,update")]
         [ValidationAspect(typeof (CategoryValidator))]
         [CacheRemoveAspect("ICategoryService.Get")]
         public async Task<IResult> Update(UpdateCategoryRequest request)
@@ -100,13 +102,15 @@ namespace Business.Concretes
             return new SuccessResult(Messages.CategoryUpdated);
         }
 
-        [SecuredOperation("admin,get")]
+        //[SecuredOperation("admin,get")]
         [CacheAspect]
         public async Task<IDataResult<Category>> GetAsync(Guid categoryId)
         {
             var result = await _categoryDal.GetAsync(c => c.CategoryId == categoryId);
 
-            if (result is not null)
+            var dbResult = await _categoryDal.SaveChangesAsync();
+
+            if (!dbResult)
             {
                 return new SuccessDataResult<Category>(result, Messages.CategoryListed);
             }
@@ -114,11 +118,11 @@ namespace Business.Concretes
             return new ErrorDataResult<Category>(Messages.Error);
         }
 
-        [SecuredOperation("admin,get")]
+        //[SecuredOperation("admin,get")]
         [CacheAspect]
-        public async Task<IDataResult<IPaginate<GetListCategoryResponse>>> GetListAsync(PageRequest pageRequest)
+        public async Task<IDataResult<IPaginate<GetListCategoryResponse>>> GetPaginatedListAsync(PageRequest pageRequest)
         {
-            var data = await _categoryDal.GetListAsync(
+            var data = await _categoryDal.GetPaginatedListAsync(
                 null,
                 index: pageRequest.PageIndex,
                 size: pageRequest.PageSize,
@@ -134,17 +138,63 @@ namespace Business.Concretes
             return new ErrorDataResult<IPaginate<GetListCategoryResponse>>(Messages.Error);
         }
 
-        
-        #region Helper Methods
-        private async Task<IResult> CheckIfCategoryHasBooks(Guid categoryId)
+        public async Task<IDataResult<List<GetListCategoryResponse>>> GetListAsync()
         {
-            var result = await _bookService.GetAsyncByCategoryId(categoryId);
+            var data = await _categoryDal.GetListAsync(null);
 
-            if (result is not null)
+            if (data is not null)
             {
-            return new SuccessResult();
+                var categoryResponse = _mapper.Map<List<GetListCategoryResponse>>(data);
+
+                return new SuccessDataResult<List<GetListCategoryResponse>>(categoryResponse, Messages.BooksListed);
+            }
+
+            return new ErrorDataResult<List<GetListCategoryResponse>>(Messages.Error);
+        }
+
+        public async Task<IDataResult<List<GetListCategoryResponse>>> GetListAsyncSortedByName()
+        {
+            var data = await _categoryDal.GetListAsyncOrderBy(
+                predicate: null,
+                orderBy: q => q.OrderBy(c => c.CategoryName)
+                );
+
+            if(data is not null)
+            {
+                var categoryResponse = _mapper.Map<List<GetListCategoryResponse>>(data);
+
+                return new SuccessDataResult<List<GetListCategoryResponse>>(categoryResponse, Messages.CategoriesListed);
+            }
+            return new ErrorDataResult<List<GetListCategoryResponse>>(Messages.Error);
+        }
+
+        public async Task<IDataResult<List<GetListCategoryResponse>>> GetListAsyncSortedByCreatedDate()
+        {
+            var data = await _categoryDal.GetListAsyncOrderBy(
+                predicate: null,
+                orderBy: q => q.OrderBy(c => c.CreatedDate)
+                );
+
+            if(data is not null)
+            {
+                var categoryResponse = _mapper.Map<List<GetListCategoryResponse>>(data);
+
+                return new SuccessDataResult<List<GetListCategoryResponse>>(categoryResponse, Messages.CategoriesListed);
 
             }
+            return new ErrorDataResult<List<GetListCategoryResponse>>(Messages.Error);
+        }
+
+        #region Helper Methods
+        private IResult CheckIfCategoryHasBooks(ICollection<Book> categoryBooks)
+        {
+
+            if (categoryBooks.Count < 1)
+            {
+                return new SuccessResult();
+
+            }
+
             return new ErrorResult(Messages.CategoryExistInBooks);
         }
 
@@ -159,7 +209,7 @@ namespace Business.Concretes
             return new SuccessResult();
         }
 
-        private IDataResult<CreateCategoryRequest> CapitalizeFirstLetter(CreateCategoryRequest request)
+        private IDataResult<ICategoryRequest> CapitalizeFirstLetter(ICategoryRequest request)
         {
             var stringToArray = request.CategoryName.Split(' ', ',', '.');
             string[] arrayToString = new string[stringToArray.Length];
@@ -173,24 +223,7 @@ namespace Business.Concretes
             }
             request.CategoryName = string.Join(" ", arrayToString);
 
-            return new SuccessDataResult<CreateCategoryRequest>(request);
-        }
-
-        private IDataResult<UpdateCategoryRequest> CapitalizeFirstLetter(UpdateCategoryRequest request)
-        {
-            var stringToArray = request.CategoryName.Split(' ', ',','.');
-            string[] arrayToString = new string[stringToArray.Length];
-            int count = 0;
-
-            foreach (var word in stringToArray)
-            {
-                var capitalizedCategoryName = char.ToUpper(word[0]) + word.Substring(1).ToLower();
-                arrayToString[count] = capitalizedCategoryName;
-                count++;
-            }
-            request.CategoryName = string.Join(" ", arrayToString);
-
-            return new SuccessDataResult<UpdateCategoryRequest>(request);
+            return new SuccessDataResult<ICategoryRequest>(request);
         }
         #endregion
 

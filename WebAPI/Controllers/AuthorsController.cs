@@ -1,5 +1,5 @@
 ﻿using Business.Abstracts;
-using Business.Dtos.Request.Author;
+using Business.Dtos.Request.AuthorRequests;
 using Core.DataAccess.Paging;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -105,12 +105,75 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpGet("GetPagedListAsync")]
-        public async Task<IActionResult> GetPagedListAsync([FromQuery] PageRequest pageRequest)
+        [HttpGet("GetPaginatedListAsync")]
+        public async Task<IActionResult> GetPaginatedListAsync([FromQuery] PageRequest pageRequest)
         {
             try
             {
-                var result = await _authorService.GetListAsync(pageRequest);
+                var result = await _authorService.GetPaginatedListAsync(pageRequest);
+
+                if (!result.IsSuccess)
+                {
+                    return BadRequest(result);
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, $"Error : {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetListAsync")]
+        public async Task<IActionResult> GetListAsync()
+        {
+            try
+            {
+                var result = await _authorService.GetListAsync();
+
+                if (!result.IsSuccess)
+                {
+                    return BadRequest(result);
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, $"Error : {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetListAsyncSortedByName")]
+        public async Task<IActionResult> GetListAsyncSortedByName()
+        {
+            try
+            {
+                var result = await _authorService.GetListAsyncSortedByName();
+
+                if (!result.IsSuccess)
+                {
+                    return BadRequest(result);
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, $"Error : {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetListAsyncSortedByCreatedDate")]
+        public async Task<IActionResult> GetListAsyncSortedByCreatedDate()
+        {
+            try
+            {
+                var result = await _authorService.GetListAsyncSortedByCreatedDate();
 
                 if (!result.IsSuccess)
                 {
