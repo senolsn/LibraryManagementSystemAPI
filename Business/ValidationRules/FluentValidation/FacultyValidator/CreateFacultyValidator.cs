@@ -7,13 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Business.ValidationRules.FluentValidation
+namespace Business.ValidationRules.FluentValidation.FacultyValidator
 {
-    public class FacultyValidator:AbstractValidator<IFacultyRequest>
+    public class CreateFacultyValidator : AbstractValidator<CreateFacultyRequest>
     {
-        public FacultyValidator()
+        public CreateFacultyValidator()
         {
-            RuleFor(f => f.FacultyName).MinimumLength(3).WithMessage(ValidationMessages.FacultyMinLength);
+            RuleFor(f => f.FacultyName).MinimumLength(2).WithMessage(ValidationMessages.FacultyMinLength);
             RuleFor(f => f.FacultyName).NotEmpty().WithMessage(ValidationMessages.FacultyNotEmpty);
         }
     }

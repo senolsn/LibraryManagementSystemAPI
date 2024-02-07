@@ -2,10 +2,11 @@
 using Business.Abstracts;
 using Business.BusinessAspects;
 using Business.Constants;
-using Business.Dtos.Request.Faculty;
-using Business.Dtos.Request.Language;
-using Business.Dtos.Response.Faculty;
-using Business.ValidationRules.FluentValidation;
+using Business.Dtos.Request.Category;
+using Business.Dtos.Request.FacultyResponses;
+using Business.Dtos.Response.Department;
+using Business.Dtos.Response.FacultyResponses;
+using Business.ValidationRules.FluentValidation.FacultyValidator;
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Validation;
 using Core.DataAccess.Paging;

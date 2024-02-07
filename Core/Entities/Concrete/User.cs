@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Core.Entities.Concrete.enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,5 +19,6 @@ namespace Core.Entities.Concrete
         public string LastName { get; set; }
         public byte[] PasswordSalt { get; set; }
         public byte[] PasswordHash { get; set; }
+        public RoleType RoleType { get; set; }
     }
 }

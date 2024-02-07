@@ -1,5 +1,6 @@
-﻿using Business.Dtos.Request.Language;
-using Business.Dtos.Response.Language;
+﻿using Business.Dtos.Request.LanguageRequests;
+using Business.Dtos.Response.Category;
+using Business.Dtos.Response.LanguageResponses;
 using Core.DataAccess.Paging;
 using Core.Utilities.Results;
 using Entities.Concrete;

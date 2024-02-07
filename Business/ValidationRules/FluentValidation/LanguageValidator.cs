@@ -1,5 +1,5 @@
 ﻿using Business.Constants;
-using Business.Dtos.Request.Language;
+using Business.Dtos.Request.LanguageRequests;
 using FluentValidation;
 
 namespace Business.ValidationRules.FluentValidation
