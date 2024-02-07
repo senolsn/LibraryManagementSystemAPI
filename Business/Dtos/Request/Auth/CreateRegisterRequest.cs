@@ -18,7 +18,6 @@ namespace Business.Dtos.Request.Auth
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Password { get; set; }
-        public RoleType RoleType { get; set; }
         public UserType UserType { get; set; }
     }
 }

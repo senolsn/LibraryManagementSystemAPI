@@ -62,17 +62,8 @@ namespace Business.Concretes
                 HashingHelper.CreatePasswordHash(request.Password, out passwordHash, out passwordSalt);
                 var user = new User { PasswordHash = passwordHash, PasswordSalt = passwordSalt };
 
-                if(request.RoleType == 0)
-                {
-                    request.DepartmentId = Guid.Parse("08dc2624-15d3-4791-844b-de01438c6c87"); //Department : Staff 
-                    request.SchoolNumber = "0";
-                }
-
-                
-                
                 var mappedUser = _mapper.Map(request, user);
                 await _userService.Add(mappedUser);
-
 
                 /*
                  1- Register page'de staff ya da student farketmeksizin
@@ -101,7 +92,21 @@ namespace Business.Concretes
                 }
                 else if(request.UserType == UserType.STUDENT)
                 {
-
+                    Student student = new()
+                    {
+                        FirstName = user.FirstName,
+                        LastName = user.LastName,
+                        Email = user.Email,
+                        FacultyId = Guid.Parse("08dc275e-f321-4c4d-86b8-da3e578c6858"),
+                        PasswordHash = passwordHash,
+                        PasswordSalt = passwordSalt,
+                        UserId = user.UserId,
+                        PhoneNumber = user.PhoneNumber,
+                        SchoolNumber = request.SchoolNumber,
+                        DepartmentId = Guid.Parse("08dc272e-f321-4c4d-86b8-da3e578c7857"),
+                        User = user
+                    };
+                    await _studentDal.AddAsync(student);
                 }           
 
                 return new SuccessDataResult<User>(user);
