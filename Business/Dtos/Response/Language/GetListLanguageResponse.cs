@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Business.Dtos.Response.Language
+namespace Business.Dtos.Response.LanguageResponses
 {
     public class GetListLanguageResponse
     {

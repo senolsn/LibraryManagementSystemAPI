@@ -145,6 +145,9 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<int>("RoleType")
+                        .HasColumnType("int");
+
                     b.Property<string>("SchoolNumber")
                         .IsRequired()
                         .HasColumnType("longtext");

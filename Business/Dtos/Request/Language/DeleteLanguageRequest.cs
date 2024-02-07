@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Business.Dtos.Request.Language
+namespace Business.Dtos.Request.LanguageRequests
 {
     public class DeleteLanguageRequest
     {

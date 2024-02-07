@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Business.Dtos.Request.Faculty
+namespace Business.Dtos.Request.FacultyResponses
 {
     public interface IFacultyRequest
     {

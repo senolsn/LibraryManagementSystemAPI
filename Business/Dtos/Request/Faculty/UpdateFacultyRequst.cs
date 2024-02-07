@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Business.Dtos.Request.Faculty
+namespace Business.Dtos.Request.FacultyResponses
 {
     public class UpdateFacultyRequest : IFacultyRequest
     {

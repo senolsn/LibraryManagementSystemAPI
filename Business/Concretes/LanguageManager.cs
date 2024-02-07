@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
 using Business.Abstracts;
 using Business.Constants;
-using Business.Dtos.Request.Language;
-using Business.Dtos.Response.Language;
+using Business.Dtos.Response.LanguageResponses;
 using Business.BusinessAspects;
 using Core.Aspects.Autofac.Validation;
 using Core.Aspects.Autofac.Caching;

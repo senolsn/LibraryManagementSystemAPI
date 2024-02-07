@@ -1,7 +1,7 @@
 ﻿using Business.Dtos.Response.Author;
 using Business.Dtos.Response.Category;
 using Business.Dtos.Response.InterpreterResponses;
-using Business.Dtos.Response.Language;
+using Business.Dtos.Response.LanguageResponses;
 using Business.Dtos.Response.Location;
 using Business.Dtos.Response.Publisher;
 using Entities.Concrete.enums;
