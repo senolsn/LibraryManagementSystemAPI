@@ -1,4 +1,4 @@
-﻿using Business.Dtos.Request.Department;
+﻿using Business.Dtos.Request.DepartmentRequests;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
