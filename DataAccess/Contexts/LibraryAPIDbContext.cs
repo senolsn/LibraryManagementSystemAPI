@@ -37,8 +37,6 @@ namespace DataAccess.Contexts
         public DbSet<DepositBook> DepositBooks { get; set; }
         public DbSet<OperationClaim> OperationClaims { get; set; }
         public DbSet<User> Users { get; set; }
-        public DbSet<Student> Students { get; set; }
-        public DbSet<Staff> Staffs { get; set; } 
         public DbSet<UserOperationClaim> UserOperationClaims { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

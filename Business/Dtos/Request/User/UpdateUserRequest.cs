@@ -8,7 +8,6 @@ namespace Business.Dtos.Request.User
 {
     public class UpdateUserRequest
     {
-        public Guid UserId { get; set; }
         public Guid FacultyId { get; set; }
         public Guid DepartmentId { get; set; }
         public string SchoolNumber { get; set; }
@@ -17,5 +16,6 @@ namespace Business.Dtos.Request.User
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Password { get; set; }
+        public List<Guid> DepartmentIds { get; set; }
     }
 }

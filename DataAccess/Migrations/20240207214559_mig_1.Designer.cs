@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(LibraryAPIDbContext))]
-    [Migration("20240206222027_mig_15")]
-    partial class mig15
+    [Migration("20240207214559_mig_1")]
+    partial class mig1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -130,6 +130,21 @@ namespace DataAccess.Migrations
                     b.HasKey("UserOperationClaimId");
 
                     b.ToTable("UserOperationClaims");
+                });
+
+            modelBuilder.Entity("DepartmentUser", b =>
+                {
+                    b.Property<Guid>("DepartmentUsersUserId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("UserDepartmentsDepartmentId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("DepartmentUsersUserId", "UserDepartmentsDepartmentId");
+
+                    b.HasIndex("UserDepartmentsDepartmentId");
+
+                    b.ToTable("DepartmentUser");
                 });
 
             modelBuilder.Entity("Entities.Concrete.Author", b =>
@@ -636,117 +651,6 @@ namespace DataAccess.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Entities.Concrete.Staff", b =>
-                {
-                    b.Property<Guid>("StaffId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime?>("DeletedDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<Guid>("FacultyId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<byte[]>("PasswordHash")
-                        .IsRequired()
-                        .HasColumnType("longblob");
-
-                    b.Property<byte[]>("PasswordSalt")
-                        .IsRequired()
-                        .HasColumnType("longblob");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("char(36)");
-
-                    b.HasKey("StaffId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Staffs");
-                });
-
-            modelBuilder.Entity("Entities.Concrete.Student", b =>
-                {
-                    b.Property<Guid>("StudentId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime?>("DeletedDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<Guid>("DepartmentId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<Guid>("FacultyId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<byte[]>("PasswordHash")
-                        .IsRequired()
-                        .HasColumnType("longblob");
-
-                    b.Property<byte[]>("PasswordSalt")
-                        .IsRequired()
-                        .HasColumnType("longblob");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("SchoolNumber")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("char(36)");
-
-                    b.HasKey("StudentId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Students");
-                });
-
             modelBuilder.Entity("Entities.Concrete.User", b =>
                 {
                     b.Property<Guid>("UserId")
@@ -851,6 +755,21 @@ namespace DataAccess.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("DepartmentUser", b =>
+                {
+                    b.HasOne("Entities.Concrete.User", null)
+                        .WithMany()
+                        .HasForeignKey("DepartmentUsersUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Entities.Concrete.Department", null)
+                        .WithMany()
+                        .HasForeignKey("UserDepartmentsDepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Entities.Concrete.Book", b =>
                 {
                     b.HasOne("Entities.Concrete.Location", "Location")
@@ -874,28 +793,6 @@ namespace DataAccess.Migrations
                 {
                     b.HasOne("Entities.Concrete.User", "User")
                         .WithMany("UserDepositBooks")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Entities.Concrete.Staff", b =>
-                {
-                    b.HasOne("Entities.Concrete.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Entities.Concrete.Student", b =>
-                {
-                    b.HasOne("Entities.Concrete.User", "User")
-                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

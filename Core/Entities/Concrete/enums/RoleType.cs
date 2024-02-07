@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Business.Dtos.Request.StaffRequests
+namespace Core.Entities.Concrete.enums
 {
-    public class UpdateStaffRequest
+    public enum RoleType
     {
+        STAFF = 0,
+        STUDENT = 1
     }
 }

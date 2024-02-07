@@ -16,16 +16,14 @@ namespace Business.Concretes
     public class AuthManager : IAuthService
     {
         private readonly IUserService _userService;
-        private readonly IStaffDal _staffDal;
         private readonly IMapper _mapper;
         private readonly ITokenHelper _tokenHelper;
 
-        public AuthManager(IUserService userService, IMapper mapper, ITokenHelper tokenHelper, IStaffDal staffDal)
+        public AuthManager(IUserService userService, IMapper mapper, ITokenHelper tokenHelper)
         {
             _userService = userService;
             _mapper = mapper;
             _tokenHelper = tokenHelper;
-            _staffDal = staffDal;
         }
 
         public IDataResult<AccessToken> CreateAccessToken(User user)
@@ -64,50 +62,6 @@ namespace Business.Concretes
 
                 var mappedUser = _mapper.Map(request, user);
                 await _userService.Add(mappedUser);
-
-                /*
-                 1- Register page'de staff ya da student farketmeksizin
-                 veriler dolduruldu. User tablosuna eklendi.
-                 
-                 2- Staff ise staffManager, student ise studentManager'ı
-                 çağırarak aşağıdaki map'leme işlemini front'ta yapıp 
-                 ilgili manager'ın add metoduna vereceğiz.
-                 
-                 *** If yapısı hoşuma gitmedi. Interface'lerle soyutla.
-                 */
-
-                if(request.UserType == UserType.STAFF)
-                {
-                    Staff staff = new Staff();
-                    staff.FirstName = user.FirstName;
-                    staff.LastName = user.LastName;
-                    staff.Email = user.Email;
-                    staff.FacultyId = Guid.Parse("08dc275e-f321-4c4d-86b8-da3e578c6858");
-                    staff.PasswordHash = passwordHash;
-                    staff.PasswordSalt = passwordSalt;
-                    staff.UserId = user.UserId;
-                    staff.PhoneNumber = user.PhoneNumber;
-                    staff.User = user;
-                    await _staffDal.AddAsync(staff);
-                }
-                else if(request.UserType == UserType.STUDENT)
-                {
-                    Student student = new()
-                    {
-                        FirstName = user.FirstName,
-                        LastName = user.LastName,
-                        Email = user.Email,
-                        FacultyId = Guid.Parse("08dc275e-f321-4c4d-86b8-da3e578c6858"),
-                        PasswordHash = passwordHash,
-                        PasswordSalt = passwordSalt,
-                        UserId = user.UserId,
-                        PhoneNumber = user.PhoneNumber,
-                        SchoolNumber = request.SchoolNumber,
-                        DepartmentId = Guid.Parse("08dc272e-f321-4c4d-86b8-da3e578c7857"),
-                        User = user
-                    };
-                    await _studentDal.AddAsync(student);
-                }           
 
                 return new SuccessDataResult<User>(user);
             }

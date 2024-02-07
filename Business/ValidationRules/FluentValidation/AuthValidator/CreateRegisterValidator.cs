@@ -23,16 +23,16 @@ namespace Business.ValidationRules.FluentValidation.AuthValidator
             RuleFor(r => r.LastName).NotEmpty();
 
 
-            RuleFor(r => r.SchoolNumber).NotEmpty();
-            RuleFor(r => r.SchoolNumber).Must(BeASchoolNumber);
-            RuleFor(r => r.SchoolNumber).Must(BeAValidNumber);
+            RuleFor(r => r.IdentyNumber).NotEmpty();
+            RuleFor(r => r.IdentyNumber).Must(BeASchoolNumber);
+            RuleFor(r => r.IdentyNumber).Must(BeAValidNumber);
 
             RuleFor(r => r.PhoneNumber).NotEmpty();
             RuleFor(r => r.PhoneNumber).Must(IsValidPhoneNumber);
             RuleFor(r => r.PhoneNumber).Must(BeAValidNumber);
 
             RuleFor(r => r.FacultyId).NotEmpty();
-            RuleFor(r => r.DepartmentId).NotEmpty();
+            RuleFor(r => r.DepartmentIds).NotEmpty();
         }
 
         private bool IsValidEmail(string email)
