@@ -46,7 +46,7 @@ namespace Business.Concretes
         }
 
         //[SecuredOperation("admin,add")]
-        [ValidationAspect(typeof (CreateBookValidator))]
+        //[ValidationAspect(typeof (CreateBookValidator))]
         [CacheRemoveAspect("IBookService.Get")]
         public async Task<IResult> Add(CreateBookRequest request)
         {
