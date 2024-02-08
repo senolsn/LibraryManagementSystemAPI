@@ -136,6 +136,17 @@ namespace Business.Concretes
             return new SuccessResult(Messages.AuthorUpdated);
         }
 
+        public async Task<IResult> UpdateForStock(Book book)
+        {
+            var result = await _bookDal.UpdateAsync(book);
+            if(result is not null)
+            {
+                return new SuccessResult(Messages.BookUpdated);
+            }
+            return new ErrorResult(Messages.Error);
+        }
+
+
         [SecuredOperation("admin,delete")]
         [ValidationAspect(typeof (CreateBookValidator))]
         [CacheRemoveAspect("IBookService.Get")]
@@ -391,6 +402,8 @@ namespace Business.Concretes
             return new ErrorDataResult<Book>(Messages.Error);
         }
 
+       
+
         #region Helper Methods
         private IDataResult<IBookRequest> CapitalizeFirstLetter(IBookRequest request)
         {
@@ -421,6 +434,10 @@ namespace Business.Concretes
             return new SuccessResult();
 
         }
+
+       
+
+
         #endregion
 
     }

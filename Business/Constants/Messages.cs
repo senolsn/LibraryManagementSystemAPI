@@ -79,7 +79,6 @@ namespace Business.Constants
         public static string StudentListed = "The student has successfully listed.";
         public static string StudentsListed = "The students were successfully listed.";
 
-        public static string BookOutOfStock = "The book you've wanted out of stock.";
 
         public static string CategoryExistInBooks = "The category you want to delete is exist in books!";
         public static string AuthorExistInBook = "The author you want to delete is exist in books";
@@ -97,8 +96,12 @@ namespace Business.Constants
         public static string WrongMailOrPassword = "Your email address or password is incorrect!";
         public static string Loginned = "Login successful!";
 
+
+
+        public static string BookUpdated = "The book has been successfully updated.";
         public static string BookListed = "The book has been successfully listed.";
         public static string BooksListed = "Books has been successfully listed.";
+        public static string BookOutOfStock = "The book you've wanted out of stock.";
 
         public static string AuthorizationDenied = "Access Denied ";
 

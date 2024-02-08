@@ -7,6 +7,7 @@ using Business.Dtos.Response.DepositBook;
 using Core.DataAccess.Paging;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
+using DataAccess.Concretes.EntityFramework;
 using Entities.Concrete;
 using Entities.Concrete.enums;
 using Entities.Dtos;
@@ -20,16 +21,16 @@ namespace Business.Concretes
     public class DepositBookManager : IDepositBookService
     {
         protected readonly IDepositBookDal _depositBookDal;
-        protected readonly IBookDal _bookDal;
+        protected readonly IBookService _bookService;
         private readonly IUserService _userService;
         protected readonly IMapper _mapper;
 
-        public DepositBookManager(IDepositBookDal depositBookDal, IMapper mapper, IBookDal bookDal, IUserService userService)
+        public DepositBookManager(IDepositBookDal depositBookDal, IMapper mapper, IUserService userService, IBookService bookService)
         {
             _depositBookDal = depositBookDal;
             _mapper = mapper;
-            _bookDal = bookDal;
             _userService = userService;
+            _bookService = bookService;
         }
 
 
@@ -38,8 +39,8 @@ namespace Business.Concretes
         {
             DepositBook depositBook = _mapper.Map<DepositBook>(request);
 
-            var bookResult = await _bookDal.GetAsync(b => b.BookId == request.BookId);
-            depositBook.Book = bookResult;
+            var bookResult = await _bookService.GetAsync(request.BookId);
+            depositBook.Book = bookResult.Data;
 
             var userResult = await _userService.GetAsync(request.UserId);
             depositBook.User = userResult.Data;
@@ -51,8 +52,8 @@ namespace Business.Concretes
             }
 
             //Stock azaltma --- Bu ve bu tarz işlemleri aspect'lerle yaparız. Şimdilik dursun. Oraya taşıyacağız.
-            bookResult.Stock = bookResult.Stock - 1;
-            await _bookDal.UpdateAsync(bookResult);
+            await DecreaseBookStock(depositBook);
+
 
             return new SuccessResult(Messages.DepositBookAdded);
         }
@@ -85,10 +86,7 @@ namespace Business.Concretes
             await _depositBookDal.UpdateAsync(depositBookToUpdate);
 
             //Stock artırma --- Bu ve bu tarz işlemleri aspect'lerle yaparız. Şimdilik dursun. Oraya taşıyacağız.
-            var book = await _bookDal.GetAsync(b => b.BookId == depositBookToUpdate.BookId);
-            book.Stock = book.Stock + 1;
-            await _bookDal.UpdateAsync(book);
-
+            await IncreaseBookStock(depositBookToUpdate);
             return new SuccessResult(Messages.DepositBookUpdated);
         }
 
@@ -438,7 +436,32 @@ namespace Business.Concretes
             return new SuccessResult();
         }
 
-        
+        private async Task<IResult> DecreaseBookStock(DepositBook depositBook)
+        {
+            var book = await _bookService.GetAsync(depositBook.BookId);
+            book.Data.Stock = book.Data.Stock - 1;
+
+            var result = await _bookService.UpdateForStock(book.Data);
+            if(result is not null)
+            {
+                return new SuccessResult(Messages.BookUpdated);
+            }
+            return new ErrorResult(Messages.Error);
+        }
+
+        private async Task<IResult> IncreaseBookStock(DepositBook depositBook)
+        {
+            var book = await _bookService.GetAsync(depositBook.BookId);
+            book.Data.Stock = book.Data.Stock + 1;
+
+            var result = await _bookService.UpdateForStock(book.Data);
+            if (result is not null)
+            {
+                return new SuccessResult(Messages.BookUpdated);
+            }
+            return new ErrorResult(Messages.Error);
+        }
+
 
         #endregion
 
