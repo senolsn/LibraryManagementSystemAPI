@@ -1,6 +1,7 @@
 ﻿using Core.Entities.Concrete;
 using Entities.Concrete.enums;
 using System;
+using System.Text.Json.Serialization;
 
 namespace Entities.Concrete
 {
@@ -13,7 +14,9 @@ namespace Entities.Concrete
         public DepositBookStatus Status { get; set; } = DepositBookStatus.NOT_RECEIVED;
         public DateTime EscrowDate { get; set; }
         public DateTime DateShouldBeEscrow { get; set; }
+
         public User User { get; set; }
+
         public Book Book { get; set; }
 
     }

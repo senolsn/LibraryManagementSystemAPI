@@ -11,7 +11,6 @@ namespace Business.Dtos.Response.UserResponses
     {
         public Guid UserId { get; set; }
         public List<GetListDepartmentResponse> UserDepartments { get; set; }
-        public List<GetListDepositBookResponse> UserDepositBooks { get; set; }
         public GetListFacultyResponse Faculty { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
