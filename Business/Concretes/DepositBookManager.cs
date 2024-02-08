@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Business.Abstracts;
 using Business.Constants;
+using Business.Dtos.Request.BookRequests;
 using Business.Dtos.Request.DepositBook;
 using Business.Dtos.Response.DepositBook;
 using Core.DataAccess.Paging;
@@ -20,13 +21,15 @@ namespace Business.Concretes
     {
         protected readonly IDepositBookDal _depositBookDal;
         protected readonly IBookDal _bookDal;
+        private readonly IUserService _userService;
         protected readonly IMapper _mapper;
 
-        public DepositBookManager(IDepositBookDal depositBookDal, IMapper mapper, IBookDal bookDal)
+        public DepositBookManager(IDepositBookDal depositBookDal, IMapper mapper, IBookDal bookDal, IUserService userService)
         {
             _depositBookDal = depositBookDal;
             _mapper = mapper;
             _bookDal = bookDal;
+            _userService = userService;
         }
 
 
@@ -35,8 +38,12 @@ namespace Business.Concretes
         {
             DepositBook depositBook = _mapper.Map<DepositBook>(request);
 
-            var book = await _bookDal.GetAsync(b => b.BookId == request.BookId);
+            var bookResult = await _bookDal.GetAsync(b => b.BookId == request.BookId);
+            depositBook.Book = bookResult;
 
+            var userResult = await _userService.GetAsync(request.UserId);
+            depositBook.User = userResult.Data;
+            
             var createdDepositBook = await _depositBookDal.AddAsync(depositBook);
             if (createdDepositBook is null)
             {
@@ -44,8 +51,8 @@ namespace Business.Concretes
             }
 
             //Stock azaltma --- Bu ve bu tarz işlemleri aspect'lerle yaparız. Şimdilik dursun. Oraya taşıyacağız.
-            book.Stock = book.Stock - 1;
-            await _bookDal.UpdateAsync(book);
+            bookResult.Stock = bookResult.Stock - 1;
+            await _bookDal.UpdateAsync(bookResult);
 
             return new SuccessResult(Messages.DepositBookAdded);
         }
@@ -146,7 +153,7 @@ namespace Business.Concretes
 
         public async Task<IDataResult<List<GetListDepositBookResponse>>> GetListAsync()
         {
-            var data = await _depositBookDal.GetListAsync(null);
+            var data = await _depositBookDal.GetListAsync();
 
             List<GetListDepositBookResponse> responseBooks = new List<GetListDepositBookResponse>();
             if (data is not null)

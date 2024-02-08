@@ -61,7 +61,7 @@ namespace Business.Concretes
                 var user = new User { PasswordHash = passwordHash, PasswordSalt = passwordSalt };
 
                 var mappedUser = _mapper.Map(request, user);
-                await _userService.Add(mappedUser);
+                await _userService.Add(mappedUser, request);
 
                 return new SuccessDataResult<User>(user);
             }

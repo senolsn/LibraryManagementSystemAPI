@@ -9,7 +9,7 @@ namespace Business.Dtos.Request.Auth
     {
         public Guid FacultyId { get; set; }
         public List<Guid> DepartmentIds { get; set; }
-        public string IdentyNumber { get; set; } //Personel no veya Okul Numarası
+        public string SchoolNumber { get; set; } //Personel no veya Okul Numarası
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public string FirstName { get; set; }

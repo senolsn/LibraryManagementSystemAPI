@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(LibraryAPIDbContext))]
-    [Migration("20240207214559_mig_1")]
-    partial class mig1
+    [Migration("20240208004536_mig_13")]
+    partial class mig13
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -354,6 +354,38 @@ namespace DataAccess.Migrations
                     b.HasKey("DepartmentId");
 
                     b.ToTable("Departments");
+
+                    b.HasData(
+                        new
+                        {
+                            DepartmentId = new Guid("6dcf2e63-05cf-4cb0-a18b-9c54e67fc9c0"),
+                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DepartmentName = "YBS"
+                        },
+                        new
+                        {
+                            DepartmentId = new Guid("1e64027b-4650-4338-9b2e-a4707b42750c"),
+                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DepartmentName = "UTI"
+                        },
+                        new
+                        {
+                            DepartmentId = new Guid("32ce91c7-e989-4942-af99-04c69bac8cf4"),
+                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DepartmentName = "İşletme"
+                        },
+                        new
+                        {
+                            DepartmentId = new Guid("6f64cfb0-750d-43d6-948d-eb2c90b3d6ac"),
+                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DepartmentName = "Çocuk Gelişimi"
+                        },
+                        new
+                        {
+                            DepartmentId = new Guid("9ee6b64d-094b-4a9e-bf91-92d80f8041d5"),
+                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DepartmentName = "Uluslararası İlişkiler"
+                        });
                 });
 
             modelBuilder.Entity("Entities.Concrete.DepositBook", b =>
@@ -391,6 +423,8 @@ namespace DataAccess.Migrations
 
                     b.HasKey("DepositBookId");
 
+                    b.HasIndex("BookId");
+
                     b.HasIndex("UserId");
 
                     b.ToTable("DepositBooks");
@@ -418,6 +452,38 @@ namespace DataAccess.Migrations
                     b.HasKey("FacultyId");
 
                     b.ToTable("Faculties");
+
+                    b.HasData(
+                        new
+                        {
+                            FacultyId = new Guid("f28929d4-7164-44be-8dd4-d4474f8e458f"),
+                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FacultyName = "INIF"
+                        },
+                        new
+                        {
+                            FacultyId = new Guid("13a57a98-5aeb-4d20-ab75-673260be7a5f"),
+                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FacultyName = "Eğitim"
+                        },
+                        new
+                        {
+                            FacultyId = new Guid("2307fe55-e881-4718-a1ea-ea18ede54aea"),
+                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FacultyName = "MYO"
+                        },
+                        new
+                        {
+                            FacultyId = new Guid("7e1422de-b065-4f41-846d-96fe5d932c2f"),
+                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FacultyName = "İİBF"
+                        },
+                        new
+                        {
+                            FacultyId = new Guid("deb213e7-e519-4a46-850b-e602c3570c33"),
+                            CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FacultyName = "Fen Edebiyat"
+                        });
                 });
 
             modelBuilder.Entity("Entities.Concrete.Interpreter", b =>
@@ -667,6 +733,9 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<Guid>("FacultyId")
+                        .HasColumnType("char(36)");
+
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -687,10 +756,19 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<int>("RoleType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SchoolNumber")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("UserId");
+
+                    b.HasIndex("FacultyId");
 
                     b.ToTable("Users");
                 });
@@ -791,13 +869,42 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Entities.Concrete.DepositBook", b =>
                 {
+                    b.HasOne("Entities.Concrete.Book", "Book")
+                        .WithMany("BookDepositBooks")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Entities.Concrete.User", "User")
                         .WithMany("UserDepositBooks")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Book");
+
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Entities.Concrete.User", b =>
+                {
+                    b.HasOne("Entities.Concrete.Faculty", "Faculty")
+                        .WithMany("FacultyUsers")
+                        .HasForeignKey("FacultyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Faculty");
+                });
+
+            modelBuilder.Entity("Entities.Concrete.Book", b =>
+                {
+                    b.Navigation("BookDepositBooks");
+                });
+
+            modelBuilder.Entity("Entities.Concrete.Faculty", b =>
+                {
+                    b.Navigation("FacultyUsers");
                 });
 
             modelBuilder.Entity("Entities.Concrete.Location", b =>

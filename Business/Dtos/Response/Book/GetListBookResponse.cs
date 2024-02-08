@@ -8,7 +8,7 @@ using Entities.Concrete.enums;
 using System;
 using System.Collections.Generic;
 
-namespace Business.Dtos.Response.Book
+namespace Business.Dtos.Response.BookResponses
 {
     public class GetListBookResponse
     {

@@ -30,5 +30,6 @@ namespace Entities.Concrete
         public ICollection<Language> BookLanguages { get; set; }
         
         public ICollection<Interpreter> BookInterpreters { get; set; }
+        public ICollection<DepositBook> BookDepositBooks { get; set; }
     }
 }

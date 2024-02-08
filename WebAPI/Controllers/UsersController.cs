@@ -1,8 +1,6 @@
 ﻿using Business.Abstracts;
-using Business.Dtos.Request.User;
+using Business.Dtos.Request.UserRequests;
 using Core.DataAccess.Paging;
-using Core.Entities.Concrete;
-using Entities.Concrete;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -20,27 +18,27 @@ namespace WebAPI.Controllers
             _userService = userService;
         }
 
-        [HttpPost("Add")]
-        public async Task<IActionResult> Add(User user)
-        {
-            try
-            {
-                var result = await _userService.Add(user);
+        //[HttpPost("Add")]
+        //public async Task<IActionResult> Add(User user)
+        //{
+        //    try
+        //    {
+        //        var result = await _userService.Add(user);
 
-                if (!result.IsSuccess)
-                {
-                    return BadRequest(result);
-                }
+        //        if (!result.IsSuccess)
+        //        {
+        //            return BadRequest(result);
+        //        }
 
-                return Ok(result);
+        //        return Ok(result);
 
-            }
-            catch (Exception ex)
-            {
+        //    }
+        //    catch (Exception ex)
+        //    {
 
-                return StatusCode(500, $"Error : {ex.Message}");
-            }
-        }
+        //        return StatusCode(500, $"Error : {ex.Message}");
+        //    }
+        //}
 
         [HttpPut("Update")]
         
@@ -128,6 +126,28 @@ namespace WebAPI.Controllers
                 return StatusCode(500, $"Error : {ex.Message}");
             }
         }
+
+        [HttpGet("GetListAsync")]
+        public async Task<IActionResult> GetListAsync()
+        {
+            try
+            {
+                var result = await _userService.GetListAsync();
+
+                if (!result.IsSuccess)
+                {
+                    return BadRequest(result);
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, $"Error : {ex.Message}");
+            }
+        }
+
         [HttpGet("GetByMail")]
         public async Task<IActionResult> GetByMail(string mail)
         {

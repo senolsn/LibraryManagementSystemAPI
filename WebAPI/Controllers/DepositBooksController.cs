@@ -145,20 +145,14 @@ namespace WebAPI.Controllers
         [HttpGet("GetListAsync")]
         public async Task<IActionResult> GetListAsync()
         {
-            try
-            {
-                var result = await _depositBookService.GetListAsync();
+            var result = await _depositBookService.GetListAsync();
 
-                if (!result.IsSuccess)
-                {
-                    return NotFound(result);
-                }
-                return Ok(result);
-            }
-            catch (Exception ex)
+            if (!result.IsSuccess)
             {
-                return StatusCode(500, $"Error : {ex.Message}");
+                return BadRequest(result);
             }
+            return Ok(result);
+
         }
 
         [HttpGet("GetAllAsync")]

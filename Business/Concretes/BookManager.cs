@@ -2,10 +2,10 @@
 using Business.Abstracts;
 using Business.BusinessAspects;
 using Business.Constants;
-using Business.Dtos.Request.Book;
+using Business.Dtos.Request.BookRequests;
 using Business.Dtos.Request.BookRequests;
 using Business.Dtos.Request.Category;
-using Business.Dtos.Response.Book;
+using Business.Dtos.Response.BookResponses;
 using Business.ValidationRules.FluentValidation.BookValidator;
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Validation;
@@ -110,7 +110,7 @@ namespace Business.Concretes
             return new SuccessResult(Messages.BookListed);
         }
 
-        [SecuredOperation("admin,update")]
+        //[SecuredOperation("admin,update")]
         [ValidationAspect(typeof (UpdateBookValidator))]
         [CacheRemoveAspect("IBookService.Get")]
         public async Task<IResult> Update(UpdateBookRequest request)

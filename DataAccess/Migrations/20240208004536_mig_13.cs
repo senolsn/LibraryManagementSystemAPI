@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class mig1 : Migration
+    public partial class mig13 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -195,6 +195,7 @@ namespace DataAccess.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    FacultyId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     Email = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     FirstName = table.Column<string>(type: "longtext", nullable: false)
@@ -203,8 +204,11 @@ namespace DataAccess.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     PhoneNumber = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
+                    SchoolNumber = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     PasswordSalt = table.Column<byte[]>(type: "longblob", nullable: false),
                     PasswordHash = table.Column<byte[]>(type: "longblob", nullable: false),
+                    RoleType = table.Column<int>(type: "int", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     DeletedDate = table.Column<DateTime>(type: "datetime(6)", nullable: true)
@@ -212,6 +216,12 @@ namespace DataAccess.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.UserId);
+                    table.ForeignKey(
+                        name: "FK_Users_Faculties_FacultyId",
+                        column: x => x.FacultyId,
+                        principalTable: "Faculties",
+                        principalColumn: "FacultyId",
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -278,33 +288,6 @@ namespace DataAccess.Migrations
                     table.ForeignKey(
                         name: "FK_DepartmentUser_Users_DepartmentUsersUserId",
                         column: x => x.DepartmentUsersUserId,
-                        principalTable: "Users",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "DepositBooks",
-                columns: table => new
-                {
-                    DepositBookId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    UserId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    BookId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    DepositDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    EscrowDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    DateShouldBeEscrow = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    DeletedDate = table.Column<DateTime>(type: "datetime(6)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DepositBooks", x => x.DepositBookId);
-                    table.ForeignKey(
-                        name: "FK_DepositBooks_Users_UserId",
-                        column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.Cascade);
@@ -411,6 +394,39 @@ namespace DataAccess.Migrations
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
+            migrationBuilder.CreateTable(
+                name: "DepositBooks",
+                columns: table => new
+                {
+                    DepositBookId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    UserId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    BookId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    DepositDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    EscrowDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    DateShouldBeEscrow = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    DeletedDate = table.Column<DateTime>(type: "datetime(6)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DepositBooks", x => x.DepositBookId);
+                    table.ForeignKey(
+                        name: "FK_DepositBooks_Books_BookId",
+                        column: x => x.BookId,
+                        principalTable: "Books",
+                        principalColumn: "BookId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DepositBooks_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
             migrationBuilder.InsertData(
                 table: "Authors",
                 columns: new[] { "AuthorId", "AuthorFirstName", "AuthorLastName", "CreatedDate", "DeletedDate", "UpdatedDate" },
@@ -433,6 +449,30 @@ namespace DataAccess.Migrations
                     { new Guid("c140fe74-88d7-4b49-8dfa-7eca685c58a4"), "Roman", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null },
                     { new Guid("c70c610e-f442-4e6c-ad2d-55940e4f9ea2"), "Anı", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null },
                     { new Guid("e52bb2b5-cffd-4822-8901-474db975313e"), "Hikaye", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Departments",
+                columns: new[] { "DepartmentId", "CreatedDate", "DeletedDate", "DepartmentName", "UpdatedDate" },
+                values: new object[,]
+                {
+                    { new Guid("1e64027b-4650-4338-9b2e-a4707b42750c"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "UTI", null },
+                    { new Guid("32ce91c7-e989-4942-af99-04c69bac8cf4"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "İşletme", null },
+                    { new Guid("6dcf2e63-05cf-4cb0-a18b-9c54e67fc9c0"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "YBS", null },
+                    { new Guid("6f64cfb0-750d-43d6-948d-eb2c90b3d6ac"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Çocuk Gelişimi", null },
+                    { new Guid("9ee6b64d-094b-4a9e-bf91-92d80f8041d5"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Uluslararası İlişkiler", null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Faculties",
+                columns: new[] { "FacultyId", "CreatedDate", "DeletedDate", "FacultyName", "UpdatedDate" },
+                values: new object[,]
+                {
+                    { new Guid("13a57a98-5aeb-4d20-ab75-673260be7a5f"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Eğitim", null },
+                    { new Guid("2307fe55-e881-4718-a1ea-ea18ede54aea"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "MYO", null },
+                    { new Guid("7e1422de-b065-4f41-846d-96fe5d932c2f"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "İİBF", null },
+                    { new Guid("deb213e7-e519-4a46-850b-e602c3570c33"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Fen Edebiyat", null },
+                    { new Guid("f28929d4-7164-44be-8dd4-d4474f8e458f"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "INIF", null }
                 });
 
             migrationBuilder.InsertData(
@@ -519,9 +559,19 @@ namespace DataAccess.Migrations
                 column: "UserDepartmentsDepartmentId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_DepositBooks_BookId",
+                table: "DepositBooks",
+                column: "BookId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_DepositBooks_UserId",
                 table: "DepositBooks",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_FacultyId",
+                table: "Users",
+                column: "FacultyId");
         }
 
         /// <inheritdoc />
@@ -546,9 +596,6 @@ namespace DataAccess.Migrations
                 name: "DepositBooks");
 
             migrationBuilder.DropTable(
-                name: "Faculties");
-
-            migrationBuilder.DropTable(
                 name: "OperationClaims");
 
             migrationBuilder.DropTable(
@@ -564,13 +611,13 @@ namespace DataAccess.Migrations
                 name: "Interpreters");
 
             migrationBuilder.DropTable(
-                name: "Books");
-
-            migrationBuilder.DropTable(
                 name: "Languages");
 
             migrationBuilder.DropTable(
                 name: "Departments");
+
+            migrationBuilder.DropTable(
+                name: "Books");
 
             migrationBuilder.DropTable(
                 name: "Users");
@@ -580,6 +627,9 @@ namespace DataAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "Publishers");
+
+            migrationBuilder.DropTable(
+                name: "Faculties");
         }
     }
 }

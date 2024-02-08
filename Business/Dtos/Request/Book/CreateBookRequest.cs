@@ -1,9 +1,6 @@
-using Business.Dtos.Request.AuthorRequests;
-using Entities.Concrete;
 using System;
 using System.Collections.Generic;
 using Entities.Concrete.enums;
-using Business.Dtos.Request.Book;
 
 namespace Business.Dtos.Request.BookRequests
 {
@@ -18,6 +15,7 @@ namespace Business.Dtos.Request.BookRequests
         public string BookName { get; set; }
         public int PageCount { get; set; }
         public string ISBNNumber { get; set; }
+        public string Description { get; set; }
         public DateTime PublishedDate { get; set; }
         public int PublishCount { get; set; }
         public int Stock { get; set; }

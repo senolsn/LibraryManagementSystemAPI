@@ -103,7 +103,7 @@ namespace Business.Concretes
             return new ErrorResult(Messages.Error);
         }
 
-        [SecuredOperation("admin,get")]
+        //[SecuredOperation("admin,get")]
         public async Task<IDataResult<Faculty>> GetAsync(Guid facultyId)
         {
             var result = await _facultyDal.GetAsync(f => f.FacultyId == facultyId);

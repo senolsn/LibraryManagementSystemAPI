@@ -14,6 +14,7 @@ namespace Entities.Concrete
         public DateTime EscrowDate { get; set; }
         public DateTime DateShouldBeEscrow { get; set; }
         public User User { get; set; }
+        public Book Book { get; set; }
 
     }
 }

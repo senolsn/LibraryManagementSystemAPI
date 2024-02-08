@@ -22,6 +22,24 @@ namespace DataAccess.Concretes.EntityFramework
             _context = context;
         }
 
+        public async override Task<ICollection<DepositBook>> GetListAsync(Expression<Func<DepositBook, bool>> predicate, bool withDeleted = false, bool enableTracking = true, CancellationToken cancellationToken = default)
+        {
+            var queryable = _context.DepositBooks.AsQueryable();
+
+            queryable = queryable.Include(u => u.User);
+            queryable = queryable.Include(u => u.Book);
+
+            if (!enableTracking)
+                queryable = queryable.AsNoTracking();
+            if (withDeleted)
+                queryable = queryable.IgnoreQueryFilters().Where(field => field.DeletedDate == null); //Girdiğim filter koşulunu sağlayan verileri topla.
+            if (predicate != null)
+                queryable = queryable.Where(predicate);
+            return await queryable.ToListAsync(cancellationToken);
+        }
+
+
+
         public async Task<ICollection<GetAllDepositBooksResponse>> GetAllAsync(Expression<Func<DepositBook, bool>> predicate, bool withDeleted = false, bool enableTracking = true, CancellationToken cancellationToken = default)
         {
 
@@ -50,7 +68,10 @@ namespace DataAccess.Concretes.EntityFramework
                          };
             var queryable = result.AsQueryable();
 
-            
+            //queryable = queryable.Include(x => x.Book);
+            //queryable = queryable.Include(x => x.User);
+
+
 
             if (!enableTracking)
                 queryable = queryable.AsNoTracking();

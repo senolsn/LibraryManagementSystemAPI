@@ -1,5 +1,5 @@
 ﻿using Business.Dtos.Request.BookRequests;
-using Business.Dtos.Response.Book;
+using Business.Dtos.Response.BookResponses;
 using Core.DataAccess.Paging;
 using Core.Utilities.Results;
 using Entities.Concrete;
