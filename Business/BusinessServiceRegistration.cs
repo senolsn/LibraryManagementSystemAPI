@@ -26,9 +26,7 @@ namespace Business
             services.AddScoped<IUserService, UserManager>();
             services.AddScoped<IAuthService,AuthManager>();
             services.AddScoped<ITokenHelper,JwtHelper>();
-
-           
-
+            services.AddScoped<ISettingService, SettingManager>();
 
             return services;
         }

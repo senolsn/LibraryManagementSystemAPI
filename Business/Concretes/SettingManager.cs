@@ -1,8 +1,10 @@
-﻿using Business.Abstracts;
+﻿using AutoMapper;
+using Business.Abstracts;
 using Business.Dtos.Request.SettingRequests;
 using Business.Dtos.Response.SettingResponses;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
+using Entities.Concrete;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,34 +16,80 @@ namespace Business.Concretes
     public class SettingManager : ISettingService
     {
         private readonly ISettingDal _settingDal;
-        public SettingManager(ISettingDal settingDal)
+        private readonly IMapper _mapper;
+
+        public SettingManager(ISettingDal settingDal, IMapper mapper)
         {
             _settingDal = settingDal;
+            _mapper = mapper;
         }
 
-        public Task<IResult> Add(CreateSettingRequest request)
+        public async Task<IResult> Add(CreateSettingRequest request)
         {
-            throw new NotImplementedException();
+            Setting setting = _mapper.Map<Setting>(request);
+
+            var createdSetting = await _settingDal.AddAsync(setting);
+
+            if( createdSetting is null) 
+            {
+                return new ErrorResult();
+            }
+            
+            return new SuccessResult();
         }
 
-        public Task<IResult> Delete(DeleteSettingRequest request)
+        public async Task<IResult> Delete(DeleteSettingRequest request)
         {
-            throw new NotImplementedException();
+            var settingToDelete = await _settingDal.GetAsync(s => s.SettingId == request.SettingId);
+            
+            if(settingToDelete is null ) 
+            {
+                return new ErrorResult();
+            }
+
+            return new SuccessResult();
         }
 
-        public Task<IDataResult<GetSettingResponse>> GetAsync(Guid settingId)
+        public async Task<IDataResult<GetSettingResponse>> GetAsync(Guid settingId)
         {
-            throw new NotImplementedException();
+           var result = await _settingDal.GetAsync(s => s.SettingId == settingId);
+
+            var mappedResult = _mapper.Map<GetSettingResponse>(result);
+
+            if(result is null)
+            {
+                return new ErrorDataResult<GetSettingResponse>(mappedResult);
+            }
+
+            return new SuccessDataResult<GetSettingResponse>(mappedResult);
         }
 
-        public Task<IDataResult<List<GetSettingResponse>>> GetListAsync()
+        public async Task<IDataResult<List<GetSettingResponse>>> GetListAsync()
         {
-            throw new NotImplementedException();
+            var data = await _settingDal.GetListAsync();
+
+            if(data is null)
+            {
+                return new ErrorDataResult<List<GetSettingResponse>>();
+            }
+
+            return new SuccessDataResult<List<GetSettingResponse>>();
         }
 
-        public Task<IResult> Update(UpdateSettingRequest request)
+        public async Task<IResult> Update(UpdateSettingRequest request)
         {
-            throw new NotImplementedException();
+            var settingToUpdate = await _settingDal.GetAsync(s => s.SettingId == request.SettingId);
+
+            if(settingToUpdate is null)
+            {
+                return new ErrorResult();
+            }
+
+            _mapper.Map(request,settingToUpdate);
+
+            await _settingDal.UpdateAsync(settingToUpdate);
+
+            return new SuccessResult();
         }
     }
 }
