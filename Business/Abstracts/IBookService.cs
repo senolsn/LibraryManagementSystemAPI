@@ -14,6 +14,7 @@ namespace Business.Abstracts
     {
         Task<IResult> Add(CreateBookRequest request);
         Task<IResult> Update(UpdateBookRequest request);
+        Task<IResult> UpdateForStock(Book book);
         Task<IResult> Delete(DeleteBookRequest request);
         Task<IDataResult<Book>> GetAsync(Guid bookId);
         Task<IDataResult<IPaginate<GetListBookResponse>>> GetPaginatedListAsync(PageRequest pageRequest);
