@@ -5,6 +5,7 @@ using Business.Dtos.Request.BookRequests;
 using Business.Dtos.Request.DepositBook;
 using Business.Dtos.Response.DepositBook;
 using Core.DataAccess.Paging;
+using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
 using DataAccess.Concretes.EntityFramework;
@@ -41,6 +42,13 @@ namespace Business.Concretes
 
             var bookResult = await _bookService.GetAsync(request.BookId);
             depositBook.Book = bookResult.Data;
+
+            var businessRules = BusinessRules.Run(CheckIfBookInStock(bookResult.Data), await CheckIfUserHasOverdueBooks(request.UserId));
+
+            if(businessRules is not null)
+            {
+                return businessRules;
+            }
 
             var userResult = await _userService.GetAsync(request.UserId);
             depositBook.User = userResult.Data;
@@ -425,10 +433,10 @@ namespace Business.Concretes
                3- (Date.Now - DepositDate) hesaplaması yapıp GÜN tipinde sonuç al.
                4- Eğer elde ettiğimiz GÜN değeri ayarlarda belirtilen gecikme değerine eşit veya büyükse kitap almasına izin verme!
             */
-            var result = _depositBookDal.GetListAsync(d => d.UserId == userId);
-            if (result.Result is not null)
+            var result = await _depositBookDal.GetListAsync(d => d.UserId == userId);
+            if (result is not null)
             {
-                foreach (var item in result.Result)
+                foreach (var item in result)
                 {
                     Console.WriteLine(item.DepositDate);
                 }
