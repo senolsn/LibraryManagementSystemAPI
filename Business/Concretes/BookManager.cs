@@ -3,8 +3,6 @@ using Business.Abstracts;
 using Business.BusinessAspects;
 using Business.Constants;
 using Business.Dtos.Request.BookRequests;
-using Business.Dtos.Request.BookRequests;
-using Business.Dtos.Request.Category;
 using Business.Dtos.Response.BookResponses;
 using Business.ValidationRules.FluentValidation.BookValidator;
 using Core.Aspects.Autofac.Caching;
@@ -26,23 +24,17 @@ namespace Business.Concretes
     {
         protected readonly IBookDal _bookDal;
         protected readonly IMapper _mapper;
-        private readonly Lazy<IAuthorService> _authorService;
-        private readonly Lazy<ICategoryService> _categoryService;
-        private readonly Lazy<ILanguageService> _languageService;
-        private readonly Lazy<IPublisherService> _publisherService;
-        private readonly Lazy<IInterpreterService> _interpreterService;
-        private readonly Lazy<ILocationService> _locationService;
+        private IAuthorService _authorService { get; }
+        private ICategoryService _categoryService { get; }
+        private ILanguageService _languageService { get; }
+        private IPublisherService _publisherService { get; }
+        private IInterpreterService _interpreterService { get; }
+        private ILocationService _locationService { get; }
 
-        public BookManager(IBookDal bookDal, IMapper mapper, Lazy<IAuthorService> authorService, Lazy<ICategoryService> categoryService, Lazy<ILanguageService> languageService, Lazy<IPublisherService> publisherService, Lazy<IInterpreterService> interpreterService, Lazy<ILocationService> locationService)
+        public BookManager(IBookDal bookDal, IMapper mapper)
         {
             _bookDal = bookDal;
             _mapper = mapper;
-            _authorService = authorService;
-            _categoryService = categoryService;
-            _languageService = languageService;
-            _publisherService = publisherService;
-            _interpreterService = interpreterService;
-            _locationService = locationService;
         }
 
         //[SecuredOperation("admin,add")]
@@ -66,14 +58,14 @@ namespace Business.Concretes
 
             foreach (var authorId in request.AuthorIds)
             {
-                var result = await _authorService.Value.GetAsync(authorId);
+                var result = await _authorService.GetAsync(authorId);
                 ArgumentNullException.ThrowIfNull(result.Data , "Author");
                 book.BookAuthors.Add(result.Data);
             }
 
             foreach (var categoryId in request.CategoryIds)
             {
-                var result = await _categoryService.Value.GetAsync(categoryId);
+                var result = await _categoryService.GetAsync(categoryId);
                 ArgumentNullException.ThrowIfNull(result.Data, "Category");
                 book.BookCategories.Add(result.Data);
 
@@ -81,22 +73,22 @@ namespace Business.Concretes
 
             foreach(var languageId in request.LanguageIds)
             {
-                var result = await _languageService.Value.GetAsync(languageId);
+                var result = await _languageService.GetAsync(languageId);
                 ArgumentNullException.ThrowIfNull(result.Data, "Language");
                 book.BookLanguages.Add(result.Data);
             }
 
             foreach (var interpreterId in request.InterpreterIds)
             {
-                var result = await _interpreterService.Value.GetAsync(interpreterId);
+                var result = await _interpreterService.GetAsync(interpreterId);
                 ArgumentNullException.ThrowIfNull(result.Data, "Interpreter");
                 book.BookInterpreters.Add(result.Data);
             }
 
-            var publisherResult = await _publisherService.Value.GetAsync(request.PublisherId);
+            var publisherResult = await _publisherService.GetAsync(request.PublisherId);
             book.Publisher = publisherResult.Data;
 
-            var locationResult = await _locationService.Value.GetAsync(request.LocationId);
+            var locationResult = await _locationService.GetAsync(request.LocationId);
             book.Location = locationResult.Data;
 
 

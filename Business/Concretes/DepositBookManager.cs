@@ -1,14 +1,12 @@
 ﻿using AutoMapper;
 using Business.Abstracts;
 using Business.Constants;
-using Business.Dtos.Request.BookRequests;
 using Business.Dtos.Request.DepositBook;
 using Business.Dtos.Response.DepositBook;
 using Core.DataAccess.Paging;
 using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
-using DataAccess.Concretes.EntityFramework;
 using Entities.Concrete;
 using Entities.Concrete.enums;
 using Entities.Dtos;
@@ -24,14 +22,16 @@ namespace Business.Concretes
         protected readonly IDepositBookDal _depositBookDal;
         protected readonly IBookService _bookService;
         private readonly IUserService _userService;
+        private readonly ISettingService _settingService;
         protected readonly IMapper _mapper;
 
-        public DepositBookManager(IDepositBookDal depositBookDal, IMapper mapper, IUserService userService, IBookService bookService)
+        public DepositBookManager(IDepositBookDal depositBookDal, IMapper mapper, IUserService userService, IBookService bookService, ISettingService settingService)
         {
             _depositBookDal = depositBookDal;
             _mapper = mapper;
             _userService = userService;
             _bookService = bookService;
+            _settingService = settingService;
         }
 
 
@@ -427,18 +427,22 @@ namespace Business.Concretes
 
         private async Task<IResult> CheckIfUserHasOverdueBooks(Guid userId)
         {
-            /*
-               1- User'a ait olan tüm deposit book'ları çek.
-               2- DepositDate değerlerine bak.
-               3- (Date.Now - DepositDate) hesaplaması yapıp GÜN tipinde sonuç al.
-               4- Eğer elde ettiğimiz GÜN değeri ayarlarda belirtilen gecikme değerine eşit veya büyükse kitap almasına izin verme!
-            */
+            var settings = _settingService.GetListAsync().Result.Data[0];
+
             var result = await _depositBookDal.GetListAsync(d => d.UserId == userId);
             if (result is not null)
             {
                 foreach (var item in result)
                 {
-                    Console.WriteLine(item.DepositDate);
+                    if (item is not null)
+                    {
+                        DateTime expirationDate = item.DepositDate.AddDays(settings.BookReturnDay);
+                        if (expirationDate <= DateTime.Now)
+                        {
+                            Console.WriteLine("Gecikmiş kitaplarınız var. Kitap: " + item.Book.BookName + " Teslim Tarihi: " + expirationDate);
+                            return new ErrorResult(Messages.ReturnOverdueBooks);
+                        }
+                    }
                 }
             }
             return new SuccessResult();

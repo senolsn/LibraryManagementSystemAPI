@@ -1,8 +1,9 @@
 ﻿using Autofac;
 using Autofac.Extras.DynamicProxy;
+using Business.Abstracts;
+using Business.Concretes;
 using Castle.DynamicProxy;
 using Core.Utilities.Interceptors;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace Business.DependencyResolvers.Autofac
 {
@@ -19,6 +20,13 @@ namespace Business.DependencyResolvers.Autofac
                 }).SingleInstance();
 
 
+            builder.RegisterType<BookManager>().PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies);
+            builder.RegisterType<CategoryManager>().PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies);
+            builder.RegisterType<AuthorManager>().PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies);
+            builder.RegisterType<LanguageManager>().PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies);
+            builder.RegisterType<PublisherManager>().PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies);
+            builder.RegisterType<InterpreterManager>().PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies);
+            builder.RegisterType<LocationManager>().PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies);
 
         }
     }

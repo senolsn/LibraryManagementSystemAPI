@@ -16,11 +16,11 @@ namespace Business
             services.AddScoped<IAuthorService, AuthorManager>();
             services.AddScoped<IDepartmentService, DepartmentManager>();
             services.AddScoped<ILocationService, LocationManager>();
-            services.AddScoped<ICategoryService, CategoryManager>();
+            //services.AddScoped<ICategoryService, CategoryManager>();
             services.AddScoped<IFacultyService, FacultyManager>();
             services.AddScoped<IPublisherService, PublisherManager>();
             services.AddScoped<ILanguageService, LanguageManager>();
-            services.AddScoped<IBookService, BookManager>();
+            //services.AddScoped<IBookService, BookManager>();
             services.AddScoped<IInterpreterService, InterpreterManager>();
             services.AddScoped<IDepositBookService, DepositBookManager>();
             services.AddScoped<IUserService, UserManager>();

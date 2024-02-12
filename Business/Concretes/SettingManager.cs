@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Business.Abstracts;
+using Business.Constants;
 using Business.Dtos.Request.SettingRequests;
 using Business.Dtos.Response.SettingResponses;
 using Core.Utilities.Results;
@@ -7,8 +8,6 @@ using DataAccess.Abstracts;
 using Entities.Concrete;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Business.Concretes
@@ -68,12 +67,19 @@ namespace Business.Concretes
         {
             var data = await _settingDal.GetListAsync();
 
-            if(data is null)
+            List<GetSettingResponse> responses  = new List<GetSettingResponse>();
+            foreach (var setting in data)
+            {
+                var mappedSetting = _mapper.Map<GetSettingResponse>(setting);
+                responses.Add(mappedSetting);
+            }
+
+            if (data is null)
             {
                 return new ErrorDataResult<List<GetSettingResponse>>();
             }
 
-            return new SuccessDataResult<List<GetSettingResponse>>();
+            return new SuccessDataResult<List<GetSettingResponse>>(responses, Messages.SettingsListed);
         }
 
         public async Task<IResult> Update(UpdateSettingRequest request)

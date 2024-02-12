@@ -111,5 +111,8 @@ namespace Business.Constants
 
         public static string LocationNameNotUnique = "Location name must be unique";
 
+        public static string SettingsListed = "Settings has been successfully listed.";
+
+        public static string ReturnOverdueBooks = "You have overdue books. Please return them first.";
     }
 }
