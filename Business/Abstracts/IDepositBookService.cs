@@ -24,6 +24,8 @@ namespace Business.Abstracts
         Task<IDataResult<List<GetListDepositBookResponse>>> GetListAsyncSortedByCreatedDate();
         Task<IDataResult<List<GetListDepositBookResponse>>> GetListAsyncUndeposited();
         Task<IDataResult<List<GetListDepositBookResponse>>> GetListAsyncDeposited();
+        Task<IDataResult<List<GetListDepositBookResponse>>> GetListAsyncExpired();
+        Task<IDataResult<List<GetListDepositBookResponse>>> GetListAsyncExpiredByUser(Guid userId);
         Task<IDataResult<List<GetListDepositBookResponse>>> GetListAsyncByUserId(Guid userId);
         Task<IDataResult<List<GetListDepositBookResponse>>> GetListAsyncByBookId(Guid bookId);
         Task<IDataResult<List<GetListDepositBookResponse>>> GetPaginatedListAsyncUndepositedByUserId(Guid userId);

@@ -137,7 +137,6 @@ namespace WebAPI.Controllers
             }
             catch (Exception ex)
             {
-
                 return StatusCode(500, $"Error : {ex.Message}");
             }
         }
@@ -145,13 +144,60 @@ namespace WebAPI.Controllers
         [HttpGet("GetListAsync")]
         public async Task<IActionResult> GetListAsync()
         {
-            var result = await _depositBookService.GetListAsync();
-
-            if (!result.IsSuccess)
+            try
             {
-                return BadRequest(result);
+                var result = await _depositBookService.GetListAsync();
+
+                if (!result.IsSuccess)
+                {
+                    return BadRequest(result);
+                }
+                return Ok(result);
             }
-            return Ok(result);
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error : {ex.Message}");
+            }   
+
+        }
+
+        [HttpGet("GetListAsyncExpired")]
+        public async Task<IActionResult> GetListAsyncExpired()
+        {
+            try
+            {
+                var result = await _depositBookService.GetListAsyncExpired();
+
+                if (!result.IsSuccess)
+                {
+                    return BadRequest(result);
+                }
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error : {ex.Message}");
+            }
+            
+        }
+
+        [HttpGet("GetListAsyncExpiredByUser")]
+        public async Task<IActionResult> GetListAsyncExpiredByUser(Guid userId)
+        {
+            try
+            {
+                var result = await _depositBookService.GetListAsyncExpiredByUser(userId);
+
+                if (!result.IsSuccess)
+                {
+                    return BadRequest(result);
+                }
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error : {ex.Message}");
+            }
 
         }
 

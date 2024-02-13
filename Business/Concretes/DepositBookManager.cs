@@ -236,6 +236,60 @@ namespace Business.Concretes
 
             return new ErrorDataResult<List<GetListDepositBookResponse>>(Messages.Error);
         }
+        public async Task<IDataResult<List<GetListDepositBookResponse>>> GetListAsyncExpired()
+        {
+            var settings = _settingService.GetListAsync().Result.Data[0];
+            var data = await _depositBookDal.GetListAsync(predicate: d => d.Status == DepositBookStatus.NOT_RECEIVED);
+
+            List<GetListDepositBookResponse> responseBooks = new List<GetListDepositBookResponse>();
+            if (data is not null)
+            {
+                foreach (var item in data)
+                {
+
+                    if (item is not null)
+                    {
+                        DateTime expirationDate = item.DepositDate.AddDays(settings.BookReturnDay);
+                        if (expirationDate <= DateTime.Now)
+                        {
+                            var bookResponse = _mapper.Map<GetListDepositBookResponse>(item);
+                            responseBooks.Add(bookResponse);
+                        }
+                    }
+                }
+
+                return new SuccessDataResult<List<GetListDepositBookResponse>>(responseBooks, Messages.BooksListed);
+            }
+
+            return new ErrorDataResult<List<GetListDepositBookResponse>>(Messages.Error);
+        }
+
+        public async Task<IDataResult<List<GetListDepositBookResponse>>> GetListAsyncExpiredByUser(Guid userId)
+        {
+            var settings = _settingService.GetListAsync().Result.Data[0];
+            var data = await _depositBookDal.GetListAsync(predicate: d => d.Status == DepositBookStatus.NOT_RECEIVED && d.UserId == userId);
+
+            List<GetListDepositBookResponse> responseBooks = new List<GetListDepositBookResponse>();
+            if (data is not null)
+            {
+                foreach (var item in data)
+                {
+                    if (item is not null)
+                    {
+                        DateTime expirationDate = item.DepositDate.AddDays(settings.BookReturnDay);
+                        if (expirationDate <= DateTime.Now)
+                        {
+                            var bookResponse = _mapper.Map<GetListDepositBookResponse>(item);
+                            responseBooks.Add(bookResponse);
+                        }
+                    }
+                }
+
+                return new SuccessDataResult<List<GetListDepositBookResponse>>(responseBooks, Messages.BooksListed);
+            }
+
+            return new ErrorDataResult<List<GetListDepositBookResponse>>(Messages.Error);
+        }
 
         public async Task<IDataResult<List<GetListDepositBookResponse>>> GetListAsyncByUserId(Guid userId)
         {
@@ -427,22 +481,17 @@ namespace Business.Concretes
 
         private async Task<IResult> CheckIfUserHasOverdueBooks(Guid userId)
         {
-            var settings = _settingService.GetListAsync().Result.Data[0];
 
-            var result = await _depositBookDal.GetListAsync(d => d.UserId == userId);
+            var result = await this.GetListAsyncExpiredByUser(userId);
             if (result is not null)
             {
-                foreach (var item in result)
+                foreach (var item in result.Data)
                 {
                     if (item is not null)
                     {
-                        DateTime expirationDate = item.DepositDate.AddDays(settings.BookReturnDay);
-                        if (expirationDate <= DateTime.Now)
-                        {
-                            Console.WriteLine("Gecikmiş kitaplarınız var. Kitap: " + item.Book.BookName + " Teslim Tarihi: " + expirationDate);
-                            return new ErrorResult(Messages.ReturnOverdueBooks);
-                        }
+                        return new ErrorResult(Messages.ReturnOverdueBooks);
                     }
+                    
                 }
             }
             return new SuccessResult();
@@ -473,6 +522,10 @@ namespace Business.Concretes
             }
             return new ErrorResult(Messages.Error);
         }
+
+       
+
+
 
 
         #endregion
